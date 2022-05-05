@@ -1,5 +1,38 @@
 import Head from "next/head";
 import Layout from "../components/Layout";
+import Graphs from "../components/Graphs";
+import Sidebar from "../components/Sidebar";
+
+import schc from "../public/exampleData/SCHC.json";
+import vcit from "../public/exampleData/VCIT.json";
+import portfolio from "../public/exampleData/portfolio.json";
+
+const portfolioData = {
+  name: "Portfolio",
+  color: "#ffffff",
+  items: portfolio.map((d) => ({ ...d, date: new Date(d.date) }))
+};
+const schcData = {
+  name: "SCHC",
+  color: "#d53e4f",
+  items: schc.map((d) => ({ ...d, date: new Date(d.date) }))
+};
+const vcitData = {
+  name: "VCIT",
+  color: "#5e4fa2",
+  items: vcit.map((d) => ({ ...d, date: new Date(d.date) }))
+};
+
+const dimensions = {
+  width: 1400,
+  height: 400,
+  margin: {
+    top: 30,
+    right: 30,
+    bottom: 30,
+    left: 60
+  }
+};
 
 export default function Home() {
   return (
@@ -13,11 +46,13 @@ export default function Home() {
         />
       </Head>
 
-      <Layout>aquita</Layout>
-
-      {/* <main className={styles.main}></main>
-
-      <footer className={styles.footer}></footer> */}
+      <Layout>
+        <div className="flex">
+          <Sidebar />
+          <Graphs data={[portfolioData, schcData, vcitData]}
+          dimensions={dimensions}/>
+        </div>
+      </Layout>
     </>
   );
 }
