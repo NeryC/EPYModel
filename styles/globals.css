@@ -18,3 +18,37 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+.zoom {
+  cursor: move;
+  fill: none;
+  pointer-events: all;
+}
+
+.y.axis line {
+  stroke: #565656;
+  stroke-dasharray: 2, 2;
+  stroke-opacity: 0.3;
+}
+
+.dotted_line { 
+  border-top: 5px solid red;
+  width: 15px;
+  height: 5px; 
+}
+
+.circle {
+  background-color:#fff;
+  border:1px solid black;    
+  height:7px;
+  border-radius:50%;
+  -moz-border-radius:50%;
+  -webkit-border-radius:50%;
+  width:7px;
+}

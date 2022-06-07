@@ -12,14 +12,14 @@ export default function Header() {
         <div className="flex justify-between items-center py-1">
           <div className="relative flex justify-start md:flex-0">
             <a href="#">
-                <div className="w-24 h-16">
-                  <Image
-                    src="/logo.png"
-                    alt="Picture of something nice"
-                    layout="fill"
-                    objectFit="contain"
-                  />
-                </div>
+              <div className="w-24 h-16">
+                <Image
+                  src="/logo.png"
+                  alt="Picture of something nice"
+                  layout="fill"
+                  objectFit="contain"
+                />
+              </div>
             </a>
           </div>
           <div className="-mr-2 -my-2 md:hidden">

@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Layout from "../components/Layout";
-import Graphs from "../components/Graphs";
+import Simulation from "../components/Graph/Simulation";
 import Sidebar from "../components/Sidebar";
 
 import schc from "../public/exampleData/SCHC.json";
@@ -49,7 +49,7 @@ export default function Home() {
       <Layout>
         <div className="flex">
           <Sidebar />
-          <Graphs data={[portfolioData, schcData, vcitData]}
+          <Simulation data={[portfolioData, schcData, vcitData]}
           dimensions={dimensions}/>
         </div>
       </Layout>

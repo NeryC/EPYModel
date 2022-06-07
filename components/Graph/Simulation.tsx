@@ -1,8 +1,8 @@
-/** Graphs.js */
+/** Simulation.js */
 import React from "react";
 import * as d3 from "d3";
 
-const Graphs = ({ data = [], dimensions = {} }) => {
+const Simulation = ({ data = [], dimensions = {} }) => {
   const svgRef = React.useRef(null);
   const { width, height, margin = {} } = dimensions;
   const svgWidth = width + margin.left + margin.right;
@@ -76,4 +76,4 @@ const Graphs = ({ data = [], dimensions = {} }) => {
   return <svg ref={svgRef} width={svgWidth} height={svgHeight} />;
 };
 
-export default Graphs;
+export default Simulation;
