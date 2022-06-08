@@ -6,26 +6,6 @@ import { dimensions, declareLineD3, drawLineD3, dynamicDateFormat } from '../../
 import useResize from '../../hooks/useResize';
 import Tooltip from "./tooltip";
 
-import schc from "../../public/exampleData/SCHC.json";
-import vcit from "../../public/exampleData/VCIT.json";
-import portfolio from "../../public/exampleData/portfolio.json";
-
-const portfolioData = {
-  name: "Portfolio",
-  color: "#ffffff",
-  items: portfolio.map((d) => ({ ...d, date: new Date(d.date) }))
-};
-const schcData = {
-  name: "SCHC",
-  color: "#d53e4f",
-  items: schc.map((d) => ({ ...d, date: new Date(d.date) }))
-};
-const vcitData = {
-  name: "VCIT",
-  color: "#5e4fa2",
-  items: vcit.map((d) => ({ ...d, date: new Date(d.date) }))
-};
-
 const Graph = ({ type, parentRef }) => {
   const { state } = useContext(Context);
   const { reported } = state;
@@ -78,8 +58,6 @@ const Graph = ({ type, parentRef }) => {
     const svgChart = d3.select(svgChartRef.current)
       .attr("viewBox", [0, 0, width, height]);
     svgChart.selectAll("*").remove();
-      
-    const tooltip = d3.select(tooltipRef.current)
 
     const tooltipLine = svgChart.append('line');
 
@@ -143,30 +121,6 @@ const Graph = ({ type, parentRef }) => {
       .attr("stroke", "black")
       .attr('opacity', 1)
       .attr('r', 3);
-    
-    // svgChart.selectAll(".dot")
-    // .data(data)
-    // .enter()
-    // .append("circle")
-    //   .attr("cx", function (d) { return x(d.fechaFormateada); } )
-    //   .attr("cy", function (d) { return y(d.Reportados); } )
-    //   .attr("clip-path", "url(#" + clip + ")")
-    //   .filter(function (d) { return d.Reportados > 0 })
-    //   .attr("r", 3)
-    //   .attr("class", "dot")
-    //   .style("fill", "#FFFFFF")
-    //   .style("stroke", "black")
-    //   .style("stroke-width", 0.5)
-
-
-    // const reportados =  declareLineD3(baseDeclareData,'Reportados');
-    // const reportadosLine = svgChart.append("path")
-    //   .data([data])
-    //   .attr("clip-path", "url(#"+clip+")")
-    //   .attr("id", "Reported")
-    //   .attr("class", "line")
-    //   .style("stroke", "orange")
-    //   .attr("d", reportados(x));
 
     function zoomed(event) {
       const xz = event.transform.rescaleX(x);
@@ -179,13 +133,13 @@ const Graph = ({ type, parentRef }) => {
       X10pLine.attr("d", X10p(xz));
       X20pLine.attr("d", X20p(xz));
       proyLine.attr("d", proy(xz));
-      // reportadosLine.attr("d", reportados(xz));
       gx.call(xAxis, xz);
       Reportados
         .attr("cx", function (d) { return xz(d.fechaFormateada); })
         .attr("cy", function (d) { return y(d.Reportados); });
       svgChart.on('mousemove', (e) => drawTooltip(e,xz))
         .on("mouseover", function () {
+          const tooltip = d3.select(tooltipRef.current)
           tooltip.style('display', 'block')
         })
       setYdomain(xz);
@@ -202,30 +156,39 @@ const Graph = ({ type, parentRef }) => {
       .call(yAxis, y);
 
     svgChart
-    // .on('mouseout', removeTooltip)
+    .on('mouseout', removeTooltip)
     .call(zoom)
       .transition()
         .duration(500)
         .call(zoom.scaleTo, 8, [x(Date.UTC(2022, 8, 1)), 0]);
 
     function removeTooltip() {
+      const tooltip = d3.select(tooltipRef.current)
       if (tooltip) tooltip.style('display', 'none');
       if (tooltipLine) tooltipLine.attr('stroke', 'none');
     }
     
     function drawTooltip(e,xz) {
       var bisectDate = d3.bisector(function (d) { return d.fechaFormateada; }).right;
-      const selectedDate = xz.invert(d3.pointer(e)[0])
-      const bisecx = bisectDate(data, selectedDate)
+
+      const x0 = xz.invert(d3.pointer(e,this)[0]),
+		  i = bisectDate(data, x0, 1),
+		  d0 = data[i - 1],
+		  d1 = data[i],
+		  actualData = x0 - d0.fechaFormateada > d1?.fechaFormateada - x0 ? d1 : d0;
+
       tooltipLine.attr('stroke', 'black')
-        .attr('x1', xz(selectedDate))
-        .attr('x2', xz(selectedDate))
+        .attr('x1', xz(actualData.fechaFormateada))
+        .attr('x2', xz(actualData.fechaFormateada))
         .attr('y1', 0)
         .attr('y2', height);
-      const actualData = data[bisecx-1]
       setSelectedData(actualData);
+
+      const tooltip = d3.select(tooltipRef.current)
+      const xPosition = (e.pageX-50) > width ? e.pageX-460 : e.pageX-220;
       tooltip
-        .style('left', (e.pageX-256) + "px")
+        .style('position', "absolute")
+        .style('left', (xPosition) + "px")
         .style('top', (e.pageY-72) + "px")
 
     }
@@ -311,9 +274,6 @@ const Graph = ({ type, parentRef }) => {
 
     
   }, [clip, margin, reported, size]);
-
-  // position:absolute;background-color:lightgray;padding:5px
-  // console.log(reported)
   return (
     !!size ?
       <div className="absolute">
@@ -322,7 +282,6 @@ const Graph = ({ type, parentRef }) => {
           width="100%"
           height={size.height}
         />
-        {/* <div ref={tooltipRef} /> */}
         <Tooltip data={selectedData} tooltipRef={tooltipRef} />
       </div>
     : 

@@ -44,7 +44,7 @@ export const drawLineD3 = (baseDrawData, title, yField, declare, x) => {
     .data([baseDrawData.data])
     .attr("clip-path", "url(#" + baseDrawData.clip + ")")
     .attr("id", title)
-    .attr("class", "line")
+    .attr("class", lineClass(yField))
     .style("stroke", lineColors[yField])
     .attr("d", declare(baseDrawData.x));
 };
@@ -80,6 +80,12 @@ export const lineColors = {
   X20p: "#e134f8",
   eq: "#039bb6",
   X2w: "#c50000",
+};
+
+const straightLine = ["dailyR", "dailyR_sin_subRegistro"];
+
+const lineClass = (yField) => {
+  return `line ${!straightLine.includes(yField) && "dotted_line"}`;
 };
 
 function timeFormat(formats) {

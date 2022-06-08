@@ -25,6 +25,10 @@ a {
   stroke-width: 2px;
 }
 
+.dotted_line {
+  stroke-dasharray: 5;
+}
+
 .zoom {
   cursor: move;
   fill: none;
@@ -37,7 +41,7 @@ a {
   stroke-opacity: 0.3;
 }
 
-.dotted_line { 
+.border_line { 
   border-top: 5px solid red;
   width: 15px;
   height: 5px; 
