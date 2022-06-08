@@ -1,15 +1,21 @@
 import {lineColors} from '../../utils/constants'
-export default function Tooltip ({data,tooltipRef}) {
+export default function Tooltip ({data,tooltipRef,activeLines}) {
   if(Object.keys(data).length === 0) return <></>
 
-  const shouldShow = (field) => (field == null ? 'hidden' : '');
+  const alwaysActive =[
+    "dailyR_sin_subRegistro",
+    "proy",
+    "Reportados"
+  ]
+
+  const shouldShow = (field) => (data[field] != null && (alwaysActive.includes(field) || activeLines[field]) ? '' : 'hidden');
   const chooseClass = (fieldName) => (fieldName == "Reportados" ? 'circle mx-auto' : 'border_line');
   const chooseLineColor = (fieldName) => (fieldName != "Reportados" ? {borderColor : lineColors[fieldName]} : {});
   const dataExample = [
     {name:'Simulated',field:'dailyR_sin_subRegistro'},
-    {name:'Estimated',field:'dailyR'},
     {name:'Proyected',field:'proy'},
     {name:'Reported',field:'Reportados'},
+    {name:'Estimated',field:'dailyR'},
     {name:'Percentil 75',field:'q75'},
     {name:'Percentil 25',field:'q25'},
     {name:'10% Increase',field:'X10p'},
@@ -27,7 +33,7 @@ export default function Tooltip ({data,tooltipRef}) {
             return(
             <tr
               key={index}
-              className={shouldShow(data[field.field])}
+              className={shouldShow(field.field)}
             >
               <td className='pr-1.5'>
                 <div className={chooseClass(field.field)} style={chooseLineColor(field.field)}></div>

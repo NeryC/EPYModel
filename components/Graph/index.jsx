@@ -14,6 +14,16 @@ const Graph = ({ type, parentRef }) => {
   const size = useResize(parentRef);
   const { margin } = dimensions;
   const [selectedData, setSelectedData] = useState({});
+  const [activeLines, setActiveLines] = useState(
+    {
+      dailyR: false,
+      q75: false,
+      q25: false,
+      X10p: false,
+      X20p: false,
+      eq: false,
+      X2w: false
+    });
 
   const clip = useId();
 
@@ -31,7 +41,7 @@ const Graph = ({ type, parentRef }) => {
       .on("zoom", zoomed);
 
     const dataXrange = d3.extent(data, function(d) { return d.fechaFormateada; }),
-      dataYrange = [0, d3.max(data, function (d) { return d.dailyR; })];
+      dataYrange = [0, d3.max(data, function (d) { return activeLines.dailyR ? d.dailyR : d.Reportados; })];
 
     const x = d3.scaleTime()
         .domain(dataXrange)
@@ -80,7 +90,7 @@ const Graph = ({ type, parentRef }) => {
 
     //Estimated
     const daily2R = declareLineD3(baseDeclareData,'dailyR');
-    const daily2RLine = drawLineD3(baseDrawData, 'Estimated', 'dailyR', daily2R);
+    const daily2RLine = activeLines.dailyR && drawLineD3(baseDrawData, 'Estimated', 'dailyR', daily2R);
 
     //Simulated
     const dailyR = declareLineD3(baseDeclareData,'dailyR_sin_subRegistro');
@@ -88,27 +98,27 @@ const Graph = ({ type, parentRef }) => {
 
     //Plateau
     const eq = declareLineD3(baseDeclareData,'eq');
-    const eqLine = drawLineD3(baseDrawData, 'Plateau', 'eq', eq);
+    const eqLine = activeLines.eq && drawLineD3(baseDrawData, 'Plateau', 'eq', eq);
 
     // Percentil 25
     const q25 = declareLineD3(baseDeclareData,'q25');
-    const q25Line = drawLineD3(baseDrawData, 'Percentil25', 'q25', q25);
+    const q25Line = activeLines.q25 && drawLineD3(baseDrawData, 'Percentil25', 'q25', q25);
 
     //Percentil 75
     const q75 = declareLineD3(baseDeclareData,'q75');
-    const q75Line = drawLineD3(baseDrawData, 'Percentil75', 'q75', q75);
+    const q75Line = activeLines.q75 && drawLineD3(baseDrawData, 'Percentil75', 'q75', q75);
 
     //Last Month
     const X2w = declareLineD3(baseDeclareData,'X2w');
-    const X2wLine = drawLineD3(baseDrawData, 'LastMonth', 'X2w', X2w);
+    const X2wLine = activeLines.X2w && drawLineD3(baseDrawData, 'LastMonth', 'X2w', X2w);
 
     //10% Increase
     const X10p = declareLineD3(baseDeclareData,'X10p');
-    const X10pLine = drawLineD3(baseDrawData, '10Increase', 'X10p', X10p);
+    const X10pLine = activeLines.X10p && drawLineD3(baseDrawData, '10Increase', 'X10p', X10p);
 
     //20% Reduction
     const X20p = declareLineD3(baseDeclareData,'X20p');
-    const X20pLine = drawLineD3(baseDrawData, '20Reduction', 'X20p', X20p);
+    const X20pLine = activeLines.X20p && drawLineD3(baseDrawData, '20Reduction', 'X20p', X20p);
 
     //Reported
     const Reportados = svgChart.selectAll('circle')
@@ -125,13 +135,13 @@ const Graph = ({ type, parentRef }) => {
     function zoomed(event) {
       const xz = event.transform.rescaleX(x);
       dailyRLine.attr("d", dailyR(xz));
-      daily2RLine.attr("d", daily2R(xz));
-      eqLine.attr("d", eq(xz));
-      q25Line.attr("d", q25(xz));
-      q75Line.attr("d", q75(xz));
-      X2wLine.attr("d", X2w(xz));
-      X10pLine.attr("d", X10p(xz));
-      X20pLine.attr("d", X20p(xz));
+      activeLines.dailyR && daily2RLine.attr("d", daily2R(xz));
+      activeLines.eq && eqLine.attr("d", eq(xz));
+      activeLines.q25 && q25Line.attr("d", q25(xz));
+      activeLines.q75 && q75Line.attr("d", q75(xz));
+      activeLines.X2w && X2wLine.attr("d", X2w(xz));
+      activeLines.X10p && X10pLine.attr("d", X10p(xz));
+      activeLines.X20p && X20pLine.attr("d", X20p(xz));
       proyLine.attr("d", proy(xz));
       gx.call(xAxis, xz);
       Reportados
@@ -210,7 +220,8 @@ const Graph = ({ type, parentRef }) => {
         let intfun;
         if (data[iL].mejor === null) {
           // if (!dailyR_sin_subRegistro.active) {
-            intfun = d3.interpolateNumber(0, data[iL].dailyR);
+            // intfun = d3.interpolateNumber(0, data[iL].dailyR);
+            intfun = d3.interpolateNumber(0, activeLines.dailyR ? data[iL].dailyR : data[iL].Reportados);
           // } else {
               // var intfun = d3.interpolateNumber(0, data[iL].dailyR_sin_subRegistro);                        
           // }
@@ -231,7 +242,8 @@ const Graph = ({ type, parentRef }) => {
         let intfun ;
         if (data[iR].mejor === null) {
           // if (!dailyR_sin_subRegistro.active) {
-            intfun = d3.interpolateNumber(0, data[iR].dailyR);
+            // intfun = d3.interpolateNumber(0, data[iR].dailyR);
+            intfun = d3.interpolateNumber(0, activeLines.dailyR ? data[iR].dailyR : data[iR].Reportados);
           // }else {
               //intfun = d3.interpolateNumber(0, data[iR].dailyR_sin_subRegistro);
           // }
@@ -249,7 +261,8 @@ const Graph = ({ type, parentRef }) => {
       dataSubset.map(function (d) {
         if (d.q75 === null) {
           // if (!dailyR_sin_subRegistro.active) {
-              countSubset.push(d.dailyR);
+              // countSubset.push(d.dailyR);
+              countSubset.push(activeLines.dailyR ? d.dailyR : d.Reportados);
           // }else {
               // countSubset.push(d.dailyR_sin_subRegistro);
           // }
@@ -273,7 +286,7 @@ const Graph = ({ type, parentRef }) => {
     }
 
     
-  }, [clip, margin, reported, size]);
+  }, [clip, margin, reported, size, activeLines]);
   return (
     !!size ?
       <div className="absolute">
@@ -282,7 +295,22 @@ const Graph = ({ type, parentRef }) => {
           width="100%"
           height={size.height}
         />
-        <Tooltip data={selectedData} tooltipRef={tooltipRef} />
+        <Tooltip data={selectedData} tooltipRef={tooltipRef} activeLines={activeLines}/>
+        {Object.keys(activeLines).map((name, index) => {
+          return (
+            <div key={index}>
+              <input
+                type="checkbox"
+                id={`custom-checkbox-${index}`}
+                name={name}
+                value={name}
+                checked={activeLines[name]}
+                onChange={() => setActiveLines({...activeLines, [name]:!activeLines[name]})}
+              />
+              <label htmlFor={`custom-checkbox-${index}`}>{name}</label>
+            </div>
+          );
+        })}
       </div>
     : 
       <></>
