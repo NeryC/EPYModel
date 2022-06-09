@@ -290,27 +290,29 @@ const Graph = ({ type, parentRef }) => {
   return (
     !!size ?
       <div className="absolute">
+        <div className="flex flex-row-reverse mt-5">
+          {Object.keys(activeLines).map((name, index) => {
+            return (
+              <div className="mr-5" key={index}>
+                <input
+                  type="checkbox"
+                  id={`custom-checkbox-${index}`}
+                  name={name}
+                  value={name}
+                  checked={activeLines[name]}
+                  onChange={() => setActiveLines({...activeLines, [name]:!activeLines[name]})}
+                />
+                <label htmlFor={`custom-checkbox-${index}`}>{name}</label>
+              </div>
+            );
+          })}
+        </div>
         <svg 
           ref={svgChartRef} 
           width="100%"
           height={size.height}
         />
         <Tooltip data={selectedData} tooltipRef={tooltipRef} activeLines={activeLines}/>
-        {Object.keys(activeLines).map((name, index) => {
-          return (
-            <div key={index}>
-              <input
-                type="checkbox"
-                id={`custom-checkbox-${index}`}
-                name={name}
-                value={name}
-                checked={activeLines[name]}
-                onChange={() => setActiveLines({...activeLines, [name]:!activeLines[name]})}
-              />
-              <label htmlFor={`custom-checkbox-${index}`}>{name}</label>
-            </div>
-          );
-        })}
       </div>
     : 
       <></>

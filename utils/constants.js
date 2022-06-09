@@ -38,7 +38,7 @@ export const declareLineD3 = (baseDeclareData, yField) => {
       .defined((d) => d[yField] != null);
 };
 
-export const drawLineD3 = (baseDrawData, title, yField, declare, x) => {
+export const drawLineD3 = (baseDrawData, title, yField, declare) => {
   return baseDrawData.svgChart
     .append("path")
     .data([baseDrawData.data])
