@@ -9,7 +9,8 @@ export default function useResize(ref) {
           return;
       }
       const width = ref.current.clientWidth;
-      const height = ref.current.clientHeight >= 534  ? 534: ref.current.clientHeight;
+      const height = 534;
+    //   const height = ref.current.clientHeight >= 534  ? 534: ref.current.clientHeight;
       setState({
           width,
           height,

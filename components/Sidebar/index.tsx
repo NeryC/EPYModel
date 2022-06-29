@@ -1,7 +1,8 @@
 export default function Sidebar() {
 
   return (
-    <aside className="w-64 min-w-[16rem]" aria-label="Sidebar">
+    // <aside className="w-64 min-w-[16rem]" aria-label="Sidebar">
+    <aside className="h-[700px]" aria-label="Sidebar">
       <div className="px-3 py-4 overflow-y-auto rounded bg-gray-200">
       <form>
         <div className="relative z-0 w-full mb-6 group">

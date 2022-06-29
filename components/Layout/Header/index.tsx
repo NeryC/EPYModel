@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 export default function Header() {
   return (
-    <Popover className="relative bg-gray-200">
+    <Popover className="relative bg-white">
       <div className="mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center py-1">
           <div className="relative flex justify-start md:flex-0">

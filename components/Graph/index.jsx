@@ -3,10 +3,11 @@ import React, { useContext, useId, useLayoutEffect, useState } from "react";
 import { Context } from "../../context/globalStore";
 import * as d3 from "d3";
 import { dimensions, declareLineD3, drawLineD3, dynamicDateFormat } from '../../utils/constants';
+import { checkLine } from '../../utils/index';
 import useResize from '../../hooks/useResize';
 import Tooltip from "./tooltip";
 
-const Graph = ({ type, parentRef }) => {
+const Graph = ({ type, parentRef, selected }) => {
   const { state } = useContext(Context);
   const { reported } = state;
   const svgChartRef = React.useRef(null);
@@ -14,16 +15,16 @@ const Graph = ({ type, parentRef }) => {
   const size = useResize(parentRef);
   const { margin } = dimensions;
   const [selectedData, setSelectedData] = useState({});
-  const [activeLines, setActiveLines] = useState(
-    {
-      dailyR: false,
-      q75: false,
-      q25: false,
-      X10p: false,
-      X20p: false,
-      eq: false,
-      X2w: false
-    });
+  // const [activeLines, setActiveLines] = useState(
+  //   {
+  //     dailyR: false,
+  //     q75: false,
+  //     q25: false,
+  //     X10p: false,
+  //     X20p: false,
+  //     eq: false,
+  //     X2w: false
+  //   });
 
   const clip = useId();
 
@@ -41,7 +42,7 @@ const Graph = ({ type, parentRef }) => {
       .on("zoom", zoomed);
 
     const dataXrange = d3.extent(data, function(d) { return d.fechaFormateada; }),
-      dataYrange = [0, d3.max(data, function (d) { return activeLines.dailyR ? d.dailyR : d.Reportados; })];
+      dataYrange = [0, d3.max(data, function (d) { return checkLine(selected,"dailyR") ? d.dailyR : d.Reportados; })];
 
     const x = d3.scaleTime()
         .domain(dataXrange)
@@ -90,7 +91,7 @@ const Graph = ({ type, parentRef }) => {
 
     //Estimated
     const daily2R = declareLineD3(baseDeclareData,'dailyR');
-    const daily2RLine = activeLines.dailyR && drawLineD3(baseDrawData, 'Estimated', 'dailyR', daily2R);
+    const daily2RLine = checkLine(selected,"dailyR") && drawLineD3(baseDrawData, 'Estimated', 'dailyR', daily2R);
 
     //Simulated
     const dailyR = declareLineD3(baseDeclareData,'dailyR_sin_subRegistro');
@@ -98,27 +99,27 @@ const Graph = ({ type, parentRef }) => {
 
     //Plateau
     const eq = declareLineD3(baseDeclareData,'eq');
-    const eqLine = activeLines.eq && drawLineD3(baseDrawData, 'Plateau', 'eq', eq);
+    const eqLine = checkLine(selected,"eq") && drawLineD3(baseDrawData, 'Plateau', 'eq', eq);
 
     // Percentil 25
     const q25 = declareLineD3(baseDeclareData,'q25');
-    const q25Line = activeLines.q25 && drawLineD3(baseDrawData, 'Percentil25', 'q25', q25);
+    const q25Line = checkLine(selected,"q25") && drawLineD3(baseDrawData, 'Percentil25', 'q25', q25);
 
     //Percentil 75
     const q75 = declareLineD3(baseDeclareData,'q75');
-    const q75Line = activeLines.q75 && drawLineD3(baseDrawData, 'Percentil75', 'q75', q75);
+    const q75Line = checkLine(selected,"q75")  && drawLineD3(baseDrawData, 'Percentil75', 'q75', q75);
 
     //Last Month
     const X2w = declareLineD3(baseDeclareData,'X2w');
-    const X2wLine = activeLines.X2w && drawLineD3(baseDrawData, 'LastMonth', 'X2w', X2w);
+    const X2wLine = checkLine(selected,"X2w") && drawLineD3(baseDrawData, 'LastMonth', 'X2w', X2w);
 
     //10% Increase
     const X10p = declareLineD3(baseDeclareData,'X10p');
-    const X10pLine = activeLines.X10p && drawLineD3(baseDrawData, '10Increase', 'X10p', X10p);
+    const X10pLine = checkLine(selected,"X10p") && drawLineD3(baseDrawData, '10Increase', 'X10p', X10p);
 
     //20% Reduction
     const X20p = declareLineD3(baseDeclareData,'X20p');
-    const X20pLine = activeLines.X20p && drawLineD3(baseDrawData, '20Reduction', 'X20p', X20p);
+    const X20pLine = checkLine(selected,"X20p") && drawLineD3(baseDrawData, '20Reduction', 'X20p', X20p);
 
     //Reported
     const Reportados = svgChart.selectAll('circle')
@@ -135,13 +136,13 @@ const Graph = ({ type, parentRef }) => {
     function zoomed(event) {
       const xz = event.transform.rescaleX(x);
       dailyRLine.attr("d", dailyR(xz));
-      activeLines.dailyR && daily2RLine.attr("d", daily2R(xz));
-      activeLines.eq && eqLine.attr("d", eq(xz));
-      activeLines.q25 && q25Line.attr("d", q25(xz));
-      activeLines.q75 && q75Line.attr("d", q75(xz));
-      activeLines.X2w && X2wLine.attr("d", X2w(xz));
-      activeLines.X10p && X10pLine.attr("d", X10p(xz));
-      activeLines.X20p && X20pLine.attr("d", X20p(xz));
+      checkLine(selected,"dailyR") && daily2RLine.attr("d", daily2R(xz));
+      checkLine(selected,"eq") && eqLine.attr("d", eq(xz));
+      checkLine(selected,"q25") && q25Line.attr("d", q25(xz));
+      checkLine(selected,"q75") && q75Line.attr("d", q75(xz));
+      checkLine(selected,"X2w") && X2wLine.attr("d", X2w(xz));
+      checkLine(selected,"X10p") && X10pLine.attr("d", X10p(xz));
+      checkLine(selected,"X20p") && X20pLine.attr("d", X20p(xz));
       proyLine.attr("d", proy(xz));
       gx.call(xAxis, xz);
       Reportados
@@ -195,11 +196,11 @@ const Graph = ({ type, parentRef }) => {
       setSelectedData(actualData);
 
       const tooltip = d3.select(tooltipRef.current)
-      const xPosition = (e.pageX-50) > width ? e.pageX-460 : e.pageX-220;
+      const xLeft = xz(actualData.fechaFormateada)
       tooltip
         .style('position', "absolute")
-        .style('left', (xPosition) + "px")
-        .style('top', (e.pageY-72) + "px")
+        .style('left', `${xLeft + 150 > width ? xLeft-160: xLeft+20}px`)
+        .style('top', (e.pageY-220) + "px")
 
     }
     
@@ -221,7 +222,7 @@ const Graph = ({ type, parentRef }) => {
         if (data[iL].mejor === null) {
           // if (!dailyR_sin_subRegistro.active) {
             // intfun = d3.interpolateNumber(0, data[iL].dailyR);
-            intfun = d3.interpolateNumber(0, activeLines.dailyR ? data[iL].dailyR : data[iL].Reportados);
+            intfun = d3.interpolateNumber(0, checkLine(selected,"dailyR")? data[iL].dailyR : data[iL].Reportados);
           // } else {
               // var intfun = d3.interpolateNumber(0, data[iL].dailyR_sin_subRegistro);                        
           // }
@@ -243,7 +244,7 @@ const Graph = ({ type, parentRef }) => {
         if (data[iR].mejor === null) {
           // if (!dailyR_sin_subRegistro.active) {
             // intfun = d3.interpolateNumber(0, data[iR].dailyR);
-            intfun = d3.interpolateNumber(0, activeLines.dailyR ? data[iR].dailyR : data[iR].Reportados);
+            intfun = d3.interpolateNumber(0, checkLine(selected,"dailyR") ? data[iR].dailyR : data[iR].Reportados);
           // }else {
               //intfun = d3.interpolateNumber(0, data[iR].dailyR_sin_subRegistro);
           // }
@@ -262,7 +263,7 @@ const Graph = ({ type, parentRef }) => {
         if (d.q75 === null) {
           // if (!dailyR_sin_subRegistro.active) {
               // countSubset.push(d.dailyR);
-              countSubset.push(activeLines.dailyR ? d.dailyR : d.Reportados);
+              countSubset.push(checkLine(selected,"dailyR") ? d.dailyR : d.Reportados);
           // }else {
               // countSubset.push(d.dailyR_sin_subRegistro);
           // }
@@ -286,11 +287,11 @@ const Graph = ({ type, parentRef }) => {
     }
 
     
-  }, [clip, margin, reported, size, activeLines]);
+  }, [clip, margin, reported, size, selected]);
   return (
     !!size ?
       <div className="absolute">
-        <div className="flex flex-row-reverse mt-5">
+        {/* <div className="flex flex-row-reverse mt-5">
           {Object.keys(activeLines).map((name, index) => {
             return (
               <div className="mr-5" key={index}>
@@ -306,13 +307,13 @@ const Graph = ({ type, parentRef }) => {
               </div>
             );
           })}
-        </div>
+        </div> */}
         <svg 
           ref={svgChartRef} 
           width="100%"
           height={size.height}
         />
-        <Tooltip data={selectedData} tooltipRef={tooltipRef} activeLines={activeLines}/>
+        <Tooltip data={selectedData} tooltipRef={tooltipRef} activeLines={selected}/>
       </div>
     : 
       <></>

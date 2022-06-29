@@ -1,11 +1,10 @@
 import { useContext, useEffect, useRef } from "react";
 import { Context } from "../context/globalStore";
 import Head from "next/head";
-import Graph from "../components/Graph";
 import Layout from "../components/Layout";
-import Sidebar from "../components/Sidebar";
+import Grap2 from "../components/Graph2";
 
-export default function Graphs({ GRAPHS_INFO }) {
+export default function Graphs2({ GRAPHS_INFO }) {
   const { dispatch } = useContext(Context);
   const parentRef = useRef(null);
   useEffect(() => {
@@ -20,22 +19,29 @@ export default function Graphs({ GRAPHS_INFO }) {
     });
   }, []);
 
+  let description2 = `The graph shows the evolution of the proportions of positive cases that pass to be hospitalized, intensive care unit and deceased cases`
+  let description1 = `The effective reproduction number, R, represents the number of new cases that is generated from a positive case, according to cases reported by the Ministry of Public Health and Social Welfare of Paraguay.
+  When R = 1, each positive case infects only one more person and in this case the epidemic remains stable, observing a plateau in the number of cases.
+  When R is greater than 1, each positive case infects more than one person and in this case the epidemic is expanding and increases positive cases.
+  When R is less than 1, each positive case infects (on average) less than one person, and in this case the epidemic is in contraction and decreases positive cases.`
+
   return (
     <>
       <Head>
-        <meta name="description" content="Graficos del coid en paraguay" />
+        <meta name="description" content="Graficos del covid en paraguay" />
         <link
           href="https://www.uaa.edu.py/cdn/images/560cb5c8fdf530a9635a95eab14b.png"
           rel="icon"
         />
       </Head>
       <Layout>
-        {/* <div className="flex w-full relative"> */}
-        <div className="grid grid-cols-5 gap-4">
-          <Sidebar />
-          <div className="col-span-4" ref={parentRef}>
-            <Graph type="test" parentRef={parentRef}/>
-          </div>
+        <div className="flex flex-col p-6">
+          <Grap2 type="reported" title="Projection of possible new Infected/Daily reported"/>
+          <Grap2 type="reported" title="Projection of daily hospitalized patients with unlimited bed capacity"/>
+          <Grap2 type="reported" title="Projection of daily ICU hospitalized patients with unlimited bed capacity"/>
+          <Grap2 type="reported" title="Daily death projection"/>
+          <Grap2 type="reported" title="EFFECTIVE REPRODUCTION NUMBER" description={description1}/>
+          <Grap2 type="reported" title="PROPORTIONS" description={description2}/>
         </div>
       </Layout>
     </>

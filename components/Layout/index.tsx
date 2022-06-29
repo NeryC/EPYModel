@@ -3,11 +3,9 @@ import Footer from "./Footer";
 
 export default function Layout ({ children }) {
   return (
-    <div className="bg-white text-black text-xl relative">
+    <div className="bg-gray-200 text-black text-xl relative">
       <Header />
-      <div className="pb-12">
-        {children}
-      </div>
+      {children}      
       <Footer />
     </div>
   );
