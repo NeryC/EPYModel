@@ -1,17 +1,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { Context } from "../../context/globalStore";
 import ScenarioTooltip from "./ScenarioTooltip"
-import { dinamicColorStyle } from "../../utils/index";
+import { dinamicColorStyle, setNewSelectedLines } from "../../utils/index";
 
-const MultiSelect = ({options, selected, handleSelected}) => {
+const MultiSelect = ({options, selected, type}) => {
 
   let [dropdown, setDropdown] = useState(false);
+  const { dispatch } = useContext(Context);
 
   let isSelected = (item) =>{
     return selected.some((element)=>element.label===item.label) ? 
       `border-l-2` : ''
-    
   }
 
   let isExpanded = () =>{
@@ -37,12 +38,14 @@ const MultiSelect = ({options, selected, handleSelected}) => {
   }
 
   let selectOption = (item) => {
-    if(selected.some((element)=>element.label===item.label)){
-      handleSelected([...selected.filter(e => e.label !== item.label)])
-    } else {
-      selected.push(item);
-      handleSelected([...selected])
-    }
+    const newItems = setNewSelectedLines(selected,item);
+    dispatch({
+      type: "SET_SELECTED_LINE",
+      payload: {
+        graphType: type,
+        item: newItems,
+      },
+    });
   }
   
   let renderOptions = () => {

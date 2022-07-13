@@ -1,39 +1,29 @@
 /** Graph.js */
-import React, { useContext, useId, useLayoutEffect, useState } from "react";
-import { Context } from "../../context/globalStore";
+import React, { useId, useLayoutEffect, useState } from "react";
 import * as d3 from "d3";
-import { dimensions, declareLineD3, drawLineD3, dynamicDateFormat } from '../../utils/constants';
+import { dimensions, declareLineD3, drawLineD3, dynamicDateFormat, declareAreaD3, drawAreaD3 } from '../../utils/constants';
 import { checkLine } from '../../utils/index';
 import useResize from '../../hooks/useResize';
 import Tooltip from "./tooltip";
 
-const Graph = ({ type, parentRef, selected }) => {
-  const { state } = useContext(Context);
-  const { reported } = state;
+const Graph = ({ parentRef, rawData }) => {
   const svgChartRef = React.useRef(null);
   const tooltipRef = React.useRef(null);
   const size = useResize(parentRef);
   const { margin } = dimensions;
   const [selectedData, setSelectedData] = useState({});
-  // const [activeLines, setActiveLines] = useState(
-  //   {
-  //     dailyR: false,
-  //     q75: false,
-  //     q25: false,
-  //     X10p: false,
-  //     X20p: false,
-  //     eq: false,
-  //     X2w: false
-  //   });
+  const {data, settings, elements} = rawData;
+  const {selectedLines} = elements;
 
   const clip = useId();
 
   useLayoutEffect(() => {
-    const data = reported.slice();
-    if (!size || !data ) {
+    if (!size || !data || !settings) {
       return;
     }
     const { width, height } = size;
+    const {smoothed, uncertainty, range} = settings;
+    const {start, finish} = range;
 
     const zoom = d3.zoom()
       .scaleExtent([1, 32])
@@ -42,7 +32,7 @@ const Graph = ({ type, parentRef, selected }) => {
       .on("zoom", zoomed);
 
     const dataXrange = d3.extent(data, function(d) { return d.fechaFormateada; }),
-      dataYrange = [0, d3.max(data, function (d) { return checkLine(selected,"dailyR") ? d.dailyR : d.Reportados; })];
+      dataYrange = [0, d3.max(data, function (d) { return checkLine(selectedLines,"dailyR") ? d.dailyR : d.Reportados; })];
 
     const x = d3.scaleTime()
         .domain(dataXrange)
@@ -84,14 +74,14 @@ const Graph = ({ type, parentRef, selected }) => {
     /// Lineas
     ///
     const baseDrawData = {svgChart, data, clip, x}
-    const baseDeclareData = {xField:'fechaFormateada', y}
+    const baseDeclareData = {xField:'fechaFormateada', y, curveSmoothed: smoothed}
     //Proyected
     const proy = declareLineD3(baseDeclareData,'proy');
     const proyLine = drawLineD3(baseDrawData, "Proyected", 'proy', proy);
 
     //Estimated
     const daily2R = declareLineD3(baseDeclareData,'dailyR');
-    const daily2RLine = checkLine(selected,"dailyR") && drawLineD3(baseDrawData, 'Estimated', 'dailyR', daily2R);
+    const daily2RLine = checkLine(selectedLines,"dailyR") && drawLineD3(baseDrawData, 'Estimated', 'dailyR', daily2R);
 
     //Simulated
     const dailyR = declareLineD3(baseDeclareData,'dailyR_sin_subRegistro');
@@ -99,27 +89,31 @@ const Graph = ({ type, parentRef, selected }) => {
 
     //Plateau
     const eq = declareLineD3(baseDeclareData,'eq');
-    const eqLine = checkLine(selected,"eq") && drawLineD3(baseDrawData, 'Plateau', 'eq', eq);
+    const eqLine = checkLine(selectedLines,"eq") && drawLineD3(baseDrawData, 'Plateau', 'eq', eq);
 
     // Percentil 25
     const q25 = declareLineD3(baseDeclareData,'q25');
-    const q25Line = checkLine(selected,"q25") && drawLineD3(baseDrawData, 'Percentil25', 'q25', q25);
+    const q25Line = checkLine(selectedLines,"q25") && drawLineD3(baseDrawData, 'Percentil25', 'q25', q25);
 
     //Percentil 75
     const q75 = declareLineD3(baseDeclareData,'q75');
-    const q75Line = checkLine(selected,"q75")  && drawLineD3(baseDrawData, 'Percentil75', 'q75', q75);
+    const q75Line = checkLine(selectedLines,"q75")  && drawLineD3(baseDrawData, 'Percentil75', 'q75', q75);
 
     //Last Month
     const X2w = declareLineD3(baseDeclareData,'X2w');
-    const X2wLine = checkLine(selected,"X2w") && drawLineD3(baseDrawData, 'LastMonth', 'X2w', X2w);
+    const X2wLine = checkLine(selectedLines,"X2w") && drawLineD3(baseDrawData, 'LastMonth', 'X2w', X2w);
 
     //10% Increase
     const X10p = declareLineD3(baseDeclareData,'X10p');
-    const X10pLine = checkLine(selected,"X10p") && drawLineD3(baseDrawData, '10Increase', 'X10p', X10p);
+    const X10pLine = checkLine(selectedLines,"X10p") && drawLineD3(baseDrawData, '10Increase', 'X10p', X10p);
 
     //20% Reduction
     const X20p = declareLineD3(baseDeclareData,'X20p');
-    const X20pLine = checkLine(selected,"X20p") && drawLineD3(baseDrawData, '20Reduction', 'X20p', X20p);
+    const X20pLine = checkLine(selectedLines,"X20p") && drawLineD3(baseDrawData, '20Reduction', 'X20p', X20p);
+
+    //20% Reduction
+    const uncertaintyGraph = declareAreaD3(baseDeclareData);
+    const uncertaintyArea = uncertainty && drawAreaD3(baseDrawData, uncertaintyGraph);
 
     //Reported
     const Reportados = svgChart.selectAll('circle')
@@ -136,13 +130,14 @@ const Graph = ({ type, parentRef, selected }) => {
     function zoomed(event) {
       const xz = event.transform.rescaleX(x);
       dailyRLine.attr("d", dailyR(xz));
-      checkLine(selected,"dailyR") && daily2RLine.attr("d", daily2R(xz));
-      checkLine(selected,"eq") && eqLine.attr("d", eq(xz));
-      checkLine(selected,"q25") && q25Line.attr("d", q25(xz));
-      checkLine(selected,"q75") && q75Line.attr("d", q75(xz));
-      checkLine(selected,"X2w") && X2wLine.attr("d", X2w(xz));
-      checkLine(selected,"X10p") && X10pLine.attr("d", X10p(xz));
-      checkLine(selected,"X20p") && X20pLine.attr("d", X20p(xz));
+      checkLine(selectedLines,"dailyR") && daily2RLine.attr("d", daily2R(xz));
+      checkLine(selectedLines,"eq") && eqLine.attr("d", eq(xz));
+      checkLine(selectedLines,"q25") && q25Line.attr("d", q25(xz));
+      checkLine(selectedLines,"q75") && q75Line.attr("d", q75(xz));
+      checkLine(selectedLines,"X2w") && X2wLine.attr("d", X2w(xz));
+      checkLine(selectedLines,"X10p") && X10pLine.attr("d", X10p(xz));
+      checkLine(selectedLines,"X20p") && X20pLine.attr("d", X20p(xz));
+      uncertainty && uncertaintyArea.attr("d", uncertaintyGraph(xz));
       proyLine.attr("d", proy(xz));
       gx.call(xAxis, xz);
       Reportados
@@ -220,12 +215,7 @@ const Graph = ({ type, parentRef, selected }) => {
           left_dateAfter = data[iL].fechaFormateada;
         let intfun;
         if (data[iL].mejor === null) {
-          // if (!dailyR_sin_subRegistro.active) {
-            // intfun = d3.interpolateNumber(0, data[iL].dailyR);
-            intfun = d3.interpolateNumber(0, checkLine(selected,"dailyR")? data[iL].dailyR : data[iL].Reportados);
-          // } else {
-              // var intfun = d3.interpolateNumber(0, data[iL].dailyR_sin_subRegistro);                        
-          // }
+            intfun = d3.interpolateNumber(0, checkLine(selectedLines,"dailyR")? data[iL].dailyR : data[iL].Reportados);
         } else {
           intfun = d3.interpolateNumber(data[iL - 1].q75, data[iL].peor);
         }
@@ -242,12 +232,7 @@ const Graph = ({ type, parentRef, selected }) => {
           right_dateAfter = data[iR].fechaFormateada;
         let intfun ;
         if (data[iR].mejor === null) {
-          // if (!dailyR_sin_subRegistro.active) {
-            // intfun = d3.interpolateNumber(0, data[iR].dailyR);
-            intfun = d3.interpolateNumber(0, checkLine(selected,"dailyR") ? data[iR].dailyR : data[iR].Reportados);
-          // }else {
-              //intfun = d3.interpolateNumber(0, data[iR].dailyR_sin_subRegistro);
-          // }
+            intfun = d3.interpolateNumber(0, checkLine(selectedLines,"dailyR") ? data[iR].dailyR : data[iR].Reportados);
         } else {
           intfun = d3.interpolateNumber(data[iR - 1].q75, data[iR].peor);
         }                
@@ -261,12 +246,7 @@ const Graph = ({ type, parentRef, selected }) => {
       const countSubset = [];
       dataSubset.map(function (d) {
         if (d.q75 === null) {
-          // if (!dailyR_sin_subRegistro.active) {
-              // countSubset.push(d.dailyR);
-              countSubset.push(checkLine(selected,"dailyR") ? d.dailyR : d.Reportados);
-          // }else {
-              // countSubset.push(d.dailyR_sin_subRegistro);
-          // }
+            countSubset.push(checkLine(selectedLines,"dailyR") ? d.dailyR : d.Reportados);
         } else {
           countSubset.push(d.peor);
         }
@@ -286,34 +266,22 @@ const Graph = ({ type, parentRef, selected }) => {
 
     }
 
+    //zoom with slider
+    svgChart.call(zoom.transform, d3.zoomIdentity
+      .scale(width / (x(data[finish].fechaFormateada) - x(data[start].fechaFormateada)))
+      .translate(-x(data[start].fechaFormateada), 0));
     
-  }, [clip, margin, reported, size, selected]);
+  }, [clip, margin, data, size, selectedLines, settings]);
+
   return (
     !!size ?
       <div className="absolute">
-        {/* <div className="flex flex-row-reverse mt-5">
-          {Object.keys(activeLines).map((name, index) => {
-            return (
-              <div className="mr-5" key={index}>
-                <input
-                  type="checkbox"
-                  id={`custom-checkbox-${index}`}
-                  name={name}
-                  value={name}
-                  checked={activeLines[name]}
-                  onChange={() => setActiveLines({...activeLines, [name]:!activeLines[name]})}
-                />
-                <label htmlFor={`custom-checkbox-${index}`}>{name}</label>
-              </div>
-            );
-          })}
-        </div> */}
         <svg 
           ref={svgChartRef} 
           width="100%"
           height={size.height}
         />
-        <Tooltip data={selectedData} tooltipRef={tooltipRef} activeLines={selected}/>
+        <Tooltip data={selectedData} tooltipRef={tooltipRef} activeLines={selectedLines}/>
       </div>
     : 
       <></>

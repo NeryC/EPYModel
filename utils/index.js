@@ -130,3 +130,12 @@ export const checkLine = (lines, name) => {
     return elem.name === name;
   });
 };
+
+export const setNewSelectedLines = (selectedLines, item) => {
+  if (selectedLines.some((element) => element.label === item.label)) {
+    return [...selectedLines.filter((e) => e.label !== item.label)];
+  } else {
+    selectedLines.push(item);
+    return [...selectedLines];
+  }
+};

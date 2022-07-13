@@ -5,8 +5,7 @@ import Layout from "../components/Layout";
 import Grap2 from "../components/Graph2";
 
 export default function Graphs2({ GRAPHS_INFO }) {
-  const { dispatch } = useContext(Context);
-  const parentRef = useRef(null);
+  const { state, dispatch } = useContext(Context);
   useEffect(() => {
     dispatch({
       type: "SET_GRAPH_INFO",
@@ -36,12 +35,12 @@ export default function Graphs2({ GRAPHS_INFO }) {
       </Head>
       <Layout>
         <div className="flex flex-col p-6">
-          <Grap2 type="reported" title="Projection of possible new Infected/Daily reported"/>
-          <Grap2 type="reported" title="Projection of daily hospitalized patients with unlimited bed capacity"/>
+          {state.reported.data && <Grap2 title="Projection of possible new Infected/Daily reported" graphInfo={state.reported}/>}
+          {/* <Grap2 type="reported" title="Projection of daily hospitalized patients with unlimited bed capacity"/>
           <Grap2 type="reported" title="Projection of daily ICU hospitalized patients with unlimited bed capacity"/>
           <Grap2 type="reported" title="Daily death projection"/>
           <Grap2 type="reported" title="EFFECTIVE REPRODUCTION NUMBER" description={description1}/>
-          <Grap2 type="reported" title="PROPORTIONS" description={description2}/>
+          <Grap2 type="reported" title="PROPORTIONS" description={description2}/> */}
         </div>
       </Layout>
     </>

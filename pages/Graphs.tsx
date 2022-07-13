@@ -72,7 +72,6 @@ export async function getServerSideProps({ locale }) {
     hopitalized = {};
     ICU = {};
     deceases = {};
-    console.log(error);
   }
   return {
     props: {

@@ -35,7 +35,36 @@ export const declareLineD3 = (baseDeclareData, yField) => {
       .y(function (d) {
         return baseDeclareData.y(d[yField]);
       })
+      .curve(baseDeclareData.curveSmoothed ? d3.curveNatural : d3.curveLinear)
       .defined((d) => d[yField] != null);
+};
+
+export const declareAreaD3 = (baseDeclareData) => {
+  return (x) =>
+    d3
+      .area()
+      .x(function (d) {
+        return x(d.fechaFormateada);
+      })
+      .y0(function (d) {
+        return baseDeclareData.y(d.peor);
+      })
+      .y1(function (d) {
+        return baseDeclareData.y(d.mejor);
+      })
+      .defined((d) => d.peor != null);
+};
+
+export const drawAreaD3 = (baseDrawData, declare) => {
+  return baseDrawData.svgChart
+    .append("path")
+    .data([baseDrawData.data])
+    .attr("clip-path", "url(#" + baseDrawData.clip + ")")
+    .attr("id", "uncertainty")
+    .style("stroke", "none")
+    .style("fill", lineColors.uncertainty)
+    .style("opacity", 0.1)
+    .attr("d", declare(baseDrawData.x));
 };
 
 export const drawLineD3 = (baseDrawData, title, yField, declare) => {
@@ -80,6 +109,7 @@ export const lineColors = {
   X20p: "#e134f8",
   eq: "#039bb6",
   X2w: "#c50000",
+  uncertainty: "b5adff",
 };
 
 const straightLine = ["dailyR", "dailyR_sin_subRegistro"];

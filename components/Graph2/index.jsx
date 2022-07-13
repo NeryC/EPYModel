@@ -3,16 +3,15 @@ import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import TemporaryGraph from "../Graph/index"
 import MultiSelect from "./MultiSelect";
 import SelectedLines from "./SelectedLines";
-import { hiddableLines,defaultVisibleLines, filterLines } from "../../utils/index";
 import ScenarioTooltip from "./ScenarioTooltip"
-import { useState, useRef } from "react";
+import { useRef } from "react";
+import SettingsDropDown from "./SettingsDropDown";
 
-const Graph2 = ({title, description}) => {
+const Graph2 = ({title, description, graphInfo}) => {
   const temporaryRef = useRef(null);
+  const { data, settings, elements, type } = graphInfo;
+  const { scenario, options, selectedLines } = elements;
 
-  let options = hiddableLines();
-  let scenarioTooltipLines = filterLines(["proy", "Reportados"]);
-  let [selected, setSelected] = useState(defaultVisibleLines());
   let shouldShowDescription = () => {
     if (description) 
       return (
@@ -26,16 +25,17 @@ const Graph2 = ({title, description}) => {
       {shouldShowDescription()}
       <div className="flex items-center justify-center text-sm">
         <span className="pr-2">Scenario</span>
-        <ScenarioTooltip item={scenarioTooltipLines} top={false}>
+        <ScenarioTooltip item={scenario} top={false}>
           <FontAwesomeIcon icon={faInfoCircle} />
         </ScenarioTooltip>
-        <MultiSelect options={options} selected={selected} handleSelected={setSelected}/>
+        <MultiSelect options={options} selected={selectedLines} type={type}/>
       </div>
-      <div className="w-full h-[534px]" ref={temporaryRef}>
-        <TemporaryGraph parentRef={temporaryRef} selected={selected}/>
+      <div className="w-full h-[534px] relative" ref={temporaryRef}>
+        {data && <TemporaryGraph parentRef={temporaryRef} rawData={graphInfo}/>}
+        {data && <SettingsDropDown settings={settings} />}
       </div>
       <div className="flex items-center justify-center text-sm">
-        <SelectedLines selected={selected}/>
+        <SelectedLines selected={selectedLines}/>
       </div>
     </div>
   );
