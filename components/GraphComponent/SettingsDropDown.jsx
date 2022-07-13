@@ -43,7 +43,6 @@ const SettingsDropDown = ({settings}) => {
   }
 
   let openSettings = () => {
-    console.log('openSettings')
     setDropdown(!dropdown);
   }
   

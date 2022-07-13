@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef } from "react";
 import { Context } from "../context/globalStore";
 import Head from "next/head";
 import Layout from "../components/Layout";
-import Grap2 from "../components/Graph2";
+import GraphComponent from "../components/GraphComponent";
 
 export default function Graphs2({ GRAPHS_INFO }) {
   const { state, dispatch } = useContext(Context);
@@ -35,12 +35,12 @@ export default function Graphs2({ GRAPHS_INFO }) {
       </Head>
       <Layout>
         <div className="flex flex-col p-6">
-          {state.reported.data && <Grap2 title="Projection of possible new Infected/Daily reported" graphInfo={state.reported}/>}
-          {/* <Grap2 type="reported" title="Projection of daily hospitalized patients with unlimited bed capacity"/>
-          <Grap2 type="reported" title="Projection of daily ICU hospitalized patients with unlimited bed capacity"/>
-          <Grap2 type="reported" title="Daily death projection"/>
-          <Grap2 type="reported" title="EFFECTIVE REPRODUCTION NUMBER" description={description1}/>
-          <Grap2 type="reported" title="PROPORTIONS" description={description2}/> */}
+          {state.reported.data && <GraphComponent title="Projection of possible new Infected/Daily reported" graphInfo={state.reported}/>}
+          {/* <GraphComponent type="reported" title="Projection of daily hospitalized patients with unlimited bed capacity"/>
+          <GraphComponent type="reported" title="Projection of daily ICU hospitalized patients with unlimited bed capacity"/>
+          <GraphComponent type="reported" title="Daily death projection"/>
+          <GraphComponent type="reported" title="EFFECTIVE REPRODUCTION NUMBER" description={description1}/>
+          <GraphComponent type="reported" title="PROPORTIONS" description={description2}/> */}
         </div>
       </Layout>
     </>
