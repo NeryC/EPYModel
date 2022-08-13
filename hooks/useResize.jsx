@@ -1,26 +1,18 @@
 import {useState,useEffect} from 'react';
-import debounce from "lodash/debounce";
+import useResizeObserver from "@react-hook/resize-observer";
 
-export default function useResize(ref) {
-  const [state, setState] = useState();
+export default function useResize(targetRef) {
+  const [size, setSize] = useState();
   useEffect(() => {
-      const getSize = debounce(() => {
-      if (!ref || !ref.current) {
-          return;
-      }
-      const width = ref.current.clientWidth;
-      const height = 534;
-    //   const height = ref.current.clientHeight >= 534  ? 534: ref.current.clientHeight;
-      setState({
-          width,
-          height,
-      });
-      }, 1000);
+    targetRef && targetRef.current && setSize(targetRef.current.getBoundingClientRect());
+  }, [targetRef]);
 
-      window.addEventListener("resize", getSize);
-      getSize();
-      return () => window.removeEventListener("resize", getSize);
-  }, [ref]);
-
-  return state;
+  // Where the magic happens
+  useResizeObserver(targetRef, (entry) => setSize(entry.contentRect));
+  return size || {
+    width: 0,
+    height: 0,
+    top: 0,
+    left: 0,
+  };
 }

@@ -1,9 +1,9 @@
-import { hiddableLines, dinamicColorStyle } from "../../utils/index";
-import { concat } from "lodash";
+import { dinamicColorStyle } from "../../utils/index";
+import { useSelector } from "react-redux";
+import { selectShowedElements } from "../../store/reducers/graphInfoSlice";
 
-const SelectedLines = ({selected}) => {
-
-  const grahpsElements = concat(hiddableLines(false), selected)
+const SelectedLines = ({type}) => {
+  const showedElements = useSelector(selectShowedElements(type));
 
   const chooseClass = (item) => {
     if (item.type == "dot") {
@@ -16,7 +16,7 @@ const SelectedLines = ({selected}) => {
   const chooseLineColor = (fieldName) => (fieldName != "Reportados" ? dinamicColorStyle("borderColor", fieldName): {});
     
   let renderSelected = () => {
-    return grahpsElements.map((item)=>(
+    return showedElements.map((item)=>(
       <div key={item.label} className={`flex justify-center items-center gap-2 rounded-full`}>
         <div className="flex flex-auto">
           <div className={chooseClass(item)} style={chooseLineColor(item.name)}/>

@@ -1,5 +1,5 @@
 /** Graph.js */
-import React, { useId, useLayoutEffect, useState } from "react";
+import React, { useId, useEffect, useState } from "react";
 import * as d3 from "d3";
 import { dimensions, declareLineD3, drawLineD3, dynamicDateFormat, declareAreaD3, drawAreaD3 } from '../../utils/constants';
 import { checkLine } from '../../utils/index';
@@ -17,12 +17,12 @@ const Graph = ({ parentRef, rawData }) => {
 
   const clip = useId();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!size || !data || !settings) {
       return;
     }
     const { width, height } = size;
-    const {smoothed, uncertainty, range} = settings;
+    const {isSmooth, uncertainty, range} = settings;
     const {start, finish} = range;
 
     const zoom = d3.zoom()
@@ -60,7 +60,6 @@ const Graph = ({ parentRef, rawData }) => {
       .attr("viewBox", [0, 0, width, height]);
     svgChart.selectAll("*").remove();
 
-    const tooltipLine = svgChart.append('line');
 
     svgChart.append("clipPath")
       .attr("id", clip)
@@ -73,8 +72,8 @@ const Graph = ({ parentRef, rawData }) => {
     ///
     /// Lineas
     ///
+    const baseDeclareData = {xField:'fechaFormateada', y, isSmooth}
     const baseDrawData = {svgChart, data, clip, x}
-    const baseDeclareData = {xField:'fechaFormateada', y, curveSmoothed: smoothed}
     //Proyected
     const proy = declareLineD3(baseDeclareData,'proy');
     const proyLine = drawLineD3(baseDrawData, "Proyected", 'proy', proy);
@@ -171,7 +170,6 @@ const Graph = ({ parentRef, rawData }) => {
     function removeTooltip() {
       const tooltip = d3.select(tooltipRef.current)
       if (tooltip) tooltip.style('display', 'none');
-      if (tooltipLine) tooltipLine.attr('stroke', 'none');
     }
     
     function drawTooltip(e,xz) {
@@ -183,11 +181,6 @@ const Graph = ({ parentRef, rawData }) => {
 		  d1 = data[i],
 		  actualData = x0 - d0.fechaFormateada > d1?.fechaFormateada - x0 ? d1 : d0;
 
-      tooltipLine.attr('stroke', 'black')
-        .attr('x1', xz(actualData.fechaFormateada))
-        .attr('x2', xz(actualData.fechaFormateada))
-        .attr('y1', 0)
-        .attr('y2', height);
       setSelectedData(actualData);
 
       const tooltip = d3.select(tooltipRef.current)

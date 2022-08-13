@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { dinamicColorStyle } from "../../utils/index";
+import { dinamicColorStyle } from "../../../utils/index";
 
 const ScenarioTooltip = ({ 
   item, children, top = true

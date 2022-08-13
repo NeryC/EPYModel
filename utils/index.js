@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const linesDescription = [
   {
     name: "dailyR_sin_subRegistro",
@@ -6,7 +8,7 @@ export const linesDescription = [
     color: "#1900ff",
     default: false,
     hiddable: false,
-    type: "line",
+    style: "line",
   },
   {
     name: "dailyR",
@@ -16,7 +18,7 @@ export const linesDescription = [
     color: "#00ccff",
     default: false,
     hiddable: true,
-    type: "line",
+    style: "line",
   },
   {
     name: "proy",
@@ -25,7 +27,7 @@ export const linesDescription = [
     color: "#1900ff",
     default: false,
     hiddable: false,
-    type: "dashed",
+    style: "dashed",
   },
   {
     name: "q75",
@@ -35,7 +37,7 @@ export const linesDescription = [
     color: "#ff0000",
     default: true,
     hiddable: true,
-    type: "dashed",
+    style: "dashed",
   },
   {
     name: "q25",
@@ -45,7 +47,7 @@ export const linesDescription = [
     color: "#009719",
     default: true,
     hiddable: true,
-    type: "dashed",
+    style: "dashed",
   },
   {
     name: "X10p",
@@ -55,7 +57,7 @@ export const linesDescription = [
     color: "#97008f",
     default: false,
     hiddable: true,
-    type: "dashed",
+    style: "dashed",
   },
   {
     name: "X20p",
@@ -65,7 +67,7 @@ export const linesDescription = [
     color: "#e134f8",
     default: false,
     hiddable: true,
-    type: "dashed",
+    style: "dashed",
   },
   {
     name: "eq",
@@ -74,7 +76,7 @@ export const linesDescription = [
     color: "#039bb6",
     default: false,
     hiddable: true,
-    type: "dashed",
+    style: "dashed",
   },
   {
     name: "X2w",
@@ -84,7 +86,7 @@ export const linesDescription = [
     color: "#c50000",
     default: false,
     hiddable: true,
-    type: "dashed",
+    style: "dashed",
   },
   {
     name: "Reportados",
@@ -93,7 +95,7 @@ export const linesDescription = [
     color: "",
     default: false,
     hiddable: false,
-    type: "dot",
+    style: "dot",
   },
 ];
 
@@ -139,3 +141,35 @@ export const setNewSelectedLines = (selectedLines, item) => {
     return [...selectedLines];
   }
 };
+
+export const graphDescription = {
+  reported: {
+    title: "Projection of possible new Infected/Daily reported",
+    description: "",
+  },
+  hopitalized: {
+    title: "Daily death projection",
+    description: "",
+  },
+  ICU: {
+    title: "EFFECTIVE REPRODUCTION NUMBER",
+    description: `The graph shows the evolution of the proportions of positive cases that pass to be hospitalized, intensive care unit and deceased cases`,
+  },
+  deceases: {
+    title: "PROPORTIONS",
+    description: `The effective reproduction number, R, represents the number of new cases that is generated from a positive case, according to cases reported by the Ministry of Public Health and Social Welfare of Paraguay.
+    When R = 1, each positive case infects only one more person and in this case the epidemic remains stable, observing a plateau in the number of cases.
+    When R is greater than 1, each positive case infects more than one person and in this case the epidemic is expanding and increases positive cases.
+    When R is less than 1, each positive case infects (on average) less than one person, and in this case the epidemic is in contraction and decreases positive cases.`,
+  },
+};
+
+export const filterGraphElementType = (type) => {
+  return linesDescription.filter((line) => {
+    return type.includes(line.type);
+  });
+};
+
+export const axiosInstance = axios.create({
+  baseURL: "http://epymodel.uaa.edu.py/api",
+});

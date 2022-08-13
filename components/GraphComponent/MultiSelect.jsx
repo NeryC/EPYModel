@@ -1,14 +1,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { useState, useContext } from "react";
-import { Context } from "../../context/globalStore";
-import ScenarioTooltip from "./ScenarioTooltip"
-import { dinamicColorStyle, setNewSelectedLines } from "../../utils/index";
+import { useState } from "react";
+import ScenarioTooltip from "./Tooltip/ScenarioTooltip"
+import { dinamicColorStyle } from "../../utils/index";
+import { selectDropdownInfo, setSelectedLine } from "../../store/reducers/graphInfoSlice";
+import { useSelector, useDispatch } from "react-redux";
 
-const MultiSelect = ({options, selected, type}) => {
+const MultiSelect = ({ type }) => {
+
+  const dispatch = useDispatch()
+
+  const [options,selected] = useSelector(selectDropdownInfo(type));
 
   let [dropdown, setDropdown] = useState(false);
-  const { dispatch } = useContext(Context);
 
   let isSelected = (item) =>{
     return selected.some((element)=>element.label===item.label) ? 
@@ -28,7 +32,7 @@ const MultiSelect = ({options, selected, type}) => {
           </div>
           <div className="flex flex-auto" onClick={()=>selectOption(item)}>
             <FontAwesomeIcon
-              className="cursor-pointer hover:text-teal-400 rounded-md w-3 h-3 ml-1"
+              className="cursor-pointer hover:text-black rounded-md w-3 h-3 ml-1"
               icon={faXmark}
             />
           </div>
@@ -37,15 +41,8 @@ const MultiSelect = ({options, selected, type}) => {
     ))
   }
 
-  let selectOption = (item) => {
-    const newItems = setNewSelectedLines(selected,item);
-    dispatch({
-      type: "SET_SELECTED_LINE",
-      payload: {
-        graphType: type,
-        item: newItems,
-      },
-    });
+  let selectOption = (selectedLine) => {
+    dispatch(setSelectedLine({type,selectedLine}));
   }
   
   let renderOptions = () => {

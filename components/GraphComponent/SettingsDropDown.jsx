@@ -1,41 +1,39 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSliders, faCameraAlt } from "@fortawesome/free-solid-svg-icons";
-import { useState, useContext } from "react";
-import { Context } from "../../context/globalStore";
+import { useState } from "react";
 import MultiRangeSlider from "./MultiRangeSlider";
 import Tooltip from "./Tooltip";
 import ToogleButton from "./ToogleButton";
+import { useSelector, useDispatch } from "react-redux";
+import { selectSettings, setChecks, resetChecks, setRange } from "../../store/reducers/graphInfoSlice";
 
 
-const SettingsDropDown = ({settings}) => {
+const SettingsDropDown = ({type, data}) => {
+  const dispatch = useDispatch();
+  const settings = useSelector(selectSettings(type));
 
-  let [dropdown, setDropdown] = useState(true);
-  const { state, dispatch } = useContext(Context);
+  let [dropdown, setDropdown] = useState(false);
 
   const handleChangeChecks = (checkName) => {
-    dispatch({
-      type: "SET_REPORTED_CHECKS",
-      payload: {
-        [checkName]: !settings[checkName],
-      },
-    });
+    dispatch(setChecks({
+      type,
+      checkName,
+    }));
   };
 
   const resetSettings = () => {
-    dispatch({
-      type: "RESET_REPORTED_SETTINGS",
-    });
+    dispatch(resetChecks({
+      type,
+    }));
   };
 
   const handleChangeRange = (min, max) => {
     if(settings.range.start !== min || settings.range.finish !== max)
-      dispatch({
-        type: "SET_REPORTED_RANGE",
-        payload: {
-          start: min,
-          finish: max
-        },
-      });
+      dispatch(setRange({
+        type,
+        start: min,
+        finish: max
+      }));
   };
 
   let isExpanded = () =>{
@@ -66,21 +64,21 @@ const SettingsDropDown = ({settings}) => {
           </Tooltip>
         </div>
 
-        <ToogleButton label="Smoothed data" name="smoothed" handleChange={handleChangeChecks} checkedState={settings.smoothed}/>
+        <ToogleButton label="Smoothed data" name="isSmooth" handleChange={()=>handleChangeChecks('isSmooth')} checkedState={settings.isSmooth}/>
 
         <div className="flex justify-between mb-5">
           <span className="text-gray-900 mr-3 flex-none">Date range</span>
           <MultiRangeSlider
             min={0}
-            max={state.reported.data.length-1}
+            max={settings.dataLength}
             selectedMin={settings.range.start}
             selectedMax={settings.range.finish}
-            data={state.reported.data}
+            data={data}
             onChange={({ min, max }) => handleChangeRange(min,max)}
           />
         </div>
 
-        <ToogleButton label="Uncertainty" name="uncertainty" handleChange={handleChangeChecks} checkedState={settings.uncertainty}/>
+        <ToogleButton label="Uncertainty" name="uncertainty" handleChange={()=>handleChangeChecks('uncertainty')} checkedState={settings.uncertainty}/>
 
         <div className="border-b mb-3 w-full"/>
 

@@ -1,6 +1,8 @@
 import React, { createContext, useReducer } from "react";
 import { sortD3, parseD3 } from '../utils/constants';
 import { filterLines, hiddableLines, defaultVisibleLines } from '../utils/index';
+import { concat } from "lodash";
+import { Provider } from 'react-redux'
 
 const initialState = {
   reported: [],
@@ -11,7 +13,7 @@ const initialState = {
 
 const initialSettings = (lastDate)=> {
   return{
-    smoothed: true,
+    isSmooth: true,
     uncertainty: false,
     range: { 
       start: 0,
@@ -21,10 +23,12 @@ const initialSettings = (lastDate)=> {
 };
 
 const initialElements = ()=> {
+  const defaultSelectedLines = defaultVisibleLines();
   return{
     scenario: filterLines(["proy", "Reportados"]),
     options: hiddableLines(),
-    selectedLines: defaultVisibleLines()
+    selectedLines: defaultSelectedLines,
+    showedElements: concat(hiddableLines(false), defaultSelectedLines)
   }
 };
 
@@ -68,7 +72,8 @@ const Reducer = (state, { type, payload }) => {
           ...state[payload.graphType],
           elements:{
             ...state[payload.graphType].elements,
-            selectedLines: payload.item
+            selectedLines: payload.item,
+            showedElements: concat(hiddableLines(false), payload.item)
           }
         }  
       };
@@ -113,9 +118,12 @@ const Reducer = (state, { type, payload }) => {
 };
 
 const GlobalStore = ({ children }) => {
-  const [state, dispatch] = useReducer(Reducer, initialState);
+  // const [state, dispatch] = useReducer(Reducer, initialState);
   return (
-    <Context.Provider value={{ dispatch, state }}>{children}</Context.Provider>
+    <Provider store={store}>
+      {children}
+    </Provider>
+    // <Context.Provider value={{ dispatch, state }}>{children}</Context.Provider>
   );
 };
 
