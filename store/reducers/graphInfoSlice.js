@@ -19,15 +19,15 @@ const initialElements = () => {
   };
 };
 
-const initialSettings = () => {
+const initialSettings = (amountOfData = 0) => {
   return {
     isSmooth: true,
     uncertainty: false,
     range: {
-      start: 0,
-      finish: 0,
+      start: 612,
+      finish: amountOfData,
     },
-    dataLength: 0,
+    dataLength: amountOfData,
   };
 };
 
@@ -72,20 +72,16 @@ export const graphInfoSlice = createSlice({
       });
       const amountOfData = action.payload.reported.length - 1;
       state.reported.data = action.payload.reported;
-      state.reported.settings.range.finish = amountOfData;
-      state.reported.settings.dataLength = amountOfData;
+      state.reported.settings = initialSettings(amountOfData);
       state.reported.isReady = true;
       state.hopitalized.data = action.payload.hopitalized;
-      state.hopitalized.settings.range.finish = amountOfData;
-      state.hopitalized.settings.dataLength = amountOfData;
+      state.hopitalized.settings = initialSettings(amountOfData);
       state.hopitalized.isReady = true;
       state.ICU.data = action.payload.ICU;
-      state.ICU.settings.range.finish = amountOfData;
-      state.ICU.settings.dataLength = amountOfData;
+      state.ICU.settings = initialSettings(amountOfData);
       state.ICU.isReady = true;
       state.deceases.data = action.payload.deceases;
-      state.deceases.settings.range.finish = amountOfData;
-      state.deceases.settings.dataLength = amountOfData;
+      state.deceases.settings = initialSettings(amountOfData);
       state.deceases.isReady = true;
     },
     setSelectedLine(state, action) {
@@ -105,15 +101,7 @@ export const graphInfoSlice = createSlice({
     },
     resetChecks(state, action) {
       const amountOfData = state[action.payload.type].settings.dataLength;
-      state[action.payload.type].settings = {
-        isSmooth: true,
-        uncertainty: false,
-        range: {
-          start: 0,
-          finish: amountOfData,
-        },
-        dataLength: amountOfData,
-      };
+      state[action.payload.type].settings = initialSettings(amountOfData);
     },
     setRange(state, action) {
       state[action.payload.type].settings.range = {

@@ -92,7 +92,7 @@ export const linesDescription = [
     name: "Reportados",
     label: "Reported",
     description: "Daily reported according to data provided by the MSPyBS.",
-    color: "",
+    color: "#FFFFFF",
     default: false,
     hiddable: false,
     style: "dot",

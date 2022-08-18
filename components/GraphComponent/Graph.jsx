@@ -1,15 +1,14 @@
 import * as d3 from "d3";
 import useDimensions from "../../hooks/useDimensions";
-import { useRef, useId, useEffect, useMemo } from "react";
+import { useRef, useId, useEffect, useMemo, useCallback } from "react";
 import SettingsDropDown from "./SettingsDropDown";
 import { dimensions, useCreateScale, dynamicDateFormat, basicDeclareLineD3, getYDomain, declareAreaD3, createZoom } from "../../utils/constants";
 import { checkLine } from "../../utils";
-import Overlay from "./GraphElements/Overlay";
+import GraphInfoTooltip from "./Tooltip/GraphInfoTooltip";
 import { useSelector } from "react-redux";
 import { selectSelectedLines, selectShowedElements, selectRange, selectIsSmooth, selectUncertainty } from "../../store/reducers/graphInfoSlice";
 
 const Graph = ({type, data}) => {
-  const overlayRef = useRef(null);
   const svgChartRef = useRef(null);
   const yAxisRef = useRef(null);
   const xAxisRef = useRef(null);
@@ -37,7 +36,7 @@ const Graph = ({type, data}) => {
   function zoomed(e) {
     const xz = e.transform.rescaleX(xScale);
     const yz = getYDomain(data, selectedLines, xz, yScale)
-    xScale.domain(e.transform.rescaleX(xScale).domain());
+    xScale.domain(xz.domain());
 
     xAxisGroup.call(axis.x, xz);
     yAxisGroup.call(axis.y, yz);
@@ -48,14 +47,6 @@ const Graph = ({type, data}) => {
       .attr("cx", d => xScale(d.fechaFormateada))
       .attr("cy", d => yScale(d.Reportados))
   }
-
-  useEffect(()=>{
-    const base = width-right
-    if(base< 0 )return
-    svgChart.call(zoom.transform, d3.zoomIdentity
-      .scale(base/ (xScale(data[range.finish].fechaFormateada) - xScale(data[range.start].fechaFormateada)))
-      .translate(-xScale(data[range.start].fechaFormateada), 0));
-  },[range, isSmooth, uncertainty, selectedLines])
 
   //y Right
   //x bottom
@@ -72,20 +63,28 @@ const Graph = ({type, data}) => {
     scaleType: "Time"
   });
 
+  const setZoom = useCallback(() =>{
+    const base = width-right
+    if(base< 0 )return
+    svgChart.call(zoom.transform, d3.zoomIdentity
+      .scale(base/ (xScale(data[range.finish].fechaFormateada) - xScale(data[range.start].fechaFormateada)))
+      .translate(-xScale(data[range.start].fechaFormateada), 0));
+  },[data, range.finish, range.start, right, svgChart, width, xScale, zoom.transform])
+
+  useEffect(()=>{
+    setZoom();
+  },[range, isSmooth, uncertainty, selectedLines, setZoom])
+
   const axis = useMemo(
     () => {
       return {
         y: (g, y1) => g.call(d3.axisRight(y1).ticks(5)),
         x: (g, x1) => g.call(d3.axisBottom(x1).ticks(5).tickFormat(dynamicDateFormat))
       }
-    },
-    [xScale, yScale]
+    }, []
   );
 
   useEffect(()=>{
-    yAxisGroup.transition().duration(750).ease(d3.easeLinear).call(axis.y, yScale);
-    xAxisGroup.transition().duration(750).ease(d3.easeLinear).call(axis.x, xScale);
-    drawLines()
 
     d3.selectAll("#Reportado").remove()
     d3.select(dotsRef.current)
@@ -110,7 +109,8 @@ const Graph = ({type, data}) => {
       return d.Reportados == null; 
     })
       .remove()
-  },[width])
+    setZoom();
+  },[clip, data, setZoom, width, xScale, yScale])
 
   const proy = basicDeclareLineD3('fechaFormateada', 'proy',isSmooth)
   const dailyR = basicDeclareLineD3('fechaFormateada','dailyR', isSmooth);
@@ -162,14 +162,13 @@ const Graph = ({type, data}) => {
   return (
     <div className="w-full h-[534px] relative" ref={containerRef}>
       <svg width={svgWidth} height={svgHeight} ref={svgChartRef}>
-        <g id="elements" transform={`translate(${left},${top})`}>
+        <g id="elements" transform={`translate(${left},${top})`} >
           <clipPath id={clip}>
-            <rect x={0} y={-10} width={width-right} height={height} />
+            <rect x={0} y={0} width={width-right} height={height-(bottom-5)} />
           </clipPath>
           <g id="YAxis" ref={yAxisRef} transform={`translate(${width - right},0)`} />
           <g id="XAxis" ref={xAxisRef} transform={`translate(0,${height - bottom})`} />
-          <Overlay ref={overlayRef} width={width} height={height}>
-          </Overlay>
+        
           <g id="Lines" clipPath={`url(#${clip})`}>
             {showedElements.map(({ name, style, color }) => {
               if (style !== "dot"){
@@ -197,6 +196,16 @@ const Graph = ({type, data}) => {
             />
           </g>
           <g id="Dots" ref={dotsRef}></g>
+
+          <GraphInfoTooltip 
+            xScale={xScale} 
+            yScale={yScale} 
+            width={width} 
+            height={height} 
+            data={data} 
+            showedElements={showedElements}
+            margin={margin} 
+          />
         </g>
       </svg>
       <SettingsDropDown type={type} data={data} />
