@@ -6,13 +6,15 @@ import Tooltip from "./Tooltip";
 import ToogleButton from "./ToogleButton";
 import { useSelector, useDispatch } from "react-redux";
 import { selectSettings, setChecks, resetChecks, setRange } from "../../store/reducers/graphInfoSlice";
+import * as d3 from "d3";
+import { saveAs } from 'file-saver';
 
 
 const SettingsDropDown = ({type, data}) => {
   const dispatch = useDispatch();
   const settings = useSelector(selectSettings(type));
 
-  let [dropdown, setDropdown] = useState(false);
+  const [dropdown, setDropdown] = useState(false);
 
   const handleChangeChecks = (checkName) => {
     dispatch(setChecks({
@@ -36,12 +38,19 @@ const SettingsDropDown = ({type, data}) => {
       }));
   };
 
-  let isExpanded = () =>{
+  const isExpanded = () =>{
     return dropdown ? 'block' : 'hidden'
   }
 
-  let openSettings = () => {
+  const openSettings = () => {
     setDropdown(!dropdown);
+  }
+
+  const downloadGraph = () => {
+    const serializer = new XMLSerializer();
+    const xmlString = serializer.serializeToString(d3.select(`#${type}`).node());
+    const imgData = 'data:image/svg+xml;base64,' + Buffer.from(xmlString).toString('base64');
+    saveAs(imgData,`${type}.svg`)
   }
   
   if(settings) return (
@@ -58,7 +67,7 @@ const SettingsDropDown = ({type, data}) => {
         <div className="border-b mb-3 w-full flex justify-between font-bold text-base">
           Chart Settings
           <Tooltip text={"Download Graph"}>
-            <button>
+            <button onClick={()=>downloadGraph()} >
               <FontAwesomeIcon icon={faCameraAlt} />
             </button>
           </Tooltip>

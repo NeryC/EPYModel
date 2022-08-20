@@ -12,9 +12,11 @@ const GraphInfoTooltip = ({
 }) => {
   const ref = useRef(null);
   const cuadroRef = useRef(null);
+  const contentDotsRef = useRef(null);
   const contentRef = useRef(null);
   const cuadro = d3.select(cuadroRef.current)
   const content = d3.select(contentRef.current)
+  const contentDots = d3.select(contentDotsRef.current)
   const drawLine = useCallback(
     (x) => {
       d3.select(ref.current)
@@ -64,6 +66,18 @@ const GraphInfoTooltip = ({
       .attr("height", contentSize.height + 4);
   }, []);
 
+  const placeDots = useCallback((actualData, color, i, baseXPos) => { 
+
+    const label = showedElements[i].name
+
+    contentDots.append("circle")
+      .attr('r', 5)
+      .attr('fill', color)
+      .attr("cx", _d => baseXPos)
+      .attr("cy", _d => yScale(actualData[label]))
+
+  },[contentDots, showedElements, yScale])
+
   const followPoints = useCallback((e) => {
 
     const x = xScale.invert(d3.pointer(e,this)[0])
@@ -75,31 +89,12 @@ const GraphInfoTooltip = ({
         d1 = data[index],
         actualData = x - d0.fechaFormateada > d1?.fechaFormateada - x ? d1 : d0;
 
-    // draw circles on line
-    d3.select(ref.current)
-      .selectAll(".tooltipLinePoint")
-      .attr("transform", (_cur, i) => {
-        if (actualData.fechaFormateada === undefined && (actualData[showedElements[i].name] === undefined || actualData[showedElements[i].name] === null)) {
-          // move point out of container
-          return "translate(-100,-100)";
-        }
-        const xPos = xScale(actualData.fechaFormateada);
-        if (i === 0) {
-          baseXPos = xPos;
-        }
-        let isVisible = true;
-        if (xPos !== baseXPos || actualData[showedElements[i].name] === null) {
-          isVisible = false;
-        }
-        const yPos = yScale(actualData[showedElements[i].name]);
-        return isVisible
-          ? `translate(${xPos}, ${yPos})`
-          : "translate(-100,-100)";
-      });
 
     let elementsCounter = 0;
     content.selectAll("*").remove();
-    showedElements.forEach(({ label, color, name })=>{
+    contentDots.selectAll("*").remove();
+
+    showedElements.forEach(({ label, color, name }, i)=>{
       if (actualData[name] === null) 
         return
       const insideContent = content.append("g")
@@ -114,6 +109,10 @@ const GraphInfoTooltip = ({
       insideContent.append("text")
         .attr("class", "performanceItemMarketValue")
         .text(Math.round(actualData[name]))
+      
+      baseXPos = xScale(actualData.fechaFormateada);
+      placeDots(actualData, color, i, baseXPos)
+      
     })
 
     const maxNameWidth = d3.max(
@@ -128,7 +127,7 @@ const GraphInfoTooltip = ({
     drawLine(baseXPos);
     drawContent(baseXPos, e.layerY);
     drawBackground();
-  }, [xScale, data, content, showedElements, drawLine, drawContent, drawBackground, yScale]);
+  }, [xScale, data, content, contentDots, showedElements, drawLine, drawContent, drawBackground, placeDots]);
   
   useEffect(() => {
     cuadro
@@ -139,9 +138,6 @@ const GraphInfoTooltip = ({
         d3.select(ref.current).attr("opacity", 1);
       })
       .on("mousemove.tooltip", (e) => {
-        d3.select(ref.current)
-          .selectAll(".tooltipLinePoint")
-          .attr("opacity", 1);
         followPoints(e);
       });
   }, [cuadro, followPoints, width]); 
@@ -157,9 +153,7 @@ const GraphInfoTooltip = ({
           <text className="contentTitle font-bold" transform="translate(4,20)" />
           <g ref={contentRef} transform="translate(4,32)"/>
         </g>
-        {showedElements.map(({ label },i) => (
-          <circle className="tooltipLinePoint fill-indigo-600" r={6} key={`${label}-${i}`} opacity={0} />
-        ))}
+        <g ref={contentDotsRef} />
       </g>
       <rect id="cuadro" ref={cuadroRef} width={width} height={height} opacity={0} />
     </>

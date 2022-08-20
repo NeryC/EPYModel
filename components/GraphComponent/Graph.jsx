@@ -161,7 +161,7 @@ const Graph = ({type, data}) => {
 
   return (
     <div className="w-full h-[534px] relative" ref={containerRef}>
-      <svg width={svgWidth} height={svgHeight} ref={svgChartRef}>
+      <svg id={type} width={svgWidth} height={svgHeight} ref={svgChartRef}>
         <g id="elements" transform={`translate(${left},${top})`} >
           <clipPath id={clip}>
             <rect x={0} y={0} width={width-right} height={height-(bottom-5)} />
