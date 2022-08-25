@@ -1,21 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { concat } from "lodash";
-import { HYDRATE } from "next-redux-wrapper";
+import { createSlice } from '@reduxjs/toolkit';
+import { concat } from 'lodash';
+import { HYDRATE } from 'next-redux-wrapper';
 
 import {
   filterLines,
   hiddableLines,
   defaultVisibleLines,
-  setNewSelectedLines,
-} from "../../utils/index";
+  setNewSelectedLines
+} from '../../utils/index';
 
 const initialElements = () => {
   const defaultSelectedLines = defaultVisibleLines();
   return {
-    scenario: filterLines(["proy", "Reportados"]),
+    scenario: filterLines(['proy', 'Reportados']),
     options: hiddableLines(),
     selectedLines: defaultSelectedLines,
-    showedElements: concat(hiddableLines(false), defaultSelectedLines),
+    showedElements: concat(hiddableLines(false), defaultSelectedLines)
   };
 };
 
@@ -25,45 +25,45 @@ const initialSettings = (amountOfData = 0) => {
     uncertainty: false,
     range: {
       start: 612,
-      finish: amountOfData,
+      finish: amountOfData
     },
-    dataLength: amountOfData,
+    dataLength: amountOfData
   };
 };
 
 const initialState = {
   reported: {
-    type: "reported",
+    type: 'reported',
     settings: initialSettings(),
     data: [],
     elements: initialElements(),
-    isReady: false,
+    isReady: false
   },
-  hopitalized: {
-    type: "hopitalized",
+  hospitalized: {
+    type: 'hospitalized',
     settings: initialSettings(),
     data: [],
     elements: initialElements(),
-    isReady: false,
+    isReady: false
   },
   ICU: {
-    type: "ICU",
+    type: 'ICU',
     settings: initialSettings(),
     data: [],
     elements: initialElements(),
-    isReady: false,
+    isReady: false
   },
   deceases: {
-    type: "deceases",
+    type: 'deceases',
     settings: initialSettings(),
     data: [],
     elements: initialElements(),
-    isReady: false,
-  },
+    isReady: false
+  }
 };
 
 export const graphInfoSlice = createSlice({
-  name: "graphInfo",
+  name: 'graphInfo',
   initialState,
   reducers: {
     initGraphData(state, action) {
@@ -74,9 +74,9 @@ export const graphInfoSlice = createSlice({
       state.reported.data = action.payload.reported;
       state.reported.settings = initialSettings(amountOfData);
       state.reported.isReady = true;
-      state.hopitalized.data = action.payload.hopitalized;
-      state.hopitalized.settings = initialSettings(amountOfData);
-      state.hopitalized.isReady = true;
+      state.hospitalized.data = action.payload.hospitalized;
+      state.hospitalized.settings = initialSettings(amountOfData);
+      state.hospitalized.isReady = true;
       state.ICU.data = action.payload.ICU;
       state.ICU.settings = initialSettings(amountOfData);
       state.ICU.isReady = true;
@@ -106,15 +106,15 @@ export const graphInfoSlice = createSlice({
     setRange(state, action) {
       state[action.payload.type].settings.range = {
         start: action.payload.start,
-        finish: action.payload.finish,
+        finish: action.payload.finish
       };
-    },
+    }
   },
   extraReducers(builder) {
     builder.addCase(HYDRATE, (_state, action) => {
       return action.payload;
     });
-  },
+  }
 });
 
 export const selectGraphData = (state) =>
@@ -152,7 +152,7 @@ export const {
   setSelectedLine,
   setChecks,
   resetChecks,
-  setRange,
+  setRange
 } = graphInfoSlice.actions;
 
 export default graphInfoSlice.reducer;

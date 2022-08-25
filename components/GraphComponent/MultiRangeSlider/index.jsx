@@ -1,7 +1,13 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from 'react';
 
-const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }) => {
-  
+const MultiRangeSlider = ({
+  min,
+  max,
+  selectedMin,
+  selectedMax,
+  data,
+  onChange
+}) => {
   const minValRef = useRef(null);
   const maxValRef = useRef(null);
   const range = useRef(null);
@@ -14,7 +20,6 @@ const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }
 
   // Set width of the range to decrease from the left side
   useEffect(() => {
-    
     if (maxValRef.current) {
       const minPercent = getPercent(selectedMin);
       const maxPercent = getPercent(+maxValRef.current.value); // Preceding with '+' converts the value from type string to type number
@@ -28,7 +33,6 @@ const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }
 
   // Set width of the range to decrease from the right side
   useEffect(() => {
-    
     if (minValRef.current) {
       const minPercent = getPercent(+minValRef.current.value);
       const maxPercent = getPercent(selectedMax);
@@ -48,10 +52,12 @@ const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }
         ref={minValRef}
         onChange={(event) => {
           const value = Math.min(+event.target.value, selectedMax - 1);
-          onChange({ min: value, max: selectedMax })
+          onChange({ min: value, max: selectedMax });
           event.target.value = value.toString();
         }}
-        className={`thumb thumb--zindex-3 ${selectedMin > max - 100 ? 'thumb--zindex-5': ''}`}
+        className={`thumb thumb--zindex-3 ${
+          selectedMin > max - 100 ? 'thumb--zindex-5' : ''
+        }`}
       />
       <input
         type="range"

@@ -1,33 +1,29 @@
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 
 export default function NavBar() {
   const router = useRouter();
-  const activeTabStyle = "border-b-2 border-lime1 text-lime1";
+  const activeTabStyle = 'border-b-2 border-lime1 text-lime1';
 
   return (
     <>
       <ul className="flex justify-center w-full px-1 pt-2 text-black font-gibson2 text-base col-span-2  md:col-end-6 lg:col-end-8 invisible lg:visible">
         <li
           className={`px-4 rounded-t cursor-pointer ${
-            router.pathname == "/" && activeTabStyle
+            router.pathname == '/' && activeTabStyle
           }`}
-          onClick={() => {
-            
-          }}
+          onClick={() => {}}
         >
           home
         </li>
         <li
           className={`px-4 rounded-t cursor-pointer ${
-            router.pathname == "/Leaderboard" && activeTabStyle
+            router.pathname == '/Leaderboard' && activeTabStyle
           }`}
-          onClick={() => {
-            
-          }}
+          onClick={() => {}}
         >
           leaderboard
         </li>
       </ul>
     </>
   );
-};
+}

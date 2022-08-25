@@ -1,9 +1,7 @@
-import Image from 'next/image'
-import { Popover } from '@headlessui/react'
-import {
-  MenuIcon,
-} from '@heroicons/react/outline'
-import Link from 'next/link'
+import Image from 'next/image';
+import { Popover } from '@headlessui/react';
+import { MenuIcon } from '@heroicons/react/outline';
+import Link from 'next/link';
 
 export default function Header() {
   return (
@@ -28,27 +26,18 @@ export default function Header() {
             </Popover.Button>
           </div>
           <Popover.Group as="nav" className="hidden md:flex space-x-5">
-            <div
-              className="text-base font-medium text-gray-500 hover:text-gray-900"
-            >
-              <Link
-                href="/"
-              >
-                Projections
-              </Link>
+            <div className="text-base font-medium text-gray-500 hover:text-gray-900">
+              <Link href="/">Projections</Link>
             </div>
-            <div
-              className="text-base font-medium text-gray-500 hover:text-gray-900"
-            >
-              <Link
-                href="/Model"
-              >
-                Model Explanation
-              </Link>
+            <div className="text-base font-medium text-gray-500 hover:text-gray-900">
+              <Link href="/Model">Model Explanation</Link>
             </div>
           </Popover.Group>
           <div className="hidden md:flex items-center">
-            <a href="#" className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+            <a
+              href="#"
+              className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
+            >
               Sign in
             </a>
             <a
@@ -61,5 +50,5 @@ export default function Header() {
         </div>
       </div>
     </Popover>
-  )
+  );
 }

@@ -1,8 +1,7 @@
-import React from "react";
-import useResize from "./useResize";
+import React from 'react';
+import useResize from './useResize';
 
 const useDimensions = ({ left, right, top, bottom }, containerRef) => {
-
   // const ref = React.useRef(null);
   const { width } = useResize(containerRef);
 
@@ -15,7 +14,7 @@ const useDimensions = ({ left, right, top, bottom }, containerRef) => {
       svgWidth: width,
       svgHeight: height,
       width: innerWidth,
-      height: innerHeight,
+      height: innerHeight
     }
   ];
 };

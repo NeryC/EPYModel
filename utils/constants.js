@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import * as d3 from "d3";
-import { checkLine } from "./index";
+import { useMemo } from 'react';
+import * as d3 from 'd3';
+import { checkLine } from './index';
 
 export const dimensions = {
   width: 1400,
@@ -9,11 +9,11 @@ export const dimensions = {
     top: 20,
     right: 30,
     bottom: 30,
-    left: 40,
-  },
+    left: 40
+  }
 };
 
-export const parseTime = d3.timeParse("%Y-%m-%d");
+export const parseTime = d3.timeParse('%Y-%m-%d');
 
 export const sortD3 = (data) => {
   data.sort(function (x, y) {
@@ -33,13 +33,13 @@ export const createZoom = (left, right, width, height, zoomed) => {
     .scaleExtent([1, 10])
     .extent([
       [left, 0],
-      [width - right, height],
+      [width - right, height]
     ])
     .translateExtent([
       [left, -Infinity],
-      [width - right, Infinity],
+      [width - right, Infinity]
     ])
-    .on("zoom", zoomed);
+    .on('zoom', zoomed);
 };
 
 //legacy
@@ -86,67 +86,67 @@ export const declareAreaD3 = () => {
 //legacy
 export const drawAreaD3 = (baseDrawData, declare) => {
   return baseDrawData.svgChart
-    .append("path")
+    .append('path')
     .data([baseDrawData.data])
-    .attr("clip-path", "url(#" + baseDrawData.clip + ")")
-    .attr("id", "uncertainty")
-    .style("stroke", "none")
-    .style("fill", lineColors.uncertainty)
-    .style("opacity", 0.1)
-    .attr("d", declare(baseDrawData.x));
+    .attr('clip-path', 'url(#' + baseDrawData.clip + ')')
+    .attr('id', 'uncertainty')
+    .style('stroke', 'none')
+    .style('fill', lineColors.uncertainty)
+    .style('opacity', 0.1)
+    .attr('d', declare(baseDrawData.x));
 };
 //legacy
 export const drawLineD3 = (baseDrawData, title, yField, declare) => {
   return baseDrawData.svgChart
-    .append("path")
+    .append('path')
     .data([baseDrawData.data])
-    .attr("clip-path", "url(#" + baseDrawData.clip + ")")
-    .attr("id", title)
-    .attr("class", lineClass(yField))
-    .style("stroke", lineColors[yField])
-    .attr("d", declare(baseDrawData.x));
+    .attr('clip-path', 'url(#' + baseDrawData.clip + ')')
+    .attr('id', title)
+    .attr('class', lineClass(yField))
+    .style('stroke', lineColors[yField])
+    .attr('d', declare(baseDrawData.x));
 };
 
 export const dynamicDateFormat = timeFormat([
   [
-    d3.timeFormat("%Y"),
+    d3.timeFormat('%Y'),
     function () {
       return true;
-    },
+    }
   ],
   [
-    d3.timeFormat("%m-%Y"),
+    d3.timeFormat('%m-%Y'),
     function (d) {
       return d.getMonth();
-    },
+    }
   ],
   [
-    d3.timeFormat("%d-%m-%Y"),
+    d3.timeFormat('%d-%m-%Y'),
     function (d) {
       return d.getDate() != 1;
-    },
-  ],
+    }
+  ]
 ]);
 
 //legacy
 export const lineColors = {
-  dailyR_sin_subRegistro: "#1900ff",
-  dailyR: "#00ccff",
-  proy: "#1900ff",
-  q75: "#ff0000",
-  q25: "#009719",
-  X10p: "#97008f",
-  X20p: "#e134f8",
-  eq: "#039bb6",
-  X2w: "#c50000",
-  uncertainty: "b5adff",
+  dailyR_sin_subRegistro: '#1900ff',
+  dailyR: '#00ccff',
+  proy: '#1900ff',
+  q75: '#ff0000',
+  q25: '#009719',
+  X10p: '#97008f',
+  X20p: '#e134f8',
+  eq: '#039bb6',
+  X2w: '#c50000',
+  uncertainty: 'b5adff'
 };
 
-const straightLine = ["dailyR", "dailyR_sin_subRegistro"];
+const straightLine = ['dailyR', 'dailyR_sin_subRegistro'];
 
 //legacy
 const lineClass = (yField) => {
-  return `line ${!straightLine.includes(yField) ? "" : "dotted_line"}`;
+  return `line ${!straightLine.includes(yField) ? '' : 'dotted_line'}`;
 };
 
 function timeFormat(formats) {
@@ -158,20 +158,21 @@ function timeFormat(formats) {
   };
 }
 
-export const useCreateScale = ({ data, range, field, scaleType }) => {
-  const getExtent = useMemo(() => {
+export const useCreateScale = ({ range, domain, scaleType }) => {
+  const type = scaleType == 'Linear' ? d3.scaleLinear() : d3.scaleTime();
+  return useMemo(() => type.domain(domain).range(range), [domain, range, type]);
+};
+
+export const useGetDomain = ({ data, field, scaleType }) => {
+  return useMemo(() => {
     const rawDomain = d3.extent(data, function (d) {
       return d[field];
     });
-    return scaleType == "Linear"
+    //I need these extra 100 points so that the circles are not cut off
+    return scaleType == 'Linear'
       ? [rawDomain[0], rawDomain[1] + 100]
       : rawDomain;
   }, [data, field, scaleType]);
-  const type = scaleType == "Linear" ? d3.scaleLinear() : d3.scaleTime();
-  return useMemo(
-    () => type.domain(getExtent).range(range),
-    [getExtent, range, type]
-  );
 };
 
 const getInterpolateValue = (data, selectedLines, bisectedDate, date) => {
@@ -185,7 +186,7 @@ const getInterpolateValue = (data, selectedLines, bisectedDate, date) => {
   if (data[bisectedDate].mejor === null) {
     intfun = d3.interpolateNumber(
       0,
-      checkLine(selectedLines, "dailyR")
+      checkLine(selectedLines, 'dailyR')
         ? data[bisectedDate].dailyR
         : data[bisectedDate].Reportados
     );
@@ -224,7 +225,7 @@ export const getYDomain = (data, selectedLines, xz, yScale) => {
   dataSubset.map(function (d) {
     if (d.q75 === null) {
       countSubset.push(
-        checkLine(selectedLines, "dailyR") ? d.dailyR : d.Reportados
+        checkLine(selectedLines, 'dailyR') ? d.dailyR : d.Reportados
       );
     } else {
       countSubset.push(d.peor);
@@ -237,9 +238,9 @@ export const getYDomain = (data, selectedLines, xz, yScale) => {
   let ymax_new = d3.max(countSubset);
 
   if (ymax_new == 0) {
-    ymax_new = dataYrange[1];
+    ymax_new = yScale.domain()[1];
   }
   // reset and redraw the yaxis
-  yScale.domain([0, ymax_new * 1.05]);
+  yScale.domain([0, ymax_new]);
   return yScale;
 };

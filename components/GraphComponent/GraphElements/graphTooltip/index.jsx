@@ -1,6 +1,6 @@
-import React, {useRef, useCallback, useEffect } from "react";
-import * as d3 from "d3";
-import { formatPercent, formatPriceUSD } from "../utils/commonUtils";
+import React, { useRef, useCallback, useEffect } from 'react';
+import * as d3 from 'd3';
+import { formatPercent, formatPriceUSD } from '../utils/commonUtils';
 
 const Tooltip = ({
   xScale,
@@ -17,26 +17,26 @@ const Tooltip = ({
   const drawLine = useCallback(
     (x) => {
       d3.select(ref.current)
-        .select(".tooltipLine")
-        .attr("x1", x)
-        .attr("x2", x)
-        .attr("y1", -margin.top)
-        .attr("y2", height);
+        .select('.tooltipLine')
+        .attr('x1', x)
+        .attr('x2', x)
+        .attr('y1', -margin.top)
+        .attr('y2', height);
     },
     [ref, height, margin]
   );
 
   const drawContent = useCallback(
     (x) => {
-      const tooltipContent = d3.select(ref.current).select(".tooltipContent");
-      tooltipContent.attr("transform", (cur, i, nodes) => {
+      const tooltipContent = d3.select(ref.current).select('.tooltipContent');
+      tooltipContent.attr('transform', (cur, i, nodes) => {
         const nodeWidth = nodes[i]?.getBoundingClientRect()?.width || 0;
         const translateX = nodeWidth + x > width ? x - nodeWidth - 12 : x + 8;
         return `translate(${translateX}, ${-margin.top})`;
       });
       tooltipContent
-        .select(".contentTitle")
-        .text(d3.timeFormat("%b %d, %Y")(xScale.invert(x)));
+        .select('.contentTitle')
+        .text(d3.timeFormat('%b %d, %Y')(xScale.invert(x)));
     },
     [xScale, margin, width]
   );
@@ -45,46 +45,46 @@ const Tooltip = ({
     // reset background size to defaults
     const contentBackground = d3
       .select(ref.current)
-      .select(".contentBackground");
-    contentBackground.attr("width", 125).attr("height", 40);
+      .select('.contentBackground');
+    contentBackground.attr('width', 125).attr('height', 40);
 
     // calculate new background size
     const tooltipContentElement = d3
       .select(ref.current)
-      .select(".tooltipContent")
+      .select('.tooltipContent')
       .node();
     if (!tooltipContentElement) return;
 
     const contentSize = tooltipContentElement.getBoundingClientRect();
     contentBackground
-      .attr("width", contentSize.width + 8)
-      .attr("height", contentSize.height + 4);
+      .attr('width', contentSize.width + 8)
+      .attr('height', contentSize.height + 4);
   }, []);
 
   const onChangePosition = useCallback((d, i, isVisible) => {
-    d3.selectAll(".performanceItemValue")
+    d3.selectAll('.performanceItemValue')
       .filter((td, tIndex) => tIndex === i)
-      .text(isVisible ? formatPercent(d.value) : "");
-    d3.selectAll(".performanceItemMarketValue")
+      .text(isVisible ? formatPercent(d.value) : '');
+    d3.selectAll('.performanceItemMarketValue')
       .filter((td, tIndex) => tIndex === i)
       .text(
-        d.marketvalue && !isVisible ? "No data" : formatPriceUSD(d.marketvalue)
+        d.marketvalue && !isVisible ? 'No data' : formatPriceUSD(d.marketvalue)
       );
 
     const maxNameWidth = d3.max(
-      d3.selectAll(".performanceItemName").nodes(),
+      d3.selectAll('.performanceItemName').nodes(),
       (node) => node.getBoundingClientRect().width
     );
-    d3.selectAll(".performanceItemValue").attr(
-      "transform",
+    d3.selectAll('.performanceItemValue').attr(
+      'transform',
       (datum, index, nodes) =>
         `translate(${
           nodes[index].previousSibling.getBoundingClientRect().width + 14
         },4)`
     );
 
-    d3.selectAll(".performanceItemMarketValue").attr(
-      "transform",
+    d3.selectAll('.performanceItemMarketValue').attr(
+      'transform',
       `translate(${maxNameWidth + 60},4)`
     );
   }, []);
@@ -97,15 +97,15 @@ const Tooltip = ({
 
     // draw circles on line
     d3.select(ref.current)
-      .selectAll(".tooltipLinePoint")
-      .attr("transform", (cur, i) => {
+      .selectAll('.tooltipLinePoint')
+      .attr('transform', (cur, i) => {
         const index = bisectDate(data[i].items, xDate, 1);
         const d0 = data[i].items[index - 1];
         const d1 = data[i].items[index];
         const d = xDate - d0?.date > d1?.date - xDate ? d1 : d0;
         if (d.date === undefined && d.value === undefined) {
           // move point out of container
-          return "translate(-100,-100)";
+          return 'translate(-100,-100)';
         }
         const xPos = xScale(d.date);
         if (i === 0) {
@@ -122,7 +122,7 @@ const Tooltip = ({
 
         return isVisible
           ? `translate(${xPos}, ${yPos})`
-          : "translate(-100,-100)";
+          : 'translate(-100,-100)';
       });
 
     drawLine(baseXPos);
@@ -141,16 +141,16 @@ const Tooltip = ({
 
   useEffect(() => {
     d3.select(anchorEl)
-      .on("mouseout.tooltip", () => {
-        d3.select(ref.current).attr("opacity", 0);
+      .on('mouseout.tooltip', () => {
+        d3.select(ref.current).attr('opacity', 0);
       })
-      .on("mouseover.tooltip", () => {
-        d3.select(ref.current).attr("opacity", 1);
+      .on('mouseover.tooltip', () => {
+        d3.select(ref.current).attr('opacity', 1);
       })
-      .on("mousemove.tooltip", () => {
+      .on('mousemove.tooltip', () => {
         d3.select(ref.current)
-          .selectAll(".tooltipLinePoint")
-          .attr("opacity", 1);
+          .selectAll('.tooltipLinePoint')
+          .attr('opacity', 1);
         followPoints();
       });
   }, [anchorEl, followPoints]);
