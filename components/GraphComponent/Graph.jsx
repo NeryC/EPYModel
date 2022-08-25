@@ -60,7 +60,7 @@ const Graph = ({ type, data }) => {
     yAxisGroup.call(axis.y, yz);
     drawLines();
 
-    d3.selectAll('#Reportado')
+    d3.selectAll(`#Reportado-${type}`)
       .attr('cx', (d) => xScale(d.fechaFormateada))
       .attr('cy', (d) => yScale(d.Reportados));
   }
@@ -124,7 +124,7 @@ const Graph = ({ type, data }) => {
   }, []);
 
   useEffect(() => {
-    d3.selectAll('#Reportado').remove();
+    d3.selectAll(`#Reportado-${type}`).remove();
     d3.select(dotsRef.current)
       .selectAll('dot')
       .data(data)
@@ -136,22 +136,22 @@ const Graph = ({ type, data }) => {
       .attr('stroke', 'black')
       .attr('opacity', 0)
       .attr('r', 2.7)
-      .attr('id', 'Reportado');
+      .attr('id', `Reportado-${type}`);
 
-    d3.selectAll('#Reportado')
+    d3.selectAll(`#Reportado-${type}`)
       .transition()
       .attr('opacity', 1)
-      .delay(function (d, i) {
+      .delay(function (_d, i) {
         return i * 2;
       });
 
-    d3.selectAll('#Reportado')
+    d3.selectAll(`#Reportado-${type}`)
       .filter(function (d) {
         return d.Reportados == null;
       })
       .remove();
     setZoom();
-  }, [clip, data, setZoom, width, xScale, yScale]);
+  }, [clip, data, setZoom, type, width, xScale, yScale]);
 
   const proy = basicDeclareLineD3('fechaFormateada', 'proy', isSmooth);
   const dailyR = basicDeclareLineD3('fechaFormateada', 'dailyR', isSmooth);
@@ -185,8 +185,11 @@ const Graph = ({ type, data }) => {
     const dX20p =
       checkLine(selectedLines, 'X20p') && X20p(xScale, yScale)(data);
 
-    d3.select('#proy').attr('d', dProy?.match(/NaN|undefined/) ? '' : dProy);
-    d3.select('#dailyR_sin_subRegistro').attr(
+    d3.select(`#proy-${type}`).attr(
+      'd',
+      dProy?.match(/NaN|undefined/) ? '' : dProy
+    );
+    d3.select(`#dailyR_sin_subRegistro-${type}`).attr(
       'd',
       dDailyR_sin_subRegistro?.match(/NaN|undefined/)
         ? ''
@@ -194,23 +197,37 @@ const Graph = ({ type, data }) => {
     );
     checkLine(selectedLines, 'dailyR') &&
       d3
-        .select('#dailyR')
+        .select(`#dailyR-${type}`)
         .attr('d', dDailyR?.match(/NaN|undefined/) ? '' : dDailyR);
     checkLine(selectedLines, 'eq') &&
-      d3.select('#eq').attr('d', dEq?.match(/NaN|undefined/) ? '' : dEq);
+      d3
+        .select(`#eq-${type}`)
+        .attr('d', dEq?.match(/NaN|undefined/) ? '' : dEq);
     checkLine(selectedLines, 'q25') &&
-      d3.select('#q25').attr('d', dQ25?.match(/NaN|undefined/) ? '' : dQ25);
+      d3
+        .select(`#q25-${type}`)
+        .attr('d', dQ25?.match(/NaN|undefined/) ? '' : dQ25);
     checkLine(selectedLines, 'q75') &&
-      d3.select('#q75').attr('d', dQ75?.match(/NaN|undefined/) ? '' : dQ75);
+      d3
+        .select(`#q75-${type}`)
+        .attr('d', dQ75?.match(/NaN|undefined/) ? '' : dQ75);
     checkLine(selectedLines, 'X2w') &&
-      d3.select('#X2w').attr('d', dX2w?.match(/NaN|undefined/) ? '' : dX2w);
+      d3
+        .select(`#X2w-${type}`)
+        .attr('d', dX2w?.match(/NaN|undefined/) ? '' : dX2w);
     checkLine(selectedLines, 'X10p') &&
-      d3.select('#X10p').attr('d', dX10p?.match(/NaN|undefined/) ? '' : dX10p);
+      d3
+        .select(`#X10p-${type}`)
+        .attr('d', dX10p?.match(/NaN|undefined/) ? '' : dX10p);
     checkLine(selectedLines, 'X20p') &&
-      d3.select('#X20p').attr('d', dX20p?.match(/NaN|undefined/) ? '' : dX20p);
+      d3
+        .select(`#X20p-${type}`)
+        .attr('d', dX20p?.match(/NaN|undefined/) ? '' : dX20p);
     uncertainty
-      ? d3.select('#uncertainty').attr('d', uncert(xScale, yScale)(data))
-      : d3.select('#uncertainty').attr('d', null);
+      ? d3
+          .select(`#uncertainty-${type}`)
+          .attr('d', uncert(xScale, yScale)(data))
+      : d3.select(`#uncertainty-${type}`).attr('d', null);
 
     yAxisGroup.select('.domain').remove();
   }
@@ -245,7 +262,7 @@ const Graph = ({ type, data }) => {
                   <path
                     key={name}
                     clipPath={`url(#${clip})`}
-                    id={name}
+                    id={`${name}-${type}`}
                     stroke={color}
                     strokeWidth={2}
                     fill="none"

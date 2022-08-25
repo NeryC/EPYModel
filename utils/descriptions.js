@@ -142,16 +142,6 @@ const linesDescriptionHospitalized = [
     style: 'line'
   },
   {
-    name: 'dailyR',
-    label: 'Estimated',
-    description:
-      'This curve shows the daily estimated infections after correcting for bias due to the testing rate.',
-    color: '#00ccff',
-    default: false,
-    hiddable: true,
-    style: 'line'
-  },
-  {
     name: 'proy',
     label: 'Proyected',
     description: 'Projection using the last value of the transmissibility.',
