@@ -4,7 +4,8 @@ import { dinamicColorStyle } from '../../../utils/index';
 const ScenarioTooltip = ({
   item,
   children,
-  top = true
+  top = true,
+  type
 }: {
   item: Array<{
     label: string;
@@ -13,6 +14,7 @@ const ScenarioTooltip = ({
   }>;
   children: ReactNode;
   top: boolean;
+  type: string;
 }) => {
   return (
     <div className="relative flex flex-col items-center group">
@@ -27,7 +29,7 @@ const ScenarioTooltip = ({
             <div key={i.label}>
               <span
                 className="font-bold px-1"
-                style={dinamicColorStyle('backgroundColor', i.name)}
+                style={dinamicColorStyle(type, 'backgroundColor', i.name)}
               >
                 {i.label}
               </span>

@@ -3,7 +3,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import MultiSelect from './MultiSelect';
 import SelectedLines from './SelectedLines';
 import ScenarioTooltip from './Tooltip/ScenarioTooltip';
-import { graphDescription } from '../../utils';
+import { graphDescriptions } from '../../utils/descriptions';
 import { parseD3, sortD3 } from '../../utils/constants';
 import Graph from './Graph';
 import { useSelector } from 'react-redux';
@@ -20,7 +20,7 @@ const GraphComponent = ({ type }) => {
   parseD3(data);
 
   let shouldShowDescription = () => {
-    const description = graphDescription[type].description;
+    const description = graphDescriptions[type].description;
     if (description)
       return (
         <div className="text-base px-4 pb-3 whitespace-pre-line">
@@ -32,12 +32,12 @@ const GraphComponent = ({ type }) => {
   return (
     <div className="rounded overflow-hidden shadow-lg bg-white mb-6 p-6 flex flex-col">
       <div className="border-b-2 pb-2 text-2xl mb-4">
-        {graphDescription[type].title}
+        {graphDescriptions[type].title}
       </div>
       {shouldShowDescription()}
       <div className="flex items-center justify-center text-sm">
         <span className="pr-2">Scenario</span>
-        <ScenarioTooltip item={scenarios} top={false}>
+        <ScenarioTooltip item={scenarios} top={false} type={type}>
           <FontAwesomeIcon icon={faInfoCircle} />
         </ScenarioTooltip>
         <MultiSelect type={type} />

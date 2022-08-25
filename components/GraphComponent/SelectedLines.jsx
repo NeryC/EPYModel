@@ -15,7 +15,7 @@ const SelectedLines = ({ type }) => {
 
   const chooseLineColor = (fieldName) =>
     fieldName != 'Reportados'
-      ? dinamicColorStyle('borderColor', fieldName)
+      ? dinamicColorStyle(type, 'borderColor', fieldName)
       : {};
 
   let renderSelected = () => {

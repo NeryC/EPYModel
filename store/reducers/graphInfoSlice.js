@@ -9,13 +9,13 @@ import {
   setNewSelectedLines
 } from '../../utils/index';
 
-const initialElements = () => {
-  const defaultSelectedLines = defaultVisibleLines();
+const initialElements = (type) => {
+  const defaultSelectedLines = defaultVisibleLines(type);
   return {
-    scenario: filterLines(['proy', 'Reportados']),
-    options: hiddableLines(),
+    scenario: filterLines(type, ['proy', 'Reportados']),
+    options: hiddableLines(type),
     selectedLines: defaultSelectedLines,
-    showedElements: concat(hiddableLines(false), defaultSelectedLines)
+    showedElements: concat(hiddableLines(type, false), defaultSelectedLines)
   };
 };
 
@@ -36,28 +36,28 @@ const initialState = {
     type: 'reported',
     settings: initialSettings(),
     data: [],
-    elements: initialElements(),
+    elements: initialElements('reported'),
     isReady: false
   },
   hospitalized: {
     type: 'hospitalized',
     settings: initialSettings(),
     data: [],
-    elements: initialElements(),
+    elements: initialElements('hospitalized'),
     isReady: false
   },
   ICU: {
     type: 'ICU',
     settings: initialSettings(),
     data: [],
-    elements: initialElements(),
+    elements: initialElements('ICU'),
     isReady: false
   },
   deceases: {
     type: 'deceases',
     settings: initialSettings(),
     data: [],
-    elements: initialElements(),
+    elements: initialElements('deceases'),
     isReady: false
   }
 };
@@ -85,13 +85,14 @@ export const graphInfoSlice = createSlice({
       state.deceases.isReady = true;
     },
     setSelectedLine(state, action) {
+      const type = action.payload.type;
       const newSelectedLines = setNewSelectedLines(
-        state[action.payload.type].elements.selectedLines,
+        state[type].elements.selectedLines,
         action.payload.selectedLine
       );
-      state[action.payload.type].elements.selectedLines = newSelectedLines;
-      state[action.payload.type].elements.showedElements = concat(
-        hiddableLines(false),
+      state[type].elements.selectedLines = newSelectedLines;
+      state[type].elements.showedElements = concat(
+        hiddableLines(type, false),
         newSelectedLines
       );
     },

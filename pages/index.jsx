@@ -25,8 +25,8 @@ export default function Graphs() {
           {graphsStatus.map(({ type, isReady }) => {
             if (isReady && type == 'reported')
               return <GraphComponent type={type} key={type} />;
-            if (isReady && type == 'hospitalized')
-              return <GraphComponent type={type} key={type} />;
+            // if (isReady && type == 'hospitalized')
+            //   return <GraphComponent type={type} key={type} />;
           })}
         </div>
       </Layout>

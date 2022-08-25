@@ -32,10 +32,10 @@ const MultiSelect = ({ type }) => {
 
   let renderSelected = () => {
     return selected.map((item) => (
-      <ScenarioTooltip item={[item]} key={item.label}>
+      <ScenarioTooltip item={[item]} key={item.label} type={type}>
         <div
           className={`flex justify-center items-center py-1 px-2 rounded-full text-white`}
-          style={dinamicColorStyle('backgroundColor', item.name)}
+          style={dinamicColorStyle(type, 'backgroundColor', item.name)}
         >
           <div className="text-xs font-bold cursor-default">{item.label}</div>
           <div className="flex flex-auto" onClick={() => selectOption(item)}>
@@ -64,7 +64,7 @@ const MultiSelect = ({ type }) => {
           className={`flex w-full items-center p-2 pl-2 relative ${isSelected(
             item
           )}`}
-          style={dinamicColorStyle('borderColor', item.name)}
+          style={dinamicColorStyle(type, 'borderColor', item.name)}
         >
           <div className="w-full items-center flex">
             <div className="mx-2 leading-6  ">{item.label}</div>
