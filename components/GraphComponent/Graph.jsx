@@ -48,6 +48,7 @@ const Graph = ({ type, data }) => {
   const svgChart = d3.select(svgChartRef.current);
   const yAxisGroup = d3.select(yAxisRef.current);
   const xAxisGroup = d3.select(xAxisRef.current);
+  const dotsGroup = d3.select(dotsRef.current);
 
   const zoom = createZoom(left, right, width, height, zoomed);
 
@@ -60,7 +61,8 @@ const Graph = ({ type, data }) => {
     yAxisGroup.call(axis.y, yz);
     drawLines();
 
-    d3.selectAll(`#Reportado-${type}`)
+    svgChart
+      .selectAll(`#Reportado-${type}`)
       .attr('cx', (d) => xScale(d.fechaFormateada))
       .attr('cy', (d) => yScale(d.Reportados));
   }
@@ -124,8 +126,8 @@ const Graph = ({ type, data }) => {
   }, []);
 
   useEffect(() => {
-    d3.selectAll(`#Reportado-${type}`).remove();
-    d3.select(dotsRef.current)
+    dotsGroup.selectAll(`#Reportado-${type}`).remove();
+    dotsGroup
       .selectAll('dot')
       .data(data)
       .join('circle')
@@ -138,20 +140,22 @@ const Graph = ({ type, data }) => {
       .attr('r', 2.7)
       .attr('id', `Reportado-${type}`);
 
-    d3.selectAll(`#Reportado-${type}`)
+    dotsGroup
+      .selectAll(`#Reportado-${type}`)
       .transition()
       .attr('opacity', 1)
       .delay(function (_d, i) {
         return i * 2;
       });
 
-    d3.selectAll(`#Reportado-${type}`)
+    dotsGroup
+      .selectAll(`#Reportado-${type}`)
       .filter(function (d) {
         return d.Reportados == null;
       })
       .remove();
     setZoom();
-  }, [clip, data, setZoom, type, width, xScale, yScale]);
+  }, [clip, data, dotsGroup, setZoom, type, width, xScale, yScale]);
 
   const proy = basicDeclareLineD3('fechaFormateada', 'proy', isSmooth);
   const dailyR = basicDeclareLineD3('fechaFormateada', 'dailyR', isSmooth);
@@ -185,49 +189,50 @@ const Graph = ({ type, data }) => {
     const dX20p =
       checkLine(selectedLines, 'X20p') && X20p(xScale, yScale)(data);
 
-    d3.select(`#proy-${type}`).attr(
-      'd',
-      dProy?.match(/NaN|undefined/) ? '' : dProy
-    );
-    d3.select(`#dailyR_sin_subRegistro-${type}`).attr(
-      'd',
-      dDailyR_sin_subRegistro?.match(/NaN|undefined/)
-        ? ''
-        : dDailyR_sin_subRegistro
-    );
+    svgChart
+      .select(`#proy-${type}`)
+      .attr('d', dProy?.match(/NaN|undefined/) ? '' : dProy);
+    svgChart
+      .select(`#dailyR_sin_subRegistro-${type}`)
+      .attr(
+        'd',
+        dDailyR_sin_subRegistro?.match(/NaN|undefined/)
+          ? ''
+          : dDailyR_sin_subRegistro
+      );
     checkLine(selectedLines, 'dailyR') &&
-      d3
+      svgChart
         .select(`#dailyR-${type}`)
         .attr('d', dDailyR?.match(/NaN|undefined/) ? '' : dDailyR);
     checkLine(selectedLines, 'eq') &&
-      d3
+      svgChart
         .select(`#eq-${type}`)
         .attr('d', dEq?.match(/NaN|undefined/) ? '' : dEq);
     checkLine(selectedLines, 'q25') &&
-      d3
+      svgChart
         .select(`#q25-${type}`)
         .attr('d', dQ25?.match(/NaN|undefined/) ? '' : dQ25);
     checkLine(selectedLines, 'q75') &&
-      d3
+      svgChart
         .select(`#q75-${type}`)
         .attr('d', dQ75?.match(/NaN|undefined/) ? '' : dQ75);
     checkLine(selectedLines, 'X2w') &&
-      d3
+      svgChart
         .select(`#X2w-${type}`)
         .attr('d', dX2w?.match(/NaN|undefined/) ? '' : dX2w);
     checkLine(selectedLines, 'X10p') &&
-      d3
+      svgChart
         .select(`#X10p-${type}`)
         .attr('d', dX10p?.match(/NaN|undefined/) ? '' : dX10p);
     checkLine(selectedLines, 'X20p') &&
-      d3
+      svgChart
         .select(`#X20p-${type}`)
         .attr('d', dX20p?.match(/NaN|undefined/) ? '' : dX20p);
     uncertainty
-      ? d3
+      ? svgChart
           .select(`#uncertainty-${type}`)
           .attr('d', uncert(xScale, yScale)(data))
-      : d3.select(`#uncertainty-${type}`).attr('d', null);
+      : svgChart.select(`#uncertainty-${type}`).attr('d', null);
 
     yAxisGroup.select('.domain').remove();
   }
