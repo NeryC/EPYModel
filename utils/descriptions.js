@@ -20,12 +20,23 @@ export const graphDescriptions = {
   }
 };
 
+export const dotFields = {
+  reported: 'Reportados',
+  hospitalized: 'Hospitalizados',
+  ICU: 'UTI',
+  deceases: 'Fallecidos'
+};
+
 export const linesDescriptions = (type) => {
   switch (type) {
     case 'reported':
       return linesDescriptionReported;
     case 'hospitalized':
       return linesDescriptionHospitalized;
+    case 'ICU':
+      return linesDescriptionICU;
+    case 'deceases':
+      return linesDescriptionDeceases;
 
     default:
       return [];
@@ -112,8 +123,7 @@ const linesDescriptionReported = [
   {
     name: 'X2w',
     label: 'Last Month',
-    description:
-      'Scenario using the average transmissibility of the last month.',
+    description: 'Scenario using the average transmissibility of the last month.',
     color: '#c50000',
     default: false,
     hiddable: true,
@@ -133,7 +143,7 @@ const linesDescriptionReported = [
 
 const linesDescriptionHospitalized = [
   {
-    name: 'dailyR_sin_subRegistro',
+    name: 'H',
     label: 'Simulated',
     description: '',
     color: '#1900ff',
@@ -202,18 +212,194 @@ const linesDescriptionHospitalized = [
   {
     name: 'X2w',
     label: 'Last Month',
-    description:
-      'Scenario using the average transmissibility of the last month.',
+    description: 'Scenario using the average transmissibility of the last month.',
     color: '#c50000',
     default: false,
     hiddable: true,
     style: 'dashed'
   },
   {
-    name: 'Reportados',
-    label: 'Reported',
+    name: 'Hospitalizados',
+    label: 'Hospitalized',
     description:
       'Reported number of daily hospitalized according to data provided by the MSPyBS.',
+    color: '#000000',
+    default: false,
+    hiddable: false,
+    style: 'dot'
+  }
+];
+
+const linesDescriptionICU = [
+  {
+    name: 'U',
+    label: 'Simulated',
+    description: '',
+    color: '#1900ff',
+    default: false,
+    hiddable: false,
+    style: 'line'
+  },
+  {
+    name: 'proy',
+    label: 'Proyected',
+    description: 'Projection using the last value of the transmissibility.',
+    color: '#1900ff',
+    default: false,
+    hiddable: false,
+    style: 'dashed'
+  },
+  {
+    name: 'q75',
+    label: 'Percentil 75',
+    description:
+      'Scenario using the historical representative high contagion rate in Paraguay.',
+    color: '#ff0000',
+    default: true,
+    hiddable: true,
+    style: 'dashed'
+  },
+  {
+    name: 'q25',
+    label: 'Percentil 25',
+    description:
+      'Scenario using the representative low contagion rate history in Paraguay.',
+    color: '#009719',
+    default: true,
+    hiddable: true,
+    style: 'dashed'
+  },
+  {
+    name: 'X10p',
+    label: '10% Increase',
+    description:
+      'Scenario assuming that the measures are relaxed by 10% with respect to the last month.',
+    color: '#97008f',
+    default: false,
+    hiddable: true,
+    style: 'dashed'
+  },
+  {
+    name: 'X20p',
+    label: '20% Reduction',
+    description:
+      'Scenario assuming that the measures are tightened by 20% with respect to the last month.',
+    color: '#e134f8',
+    default: false,
+    hiddable: true,
+    style: 'dashed'
+  },
+  {
+    name: 'eq',
+    label: 'Plateau',
+    description: 'Scenario for the plateau (Replay number equal to unity).',
+    color: '#039bb6',
+    default: false,
+    hiddable: true,
+    style: 'dashed'
+  },
+  {
+    name: 'X2w',
+    label: 'Last Month',
+    description: 'Scenario using the average transmissibility of the last month.',
+    color: '#c50000',
+    default: false,
+    hiddable: true,
+    style: 'dashed'
+  },
+  {
+    name: 'UTI',
+    label: 'ICU',
+    description:
+      'Reported number of daily ICU hospitalized according to data provided by the MSPyBS.',
+    color: '#000000',
+    default: false,
+    hiddable: false,
+    style: 'dot'
+  }
+];
+const linesDescriptionDeceases = [
+  {
+    name: 'dailyF',
+    label: 'Simulated',
+    description: '',
+    color: '#1900ff',
+    default: false,
+    hiddable: false,
+    style: 'line'
+  },
+  {
+    name: 'proy',
+    label: 'Proyected',
+    description: 'Projection using the last value of the transmissibility.',
+    color: '#1900ff',
+    default: false,
+    hiddable: false,
+    style: 'dashed'
+  },
+  {
+    name: 'q75',
+    label: 'Percentil 75',
+    description:
+      'Scenario using the historical representative high contagion rate in Paraguay.',
+    color: '#ff0000',
+    default: true,
+    hiddable: true,
+    style: 'dashed'
+  },
+  {
+    name: 'q25',
+    label: 'Percentil 25',
+    description:
+      'Scenario using the representative low contagion rate history in Paraguay.',
+    color: '#009719',
+    default: true,
+    hiddable: true,
+    style: 'dashed'
+  },
+  {
+    name: 'X10p',
+    label: '10% Increase',
+    description:
+      'Scenario assuming that the measures are relaxed by 10% with respect to the last month.',
+    color: '#97008f',
+    default: false,
+    hiddable: true,
+    style: 'dashed'
+  },
+  {
+    name: 'X20p',
+    label: '20% Reduction',
+    description:
+      'Scenario assuming that the measures are tightened by 20% with respect to the last month.',
+    color: '#e134f8',
+    default: false,
+    hiddable: true,
+    style: 'dashed'
+  },
+  {
+    name: 'eq',
+    label: 'Plateau',
+    description: 'Scenario for the plateau (Replay number equal to unity).',
+    color: '#039bb6',
+    default: false,
+    hiddable: true,
+    style: 'dashed'
+  },
+  {
+    name: 'X2w',
+    label: 'Last Month',
+    description: 'Scenario using the average transmissibility of the last month.',
+    color: '#c50000',
+    default: false,
+    hiddable: true,
+    style: 'dashed'
+  },
+  {
+    name: 'Fallecidos',
+    label: 'Deaths',
+    description:
+      'Reported number of daily deaths according to data provided by the MSPyBS.',
     color: '#000000',
     default: false,
     hiddable: false,

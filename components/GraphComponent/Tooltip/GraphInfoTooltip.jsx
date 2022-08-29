@@ -1,4 +1,5 @@
 import { useRef, useEffect, useCallback } from 'react';
+import { dateField } from '../../../utils';
 import * as d3 from 'd3';
 
 const GraphInfoTooltip = ({
@@ -36,8 +37,7 @@ const GraphInfoTooltip = ({
         const nodeWidth = nodes[i]?.getBoundingClientRect()?.width || 0;
         const nodeHeight = nodes[i]?.getBoundingClientRect()?.height || 0;
         const translateX = nodeWidth + x > width ? x - nodeWidth - 12 : x + 20;
-        const translateY =
-          nodeHeight + y > height ? y - nodeHeight - 12 : y - 20;
+        const translateY = nodeHeight + y > height ? y - nodeHeight - 12 : y - 20;
         return `translate(${translateX}, ${translateY})`;
       });
       tooltipContent
@@ -49,16 +49,11 @@ const GraphInfoTooltip = ({
 
   const drawBackground = useCallback(() => {
     // reset background size to defaults
-    const contentBackground = d3
-      .select(ref.current)
-      .select('.contentBackground');
+    const contentBackground = d3.select(ref.current).select('.contentBackground');
     contentBackground.attr('width', 125).attr('height', 40);
 
     // calculate new background size
-    const tooltipContentElement = d3
-      .select(ref.current)
-      .select('.tooltipContent')
-      .node();
+    const tooltipContentElement = d3.select(ref.current).select('.tooltipContent').node();
     if (!tooltipContentElement) return;
 
     const contentSize = tooltipContentElement.getBoundingClientRect();
@@ -84,13 +79,13 @@ const GraphInfoTooltip = ({
   const followPoints = useCallback(
     (e) => {
       const x = xScale.invert(d3.pointer(e, this)[0]);
-      const bisectDate = d3.bisector((d) => d.fechaFormateada).left;
+      const bisectDate = d3.bisector((d) => d[dateField]).left;
       let baseXPos = 0;
 
       const index = bisectDate(data, x, 1),
         d0 = data[index - 1],
         d1 = data[index],
-        actualData = x - d0.fechaFormateada > d1?.fechaFormateada - x ? d1 : d0;
+        actualData = x - d0[dateField] > d1?.fechaFormateada - x ? d1 : d0;
 
       let elementsCounter = 0;
       content.selectAll('*').remove();
@@ -112,7 +107,7 @@ const GraphInfoTooltip = ({
           .attr('class', 'performanceItemMarketValue')
           .text(Math.round(actualData[name]));
 
-        baseXPos = xScale(actualData.fechaFormateada);
+        baseXPos = xScale(actualData[dateField]);
         placeDots(actualData, color, i, baseXPos);
       });
 
@@ -168,21 +163,12 @@ const GraphInfoTooltip = ({
             ry={4}
             opacity={0.8}
           />
-          <text
-            className="contentTitle font-bold"
-            transform="translate(4,20)"
-          />
+          <text className="contentTitle font-bold" transform="translate(4,20)" />
           <g ref={contentRef} transform="translate(4,32)" />
         </g>
         <g ref={contentDotsRef} />
       </g>
-      <rect
-        id="cuadro"
-        ref={cuadroRef}
-        width={width}
-        height={height}
-        opacity={0}
-      />
+      <rect id="cuadro" ref={cuadroRef} width={width} height={height} opacity={0} />
     </>
   );
 };

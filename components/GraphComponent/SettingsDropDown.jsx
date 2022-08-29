@@ -54,9 +54,7 @@ const SettingsDropDown = ({ type, data }) => {
 
   const downloadGraph = () => {
     const serializer = new XMLSerializer();
-    const xmlString = serializer.serializeToString(
-      d3.select(`#${type}`).node()
-    );
+    const xmlString = serializer.serializeToString(d3.select(`#${type}`).node());
     const imgData =
       'data:image/svg+xml;base64,' + Buffer.from(xmlString).toString('base64');
     saveAs(imgData, `${type}.svg`);

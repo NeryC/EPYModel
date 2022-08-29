@@ -12,7 +12,7 @@ import {
   createZoom,
   useGetDomain
 } from '../../utils/constants';
-import { checkLine } from '../../utils';
+import { checkLine, dateField } from '../../utils';
 import GraphInfoTooltip from './Tooltip/GraphInfoTooltip';
 import { useSelector } from 'react-redux';
 import {
@@ -20,7 +20,8 @@ import {
   selectShowedElements,
   selectRange,
   selectIsSmooth,
-  selectUncertainty
+  selectUncertainty,
+  selectDotField
 } from '../../store/reducers/graphInfoSlice';
 
 const Graph = ({ type, data }) => {
@@ -35,15 +36,15 @@ const Graph = ({ type, data }) => {
   const isSmooth = useSelector(selectIsSmooth(type));
   const uncertainty = useSelector(selectUncertainty(type));
   const range = useSelector(selectRange(type));
+  const dotField = useSelector(selectDotField(type));
+
+  let graphElements = {};
 
   const { margin } = dimensions;
   const { left, top, right, bottom } = margin;
   const clip = useId();
 
-  const [{ svgWidth, svgHeight, width, height }] = useDimensions(
-    margin,
-    containerRef
-  );
+  const [{ svgWidth, svgHeight, width, height }] = useDimensions(margin, containerRef);
 
   const svgChart = d3.select(svgChartRef.current);
   const yAxisGroup = d3.select(yAxisRef.current);
@@ -54,7 +55,7 @@ const Graph = ({ type, data }) => {
 
   function zoomed(e) {
     const xz = e.transform.rescaleX(xScale);
-    const yz = getYDomain(data, selectedLines, xz, yScale);
+    const yz = getYDomain(data, type, selectedLines, xz, yScale);
     xScale.domain(xz.domain());
 
     xAxisGroup.call(axis.x, xz);
@@ -62,15 +63,16 @@ const Graph = ({ type, data }) => {
     drawLines();
 
     svgChart
-      .selectAll(`#Reportado-${type}`)
-      .attr('cx', (d) => xScale(d.fechaFormateada))
-      .attr('cy', (d) => yScale(d.Reportados));
+      .selectAll(`#${dotField}-${type}`)
+      .attr('cx', (d) => xScale(d[dateField]))
+      .attr('cy', (d) => yScale(d[dotField]));
   }
   //y Right
   //x bottom
+  //dailyR == estimated in reported graph estimated could be higer than dotfield if it is selected
   const yDomain = useGetDomain({
     data,
-    field: checkLine(selectedLines, 'dailyR') ? 'dailyR' : 'Reportados',
+    field: checkLine(selectedLines, 'dailyR') ? 'dailyR' : dotField,
     scaleType: 'Linear'
   });
   const yScale = useCreateScale({
@@ -80,7 +82,7 @@ const Graph = ({ type, data }) => {
   });
   const xDomain = useGetDomain({
     data,
-    field: 'fechaFormateada',
+    field: dateField,
     scaleType: 'Time'
   });
   const xScale = useCreateScale({
@@ -97,21 +99,11 @@ const Graph = ({ type, data }) => {
       d3.zoomIdentity
         .scale(
           base /
-            (xScale(data[range.finish].fechaFormateada) -
-              xScale(data[range.start].fechaFormateada))
+            (xScale(data[range.finish][dateField]) - xScale(data[range.start][dateField]))
         )
-        .translate(-xScale(data[range.start].fechaFormateada), 0)
+        .translate(-xScale(data[range.start][dateField]), 0)
     );
-  }, [
-    data,
-    range.finish,
-    range.start,
-    right,
-    svgChart,
-    width,
-    xScale,
-    zoom.transform
-  ]);
+  }, [data, range.finish, range.start, right, svgChart, width, xScale, zoom.transform]);
 
   useEffect(() => {
     setZoom();
@@ -120,28 +112,27 @@ const Graph = ({ type, data }) => {
   const axis = useMemo(() => {
     return {
       y: (g, y1) => g.call(d3.axisRight(y1).ticks(5)),
-      x: (g, x1) =>
-        g.call(d3.axisBottom(x1).ticks(5).tickFormat(dynamicDateFormat))
+      x: (g, x1) => g.call(d3.axisBottom(x1).ticks(5).tickFormat(dynamicDateFormat))
     };
   }, []);
 
   useEffect(() => {
-    dotsGroup.selectAll(`#Reportado-${type}`).remove();
+    dotsGroup.selectAll(`#${dotField}-${type}`).remove();
     dotsGroup
       .selectAll('dot')
       .data(data)
       .join('circle')
-      .attr('cx', (d) => xScale(d.fechaFormateada))
-      .attr('cy', (d) => yScale(d.Reportados))
+      .attr('cx', (d) => xScale(d[dateField]))
+      .attr('cy', (d) => yScale(d[dotField]))
       .attr('clip-path', 'url(#' + clip + ')')
       .attr('fill', '#FFFFFF')
       .attr('stroke', 'black')
       .attr('opacity', 0)
       .attr('r', 2.7)
-      .attr('id', `Reportado-${type}`);
+      .attr('id', `${dotField}-${type}`);
 
     dotsGroup
-      .selectAll(`#Reportado-${type}`)
+      .selectAll(`#${dotField}-${type}`)
       .transition()
       .attr('opacity', 1)
       .delay(function (_d, i) {
@@ -149,89 +140,43 @@ const Graph = ({ type, data }) => {
       });
 
     dotsGroup
-      .selectAll(`#Reportado-${type}`)
+      .selectAll(`#${dotField}-${type}`)
       .filter(function (d) {
-        return d.Reportados == null;
+        return d[dotField] == null;
       })
       .remove();
     setZoom();
-  }, [clip, data, dotsGroup, setZoom, type, width, xScale, yScale]);
+    // I only need this render in the first time or when el graph is resized
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [width]);
 
-  const proy = basicDeclareLineD3('fechaFormateada', 'proy', isSmooth);
-  const dailyR = basicDeclareLineD3('fechaFormateada', 'dailyR', isSmooth);
-  const dailyR_sin_subRegistro = basicDeclareLineD3(
-    'fechaFormateada',
-    'dailyR_sin_subRegistro',
-    isSmooth
-  );
-  const eq = basicDeclareLineD3('fechaFormateada', 'eq', isSmooth);
-  const q25 = basicDeclareLineD3('fechaFormateada', 'q25', isSmooth);
-  const q75 = basicDeclareLineD3('fechaFormateada', 'q75', isSmooth);
-  const X2w = basicDeclareLineD3('fechaFormateada', 'X2w', isSmooth);
-  const X10p = basicDeclareLineD3('fechaFormateada', 'X10p', isSmooth);
-  const X20p = basicDeclareLineD3('fechaFormateada', 'X20p', isSmooth);
-  const uncert = declareAreaD3();
+  const baseLineData = {
+    xField: dateField,
+    isSmooth: isSmooth
+  };
+
+  showedElements.forEach((element) => {
+    if (element.style == 'dot') return;
+
+    graphElements[element.name] = basicDeclareLineD3(baseLineData, element.name);
+  });
+
+  graphElements['uncertainty'] = declareAreaD3(dateField, 'peor', 'mejor');
 
   function drawLines() {
-    const dProy = proy(xScale, yScale)(data);
-    const dDailyR_sin_subRegistro = dailyR_sin_subRegistro(
-      xScale,
-      yScale
-    )(data);
-    const dDailyR =
-      checkLine(selectedLines, 'dailyR') && dailyR(xScale, yScale)(data);
-    const dEq = checkLine(selectedLines, 'eq') && eq(xScale, yScale)(data);
-    const dQ25 = checkLine(selectedLines, 'q25') && q25(xScale, yScale)(data);
-    const dQ75 = checkLine(selectedLines, 'q75') && q75(xScale, yScale)(data);
-    const dX2w = checkLine(selectedLines, 'X2w') && X2w(xScale, yScale)(data);
-    const dX10p =
-      checkLine(selectedLines, 'X10p') && X10p(xScale, yScale)(data);
-    const dX20p =
-      checkLine(selectedLines, 'X20p') && X20p(xScale, yScale)(data);
+    showedElements.forEach((element) => {
+      if (element.style == 'dot') return;
+      const d = graphElements[element.name](xScale, yScale)(data);
 
-    svgChart
-      .select(`#proy-${type}`)
-      .attr('d', dProy?.match(/NaN|undefined/) ? '' : dProy);
-    svgChart
-      .select(`#dailyR_sin_subRegistro-${type}`)
-      .attr(
-        'd',
-        dDailyR_sin_subRegistro?.match(/NaN|undefined/)
-          ? ''
-          : dDailyR_sin_subRegistro
-      );
-    checkLine(selectedLines, 'dailyR') &&
       svgChart
-        .select(`#dailyR-${type}`)
-        .attr('d', dDailyR?.match(/NaN|undefined/) ? '' : dDailyR);
-    checkLine(selectedLines, 'eq') &&
-      svgChart
-        .select(`#eq-${type}`)
-        .attr('d', dEq?.match(/NaN|undefined/) ? '' : dEq);
-    checkLine(selectedLines, 'q25') &&
-      svgChart
-        .select(`#q25-${type}`)
-        .attr('d', dQ25?.match(/NaN|undefined/) ? '' : dQ25);
-    checkLine(selectedLines, 'q75') &&
-      svgChart
-        .select(`#q75-${type}`)
-        .attr('d', dQ75?.match(/NaN|undefined/) ? '' : dQ75);
-    checkLine(selectedLines, 'X2w') &&
-      svgChart
-        .select(`#X2w-${type}`)
-        .attr('d', dX2w?.match(/NaN|undefined/) ? '' : dX2w);
-    checkLine(selectedLines, 'X10p') &&
-      svgChart
-        .select(`#X10p-${type}`)
-        .attr('d', dX10p?.match(/NaN|undefined/) ? '' : dX10p);
-    checkLine(selectedLines, 'X20p') &&
-      svgChart
-        .select(`#X20p-${type}`)
-        .attr('d', dX20p?.match(/NaN|undefined/) ? '' : dX20p);
+        .select(`#${element.name}-${type}`)
+        .attr('d', d?.match(/NaN|undefined/) ? '' : d);
+    });
+
     uncertainty
       ? svgChart
           .select(`#uncertainty-${type}`)
-          .attr('d', uncert(xScale, yScale)(data))
+          .attr('d', graphElements['uncertainty'](xScale, yScale)(data))
       : svgChart.select(`#uncertainty-${type}`).attr('d', null);
 
     yAxisGroup.select('.domain').remove();
@@ -242,23 +187,10 @@ const Graph = ({ type, data }) => {
       <svg id={type} width={svgWidth} height={svgHeight} ref={svgChartRef}>
         <g id="elements" transform={`translate(${left},${top})`}>
           <clipPath id={clip}>
-            <rect
-              x={0}
-              y={0}
-              width={width - right}
-              height={height - (bottom - 5)}
-            />
+            <rect x={0} y={0} width={width - right} height={height - (bottom - 5)} />
           </clipPath>
-          <g
-            id="YAxis"
-            ref={yAxisRef}
-            transform={`translate(${width - right},0)`}
-          />
-          <g
-            id="XAxis"
-            ref={xAxisRef}
-            transform={`translate(0,${height - bottom})`}
-          />
+          <g id="YAxis" ref={yAxisRef} transform={`translate(${width - right},0)`} />
+          <g id="XAxis" ref={xAxisRef} transform={`translate(0,${height - bottom})`} />
 
           <g id="Lines" clipPath={`url(#${clip})`}>
             {showedElements.map(({ name, style, color }) => {
@@ -279,7 +211,7 @@ const Graph = ({ type, data }) => {
           </g>
           <g id="uncertaintyContainer">
             <path
-              id="uncertainty"
+              id={`uncertainty-${type}`}
               clipPath={`url(#${clip})`}
               stroke="none"
               fill="b5adff"

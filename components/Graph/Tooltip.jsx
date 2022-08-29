@@ -10,8 +10,7 @@ export default function Tooltip({ data, tooltipRef, activeLines }) {
   const shouldShow = (field) => (data[field] != null ? '' : 'hidden');
   const chooseClass = (fieldName) =>
     fieldName == 'Reportados' ? 'circle mx-auto' : 'border_line w-3.5';
-  const chooseLineColor = (fieldName) =>
-    dinamicColorStyle('borderColor', fieldName);
+  const chooseLineColor = (fieldName) => dinamicColorStyle('borderColor', fieldName);
 
   return (
     <div

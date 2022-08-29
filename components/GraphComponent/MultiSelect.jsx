@@ -1,16 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faXmark,
-  faChevronDown,
-  faChevronUp
-} from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import ScenarioTooltip from './Tooltip/ScenarioTooltip';
 import { dinamicColorStyle } from '../../utils/index';
-import {
-  selectDropdownInfo,
-  setSelectedLine
-} from '../../store/reducers/graphInfoSlice';
+import { selectDropdownInfo, setSelectedLine } from '../../store/reducers/graphInfoSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
 const MultiSelect = ({ type }) => {
@@ -21,9 +14,7 @@ const MultiSelect = ({ type }) => {
   let [dropdown, setDropdown] = useState(false);
 
   let isSelected = (item) => {
-    return selected.some((element) => element.label === item.label)
-      ? `border-l-2`
-      : '';
+    return selected.some((element) => element.label === item.label) ? `border-l-2` : '';
   };
 
   let isExpanded = () => {
@@ -61,9 +52,7 @@ const MultiSelect = ({ type }) => {
         onClick={() => selectOption(item)}
       >
         <div
-          className={`flex w-full items-center p-2 pl-2 relative ${isSelected(
-            item
-          )}`}
+          className={`flex w-full items-center p-2 pl-2 relative ${isSelected(item)}`}
           style={dinamicColorStyle(type, 'borderColor', item.name)}
         >
           <div className="w-full items-center flex">

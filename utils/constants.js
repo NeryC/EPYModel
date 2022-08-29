@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import * as d3 from 'd3';
-import { checkLine } from './index';
+import { checkLine, dateField } from './index';
+import { dotFields } from './descriptions';
 
 export const dimensions = {
   width: 1400,
@@ -15,15 +16,9 @@ export const dimensions = {
 
 export const parseTime = d3.timeParse('%Y-%m-%d');
 
-export const sortD3 = (data) => {
-  data.sort(function (x, y) {
-    return d3.ascending(x.fechaFormateada, y.fechaFormateada);
-  });
-};
-
 export const parseD3 = (data) => {
   data.forEach(function (d) {
-    d.fechaFormateada = parseTime(d.fecha);
+    d[dateField] = parseTime(d.fecha);
   });
 };
 
@@ -57,30 +52,30 @@ export const declareLineD3 = (baseDeclareData, yField) => {
       .defined((d) => d[yField] != null);
 };
 
-export const basicDeclareLineD3 = (dataXField, dataYField, isSmooth) => {
+export const basicDeclareLineD3 = (baseLineData, dataYField) => {
   return (xScale, yScale) =>
     d3
       .line()
-      .x((d) => xScale(d[dataXField]))
+      .x((d) => xScale(d[baseLineData.xField]))
       .y((d) => yScale(d[dataYField]))
-      .curve(isSmooth ? d3.curveNatural : d3.curveLinear)
+      .curve(baseLineData.isSmooth ? d3.curveNatural : d3.curveLinear)
       .defined((d) => d[dataYField] != null);
 };
 
-export const declareAreaD3 = () => {
+export const declareAreaD3 = (xField, y0Field, y1Field) => {
   return (xScale, yScale) =>
     d3
       .area()
       .x(function (d) {
-        return xScale(d.fechaFormateada);
+        return xScale(d[xField]);
       })
       .y0(function (d) {
-        return yScale(d.peor);
+        return yScale(d[y0Field]);
       })
       .y1(function (d) {
-        return yScale(d.mejor);
+        return yScale(d[y1Field]);
       })
-      .defined((d) => d.peor != null);
+      .defined((d) => d[y0Field] != null);
 };
 
 //legacy
@@ -169,63 +164,60 @@ export const useGetDomain = ({ data, field, scaleType }) => {
       return d[field];
     });
     //I need these extra 100 points so that the circles are not cut off
-    return scaleType == 'Linear'
-      ? [rawDomain[0], rawDomain[1] + 100]
-      : rawDomain;
+    return scaleType == 'Linear' ? [rawDomain[0] + 100, rawDomain[1] + 100] : rawDomain;
   }, [data, field, scaleType]);
 };
 
-const getInterpolateValue = (data, selectedLines, bisectedDate, date) => {
+const getInterpolateValue = (data, type, selectedLines, bisectedDate, date) => {
   if (data[bisectedDate] == undefined || data[bisectedDate - 1] == undefined) {
     return 0;
   }
 
-  const dateBefore = data[bisectedDate - 1].fechaFormateada,
-    dateAfter = data[bisectedDate].fechaFormateada;
+  const dateBefore = data[bisectedDate - 1][dateField],
+    dateAfter = data[bisectedDate][dateField];
   let intfun;
+  //dailyR == estimated in reported graph estimated could be higer than dotfield if it is selected
   if (data[bisectedDate].mejor === null) {
     intfun = d3.interpolateNumber(
       0,
       checkLine(selectedLines, 'dailyR')
         ? data[bisectedDate].dailyR
-        : data[bisectedDate].Reportados
+        : data[bisectedDate][dotFields[type]]
     );
   } else {
-    intfun = d3.interpolateNumber(
-      data[bisectedDate - 1].q75,
-      data[bisectedDate].peor
-    );
+    intfun = d3.interpolateNumber(data[bisectedDate - 1].q75, data[bisectedDate].peor);
   }
   return intfun((date - dateBefore) / (dateAfter - dateBefore));
 };
 
-export const getYDomain = (data, selectedLines, xz, yScale) => {
+export const getYDomain = (data, type, selectedLines, xz, yScale) => {
   // get the min and max date in focus
   const xleft = new Date(xz.domain()[0]);
   const xright = new Date(xz.domain()[1]);
   // a function that finds the nearest point to the right of a point
   const bisectDate = d3.bisector(function (d) {
-    return d.fechaFormateada;
+    return d[dateField];
   }).right;
 
   // get the y value of the line at the left edge of view port:
   const iL = bisectDate(data, xleft);
-  let yleft = getInterpolateValue(data, selectedLines, iL, xleft);
+  let yleft = getInterpolateValue(data, type, selectedLines, iL, xleft);
 
   // get the x value of the line at the right edge of view port:
   const iR = bisectDate(data, xright);
-  let yright = getInterpolateValue(data, selectedLines, iR, xright);
+  let yright = getInterpolateValue(data, type, selectedLines, iR, xright);
 
   // get the y values of all the actual data points that are in view
   const dataSubset = data.filter(function (d) {
-    return d.fechaFormateada >= xleft && d.fechaFormateada <= xright;
+    return d[dateField] >= xleft && d[dateField] <= xright;
   });
 
   const countSubset = [];
+  //dailyR == estimated in reported graph estimated could be higer than dotfield if it is selected
   dataSubset.map(function (d) {
     if (d.q75 === null) {
       countSubset.push(
-        checkLine(selectedLines, 'dailyR') ? d.dailyR : d.Reportados
+        checkLine(selectedLines, 'dailyR') ? d.dailyR : d[dotFields[type]]
       );
     } else {
       countSubset.push(d.peor);

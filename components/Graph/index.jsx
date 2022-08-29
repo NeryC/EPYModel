@@ -134,8 +134,7 @@ const Graph = ({ parentRef, rawData }) => {
     //Plateau
     const eq = declareLineD3(baseDeclareData, 'eq');
     const eqLine =
-      checkLine(selectedLines, 'eq') &&
-      drawLineD3(baseDrawData, 'Plateau', 'eq', eq);
+      checkLine(selectedLines, 'eq') && drawLineD3(baseDrawData, 'Plateau', 'eq', eq);
 
     // Percentil 25
     const q25 = declareLineD3(baseDeclareData, 'q25');
@@ -169,8 +168,7 @@ const Graph = ({ parentRef, rawData }) => {
 
     //20% Reduction
     const uncertaintyGraph = declareAreaD3(baseDeclareData);
-    const uncertaintyArea =
-      uncertainty && drawAreaD3(baseDrawData, uncertaintyGraph);
+    const uncertaintyArea = uncertainty && drawAreaD3(baseDrawData, uncertaintyGraph);
 
     //Reported
     const Reportados = svgChart
@@ -241,8 +239,7 @@ const Graph = ({ parentRef, rawData }) => {
         i = bisectDate(data, x0, 1),
         d0 = data[i - 1],
         d1 = data[i],
-        actualData =
-          x0 - d0.fechaFormateada > d1?.fechaFormateada - x0 ? d1 : d0;
+        actualData = x0 - d0.fechaFormateada > d1?.fechaFormateada - x0 ? d1 : d0;
 
       setSelectedData(actualData);
 
@@ -273,16 +270,12 @@ const Graph = ({ parentRef, rawData }) => {
         if (data[iL].mejor === null) {
           intfun = d3.interpolateNumber(
             0,
-            checkLine(selectedLines, 'dailyR')
-              ? data[iL].dailyR
-              : data[iL].Reportados
+            checkLine(selectedLines, 'dailyR') ? data[iL].dailyR : data[iL].Reportados
           );
         } else {
           intfun = d3.interpolateNumber(data[iL - 1].q75, data[iL].peor);
         }
-        yleft = intfun(
-          (xleft - left_dateBefore) / (left_dateAfter - left_dateBefore)
-        );
+        yleft = intfun((xleft - left_dateBefore) / (left_dateAfter - left_dateBefore));
       } else {
         yleft = 0;
       }
@@ -296,9 +289,7 @@ const Graph = ({ parentRef, rawData }) => {
         if (data[iR].mejor === null) {
           intfun = d3.interpolateNumber(
             0,
-            checkLine(selectedLines, 'dailyR')
-              ? data[iR].dailyR
-              : data[iR].Reportados
+            checkLine(selectedLines, 'dailyR') ? data[iR].dailyR : data[iR].Reportados
           );
         } else {
           intfun = d3.interpolateNumber(data[iR - 1].q75, data[iR].peor);
@@ -317,9 +308,7 @@ const Graph = ({ parentRef, rawData }) => {
       const countSubset = [];
       dataSubset.map(function (d) {
         if (d.q75 === null) {
-          countSubset.push(
-            checkLine(selectedLines, 'dailyR') ? d.dailyR : d.Reportados
-          );
+          countSubset.push(checkLine(selectedLines, 'dailyR') ? d.dailyR : d.Reportados);
         } else {
           countSubset.push(d.peor);
         }
@@ -342,10 +331,7 @@ const Graph = ({ parentRef, rawData }) => {
     svgChart.call(
       zoom.transform,
       d3.zoomIdentity
-        .scale(
-          width /
-            (x(data[finish].fechaFormateada) - x(data[start].fechaFormateada))
-        )
+        .scale(width / (x(data[finish].fechaFormateada) - x(data[start].fechaFormateada)))
         .translate(-x(data[start].fechaFormateada), 0)
     );
   }, [clip, margin, data, size, selectedLines, settings]);
@@ -353,11 +339,7 @@ const Graph = ({ parentRef, rawData }) => {
   return !!size ? (
     <div className="absolute">
       <svg ref={svgChartRef} width="100%" height={size.height} />
-      <Tooltip
-        data={selectedData}
-        tooltipRef={tooltipRef}
-        activeLines={selectedLines}
-      />
+      <Tooltip data={selectedData} tooltipRef={tooltipRef} activeLines={selectedLines} />
     </div>
   ) : (
     <></>

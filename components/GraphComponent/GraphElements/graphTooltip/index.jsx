@@ -43,16 +43,11 @@ const Tooltip = ({
 
   const drawBackground = useCallback(() => {
     // reset background size to defaults
-    const contentBackground = d3
-      .select(ref.current)
-      .select('.contentBackground');
+    const contentBackground = d3.select(ref.current).select('.contentBackground');
     contentBackground.attr('width', 125).attr('height', 40);
 
     // calculate new background size
-    const tooltipContentElement = d3
-      .select(ref.current)
-      .select('.tooltipContent')
-      .node();
+    const tooltipContentElement = d3.select(ref.current).select('.tooltipContent').node();
     if (!tooltipContentElement) return;
 
     const contentSize = tooltipContentElement.getBoundingClientRect();
@@ -67,9 +62,7 @@ const Tooltip = ({
       .text(isVisible ? formatPercent(d.value) : '');
     d3.selectAll('.performanceItemMarketValue')
       .filter((td, tIndex) => tIndex === i)
-      .text(
-        d.marketvalue && !isVisible ? 'No data' : formatPriceUSD(d.marketvalue)
-      );
+      .text(d.marketvalue && !isVisible ? 'No data' : formatPriceUSD(d.marketvalue));
 
     const maxNameWidth = d3.max(
       d3.selectAll('.performanceItemName').nodes(),
@@ -78,9 +71,7 @@ const Tooltip = ({
     d3.selectAll('.performanceItemValue').attr(
       'transform',
       (datum, index, nodes) =>
-        `translate(${
-          nodes[index].previousSibling.getBoundingClientRect().width + 14
-        },4)`
+        `translate(${nodes[index].previousSibling.getBoundingClientRect().width + 14},4)`
     );
 
     d3.selectAll('.performanceItemMarketValue').attr(
@@ -120,9 +111,7 @@ const Tooltip = ({
 
         onChangePosition(d, i, isVisible);
 
-        return isVisible
-          ? `translate(${xPos}, ${yPos})`
-          : 'translate(-100,-100)';
+        return isVisible ? `translate(${xPos}, ${yPos})` : 'translate(-100,-100)';
       });
 
     drawLine(baseXPos);
@@ -148,9 +137,7 @@ const Tooltip = ({
         d3.select(ref.current).attr('opacity', 1);
       })
       .on('mousemove.tooltip', () => {
-        d3.select(ref.current)
-          .selectAll('.tooltipLinePoint')
-          .attr('opacity', 1);
+        d3.select(ref.current).selectAll('.tooltipLinePoint').attr('opacity', 1);
         followPoints();
       });
   }, [anchorEl, followPoints]);
@@ -170,11 +157,7 @@ const Tooltip = ({
               <text className="performanceItemName" transform="translate(10,4)">
                 {name}
               </text>
-              <text
-                className="performanceItemValue"
-                opacity={0.5}
-                fontSize={10}
-              />
+              <text className="performanceItemValue" opacity={0.5} fontSize={10} />
               <text className="performanceItemMarketValue" />
             </g>
           ))}

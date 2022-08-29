@@ -1,9 +1,13 @@
 import { dinamicColorStyle } from '../../utils/index';
 import { useSelector } from 'react-redux';
-import { selectShowedElements } from '../../store/reducers/graphInfoSlice';
+import {
+  selectShowedElements,
+  selectDotField
+} from '../../store/reducers/graphInfoSlice';
 
 const SelectedLines = ({ type }) => {
   const showedElements = useSelector(selectShowedElements(type));
+  const dotField = useSelector(selectDotField(type));
 
   const chooseClass = (item) => {
     if (item.type == 'dot') {
@@ -14,9 +18,7 @@ const SelectedLines = ({ type }) => {
   };
 
   const chooseLineColor = (fieldName) =>
-    fieldName != 'Reportados'
-      ? dinamicColorStyle(type, 'borderColor', fieldName)
-      : {};
+    fieldName != dotField ? dinamicColorStyle(type, 'borderColor', fieldName) : {};
 
   let renderSelected = () => {
     return showedElements.map((item) => (
@@ -25,10 +27,7 @@ const SelectedLines = ({ type }) => {
         className={`flex justify-center items-center gap-2 rounded-full`}
       >
         <div className="flex flex-auto">
-          <div
-            className={chooseClass(item)}
-            style={chooseLineColor(item.name)}
-          />
+          <div className={chooseClass(item)} style={chooseLineColor(item.name)} />
         </div>
         <div className="text-xs font-bold">{item.label}</div>
       </div>

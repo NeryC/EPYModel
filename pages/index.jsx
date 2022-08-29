@@ -1,10 +1,7 @@
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import GraphComponent from '../components/GraphComponent';
-import {
-  initGraphData,
-  selectGraphData
-} from '../store/reducers/graphInfoSlice';
+import { initGraphData, selectGraphData } from '../store/reducers/graphInfoSlice';
 import { useSelector } from 'react-redux';
 import { wrapper } from '../store/store';
 import { axiosInstance } from '../utils';
@@ -23,10 +20,7 @@ export default function Graphs() {
       <Layout>
         <div className="flex flex-col p-6">
           {graphsStatus.map(({ type, isReady }) => {
-            if (isReady && type == 'reported')
-              return <GraphComponent type={type} key={type} />;
-            // if (isReady && type == 'hospitalized')
-            //   return <GraphComponent type={type} key={type} />;
+            if (isReady) return <GraphComponent type={type} key={type} />;
           })}
         </div>
       </Layout>

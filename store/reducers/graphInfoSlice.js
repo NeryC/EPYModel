@@ -9,13 +9,16 @@ import {
   setNewSelectedLines
 } from '../../utils/index';
 
+import { dotFields } from '../../utils/descriptions';
+
 const initialElements = (type) => {
   const defaultSelectedLines = defaultVisibleLines(type);
   return {
-    scenario: filterLines(type, ['proy', 'Reportados']),
+    scenario: filterLines(type, ['proy', dotFields[type]]),
     options: hiddableLines(type),
     selectedLines: defaultSelectedLines,
-    showedElements: concat(hiddableLines(type, false), defaultSelectedLines)
+    showedElements: concat(hiddableLines(type, false), defaultSelectedLines),
+    dotField: dotFields[type]
   };
 };
 
@@ -74,12 +77,21 @@ export const graphInfoSlice = createSlice({
       state.reported.data = action.payload.reported;
       state.reported.settings = initialSettings(amountOfData);
       state.reported.isReady = true;
+      action.payload.hospitalized.sort(function (a, b) {
+        return new Date(a.fecha) - new Date(b.fecha);
+      });
       state.hospitalized.data = action.payload.hospitalized;
       state.hospitalized.settings = initialSettings(amountOfData);
       state.hospitalized.isReady = true;
+      action.payload.ICU.sort(function (a, b) {
+        return new Date(a.fecha) - new Date(b.fecha);
+      });
       state.ICU.data = action.payload.ICU;
       state.ICU.settings = initialSettings(amountOfData);
       state.ICU.isReady = true;
+      action.payload.deceases.sort(function (a, b) {
+        return new Date(a.fecha) - new Date(b.fecha);
+      });
       state.deceases.data = action.payload.deceases;
       state.deceases.settings = initialSettings(amountOfData);
       state.deceases.isReady = true;
@@ -123,8 +135,7 @@ export const selectGraphData = (state) =>
     return { type, isReady };
   });
 
-export const selectScenarios = (type) => (state) =>
-  state[type].elements.scenario;
+export const selectScenarios = (type) => (state) => state[type].elements.scenario;
 
 export const selectRawData = (type) => (state) => state[type].data;
 
@@ -140,20 +151,15 @@ export const selectSettings = (type) => (state) => state[type].settings;
 export const selectSelectedLines = (type) => (state) =>
   state[type].elements.selectedLines;
 
-export const selectIsSmooth = (type) => (state) =>
-  state[type].settings.isSmooth;
+export const selectIsSmooth = (type) => (state) => state[type].settings.isSmooth;
 
-export const selectUncertainty = (type) => (state) =>
-  state[type].settings.uncertainty;
+export const selectUncertainty = (type) => (state) => state[type].settings.uncertainty;
 
 export const selectRange = (type) => (state) => state[type].settings.range;
 
-export const {
-  initGraphData,
-  setSelectedLine,
-  setChecks,
-  resetChecks,
-  setRange
-} = graphInfoSlice.actions;
+export const selectDotField = (type) => (state) => state[type].elements.dotField;
+
+export const { initGraphData, setSelectedLine, setChecks, resetChecks, setRange } =
+  graphInfoSlice.actions;
 
 export default graphInfoSlice.reducer;

@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { linesDescriptions } from './descriptions';
 
+export const dateField = 'fechaFormateada';
+
 export const dinamicColorStyle = (type, atribute, name) => {
-  return findLine(type, name).color
-    ? { [atribute]: findLine(type, name).color }
-    : {};
+  return findLine(type, name).color ? { [atribute]: findLine(type, name).color } : {};
 };
 
 export const hiddableLines = (type, value = true) => {

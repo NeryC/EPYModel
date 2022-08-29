@@ -4,9 +4,7 @@ import useResizeObserver from '@react-hook/resize-observer';
 export default function useResize(targetRef) {
   const [size, setSize] = useState();
   useEffect(() => {
-    targetRef &&
-      targetRef.current &&
-      setSize(targetRef.current.getBoundingClientRect());
+    targetRef && targetRef.current && setSize(targetRef.current.getBoundingClientRect());
   }, [targetRef]);
 
   // Where the magic happens
