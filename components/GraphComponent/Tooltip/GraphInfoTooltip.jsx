@@ -155,7 +155,7 @@ const GraphInfoTooltip = ({
   return (
     <>
       <g ref={ref} opacity={0}>
-        <line className="tooltipLine stroke-slate-200" />
+        <line className="tooltipLine stroke-slate-500" />
         <g className="tooltipContent">
           <rect
             className="contentBackground fill-slate-200"
