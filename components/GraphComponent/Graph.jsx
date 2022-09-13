@@ -72,23 +72,23 @@ const Graph = ({ type, data }) => {
   //dailyR == estimated in reported graph estimated could be higer than dotfield if it is selected
   const yDomain = useGetDomain({
     data,
-    field: checkLine(selectedLines, 'dailyR') ? 'dailyR' : dotField,
-    scaleType: 'Linear'
+    field: checkLine(selectedLines, 'dailyR') ? 'dailyR' : dotField
   });
   const yScale = useCreateScale({
-    range: [height - margin.bottom, margin.top],
+    range: [height - bottom, 3],
     domain: yDomain,
-    scaleType: 'Linear'
+    scaleType: 'Linear',
+    size: height
   });
   const xDomain = useGetDomain({
     data,
-    field: dateField,
-    scaleType: 'Time'
+    field: dateField
   });
   const xScale = useCreateScale({
     range: [0, width - right],
     domain: xDomain,
-    scaleType: 'Time'
+    scaleType: 'Time',
+    size: width
   });
 
   const setZoom = useCallback(() => {
@@ -111,10 +111,23 @@ const Graph = ({ type, data }) => {
 
   const axis = useMemo(() => {
     return {
-      y: (g, y1) => g.call(d3.axisRight(y1).ticks(5)),
-      x: (g, x1) => g.call(d3.axisBottom(x1).ticks(5).tickFormat(dynamicDateFormat))
+      y: (g, y1) =>
+        g.call(
+          d3
+            .axisRight(y1)
+            .ticks(5)
+            .tickSize(-(width - right))
+        ),
+      x: (g, x1) =>
+        g.call(
+          d3
+            .axisBottom(x1)
+            .ticks(5)
+            .tickSize(-(height - bottom))
+            .tickFormat(dynamicDateFormat)
+        )
     };
-  }, []);
+  }, [bottom, height, right, width]);
 
   useEffect(() => {
     dotsGroup.selectAll(`#${dotField}-${type}`).remove();
@@ -180,6 +193,9 @@ const Graph = ({ type, data }) => {
       : svgChart.select(`#uncertainty-${type}`).attr('d', null);
 
     yAxisGroup.select('.domain').remove();
+    xAxisGroup.select('.domain').remove();
+    xAxisGroup.selectAll('line').attr('stroke', 'rgba(128, 128, 128, 0.3)');
+    yAxisGroup.selectAll('line').attr('stroke', 'rgba(128, 128, 128, 0.3)');
   }
 
   return (

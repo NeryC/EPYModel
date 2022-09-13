@@ -158,14 +158,12 @@ export const useCreateScale = ({ range, domain, scaleType }) => {
   return useMemo(() => type.domain(domain).range(range), [domain, range, type]);
 };
 
-export const useGetDomain = ({ data, field, scaleType }) => {
+export const useGetDomain = ({ data, field }) => {
   return useMemo(() => {
-    const rawDomain = d3.extent(data, function (d) {
+    return d3.extent(data, function (d) {
       return d[field];
     });
-    //I need these extra 100 points so that the circles are not cut off
-    return scaleType == 'Linear' ? [rawDomain[0] + 100, rawDomain[1] + 100] : rawDomain;
-  }, [data, field, scaleType]);
+  }, [data, field]);
 };
 
 const getInterpolateValue = (data, type, selectedLines, bisectedDate, date) => {

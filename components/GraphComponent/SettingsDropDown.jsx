@@ -63,7 +63,7 @@ const SettingsDropDown = ({ type, data }) => {
   if (settings)
     return (
       <div
-        className="flex flex-col items-end top-10 right-10 absolute"
+        className="flex flex-col items-end top-10 right-14 absolute"
         onMouseLeave={() => setDropdown(false)}
       >
         <div

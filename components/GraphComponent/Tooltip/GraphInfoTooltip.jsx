@@ -155,13 +155,13 @@ const GraphInfoTooltip = ({
   return (
     <>
       <g ref={ref} opacity={0}>
-        <line className="tooltipLine stroke-indigo-600" />
+        <line className="tooltipLine stroke-slate-200" />
         <g className="tooltipContent">
           <rect
-            className="contentBackground fill-indigo-600"
+            className="contentBackground fill-slate-200"
             rx={4}
             ry={4}
-            opacity={0.8}
+            opacity={0.9}
           />
           <text className="contentTitle font-bold" transform="translate(4,20)" />
           <g ref={contentRef} transform="translate(4,32)" />
