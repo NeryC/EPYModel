@@ -1,5 +1,6 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { dateField } from '../../../utils';
+import { useTranslation } from 'next-i18next';
 import * as d3 from 'd3';
 
 const GraphInfoTooltip = ({
@@ -18,6 +19,7 @@ const GraphInfoTooltip = ({
   const cuadro = d3.select(cuadroRef.current);
   const content = d3.select(contentRef.current);
   const contentDots = d3.select(contentDotsRef.current);
+  const { t } = useTranslation('common');
   const drawLine = useCallback(
     (x) => {
       d3.select(ref.current)
@@ -42,7 +44,7 @@ const GraphInfoTooltip = ({
       });
       tooltipContent
         .select('.contentTitle')
-        .text(d3.timeFormat('%b %d, %Y')(xScale.invert(x)));
+        .text(d3.timeFormat('%y/%m/%d')(xScale.invert(x)));
     },
     [xScale, width, height]
   );
@@ -101,7 +103,7 @@ const GraphInfoTooltip = ({
           .append('text')
           .attr('class', 'performanceItemName')
           .attr('transform', `translate(10,6)`)
-          .text(label);
+          .text(`${t(label)}`);
         insideContent
           .append('text')
           .attr('class', 'performanceItemMarketValue')
@@ -124,6 +126,7 @@ const GraphInfoTooltip = ({
       drawContent(baseXPos, e.layerY);
       drawBackground();
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       xScale,
       data,

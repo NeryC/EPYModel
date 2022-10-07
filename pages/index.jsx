@@ -5,6 +5,7 @@ import { initGraphData, selectGraphData } from '../store/reducers/graphInfoSlice
 import { useSelector } from 'react-redux';
 import { wrapper } from '../store/store';
 import { axiosInstance } from '../utils';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export default function Graphs() {
   const graphsStatus = useSelector(selectGraphData);
@@ -28,7 +29,7 @@ export default function Graphs() {
   );
 }
 
-export const getStaticProps = wrapper.getStaticProps((store) => async () => {
+export const getStaticProps = wrapper.getStaticProps((store) => async (locale) => {
   const reported = await axiosInstance(`/proyeccionR`);
   const hospitalized = await axiosInstance(`/proyeccionH`);
   const ICU = await axiosInstance(`/proyeccionU`);
@@ -42,4 +43,9 @@ export const getStaticProps = wrapper.getStaticProps((store) => async () => {
       deceases: deceases.data
     })
   );
+  return {
+    props: {
+      ...(await serverSideTranslations(locale.locale, ['common']))
+    }
+  };
 });

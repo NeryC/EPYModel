@@ -13,8 +13,10 @@ import {
 } from '../../store/reducers/graphInfoSlice';
 import * as d3 from 'd3';
 import { saveAs } from 'file-saver';
+import { useTranslation } from 'next-i18next';
 
 const SettingsDropDown = ({ type, data }) => {
+  const { t } = useTranslation('common');
   const dispatch = useDispatch();
   const settings = useSelector(selectSettings(type));
 
@@ -78,8 +80,8 @@ const SettingsDropDown = ({ type, data }) => {
           className={`${isExpanded()} shadow  border bg-white z-40 rounded flex flex-col p-2 items-center text-sm`}
         >
           <div className="border-b mb-3 w-full flex justify-between font-bold text-base">
-            Chart Settings
-            <Tooltip text={'Download Graph'}>
+            {t('chart-setting')}
+            <Tooltip text={t('download-graph')}>
               <button onClick={() => downloadGraph()}>
                 <FontAwesomeIcon icon={faCameraAlt} />
               </button>
@@ -87,14 +89,14 @@ const SettingsDropDown = ({ type, data }) => {
           </div>
 
           <ToogleButton
-            label="Smoothed data"
+            label={t('smoothed-data')} //"Smoothed data"
             name="isSmooth"
             handleChange={() => handleChangeChecks('isSmooth')}
             checkedState={settings.isSmooth}
           />
 
           <div className="flex justify-between mb-5">
-            <span className="text-gray-900 mr-3 flex-none">Date range</span>
+            <span className="text-gray-900 mr-3 flex-none">{t('date-range')}</span>
             <MultiRangeSlider
               min={0}
               max={settings.dataLength}
@@ -106,7 +108,7 @@ const SettingsDropDown = ({ type, data }) => {
           </div>
 
           <ToogleButton
-            label="Uncertainty"
+            label={t('uncertainty')}
             name="uncertainty"
             handleChange={() => handleChangeChecks('uncertainty')}
             checkedState={settings.uncertainty}
@@ -116,13 +118,13 @@ const SettingsDropDown = ({ type, data }) => {
 
           <div className="flex justify-between w-full mb-2 text-sm">
             <button className="bg-transparent hover:bg-indigo-600 text-indigo-600 font-semibold hover:text-white px-2 border border-indigo-600 hover:border-transparent rounded">
-              Apply to all
+              {t('apply-to-all')}
             </button>
             <button
               onClick={() => resetSettings()}
               className="bg-transparent hover:bg-indigo-600 text-indigo-600 font-semibold hover:text-white px-2 border border-indigo-600 hover:border-transparent rounded"
             >
-              Reset
+              {t('reset')}
             </button>
           </div>
         </div>

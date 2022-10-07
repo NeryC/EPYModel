@@ -1,0 +1,50 @@
+{
+  "es":"SPANISH",
+  "en":"ENGLISH",
+  "scenario":"Scenario",
+  "simulated":"Simulated",
+  "proyected":"Proyected",
+  "proyected-description":"Projection using the last value of the transmissibility.",
+  "percentile75":"Percentile 75",
+  "percentile75-description":"Scenario using the historical representative high contagion rate in Paraguay.",
+  "percentile25":"Percentile 25",
+  "percentile25-description":"Scenario using the representative low contagion rate history in Paraguay.",
+  "10increase":"10% Increase",
+  "10increase-description":"Scenario assuming that the measures are relaxed by 10% with respect to the last month.",
+  "20reduction":"20% Reduction",
+  "20reduction-description":"Scenario assuming that the measures are tightened by 20% with respect to the last month.",
+  "plateau":"Plateau",
+  "plateau-description":"Scenario for the plateau (Replay number equal to unity).",
+  "lastMonth":"Last Month",
+  "lastMonth-description":"Scenario using the average transmissibility of the last month.",
+  "all-rights-reserved":"All Rights Reserved.",
+  "chart-setting":"Chart Settings",
+  "smoothed-data":"Smoothed data",
+  "date-range":"Date range",
+  "uncertainty":"Uncertainty",
+  "apply-to-all":"Apply to all",
+  "reset":"Reset",
+  "download-graph":"Download Graph",
+
+  "reported":"Reported",
+  "reported-title":"Projection of possible new Infected/Daily reported",
+  "reported-description":"Reported number of daily infected according to data provided by the MSPyBS.",
+  "reported-estimated":"Estimated",
+  "reported-estimated-description":"This curve shows the daily estimated infections after correcting for bias due to the testing rate.",
+
+  "hospitalized":"Hospitalized",
+  "hospitalized-title":"Daily death projection",
+  "hospitalized-description":"Reported number of daily hospitalized according to data provided by the MSPyBS.",
+
+  "ICU":"UTI",
+  "ICU-title":"EFFECTIVE REPRODUCTION NUMBER",
+  "ICU-subtitle":"The graph shows the evolution of the proportions of positive cases that pass to be hospitalized, intensive care unit and deceased cases",
+  "ICU-description":"Reported number of daily UTI hospitalized according to data provided by the MSPyBS.",
+  
+  "deceases":"deceases",
+  "deceases-title":"PROPORTIONS",
+  "deceases-subtitle":"The effective reproduction number, R, represents the number of new cases that is generated from a positive case, according to cases reported by the Ministry of Public Health and Social Welfare of Paraguay.\nWhen R = 1, each positive case infects only one more person and in this case the epidemic remains stable, observing a plateau in the number of cases.\nWhen R is greater than 1, each positive case infects more than one person and in this case the epidemic is expanding and increases positive cases.\nWhen R is less than 1, each positive case infects (on average) less than one person, and in this case the epidemic is in contraction and decreases positive cases.",
+  "deceases-description":"Reported number of daily deaths according to data provided by the MSPyBS."
+
+}
+  

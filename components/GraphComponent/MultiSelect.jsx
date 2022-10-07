@@ -5,8 +5,10 @@ import ScenarioTooltip from './Tooltip/ScenarioTooltip';
 import { dinamicColorStyle } from '../../utils/index';
 import { selectDropdownInfo, setSelectedLine } from '../../store/reducers/graphInfoSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'next-i18next';
 
 const MultiSelect = ({ type }) => {
+  const { t } = useTranslation('common');
   const dispatch = useDispatch();
 
   const [options, selected] = useSelector(selectDropdownInfo(type));
@@ -28,7 +30,7 @@ const MultiSelect = ({ type }) => {
           className={`flex justify-center items-center py-1 px-2 rounded-full text-white`}
           style={dinamicColorStyle(type, 'backgroundColor', item.name)}
         >
-          <div className="text-xs font-bold cursor-default">{item.label}</div>
+          <div className="text-xs font-bold cursor-default">{t(item.label)}</div>
           <div className="flex flex-auto" onClick={() => selectOption(item)}>
             <FontAwesomeIcon
               className="cursor-pointer hover:text-black rounded-md w-3 h-3 ml-1"
@@ -56,7 +58,7 @@ const MultiSelect = ({ type }) => {
           style={dinamicColorStyle(type, 'borderColor', item.name)}
         >
           <div className="w-full items-center flex">
-            <div className="mx-2 leading-6  ">{item.label}</div>
+            <div className="mx-2 leading-6  ">{t(item.label)}</div>
           </div>
         </div>
       </div>

@@ -4,8 +4,10 @@ import {
   selectShowedElements,
   selectDotField
 } from '../../store/reducers/graphInfoSlice';
+import { useTranslation } from 'next-i18next';
 
 const SelectedLines = ({ type }) => {
+  const { t } = useTranslation('common');
   const showedElements = useSelector(selectShowedElements(type));
   const dotField = useSelector(selectDotField(type));
 
@@ -29,7 +31,7 @@ const SelectedLines = ({ type }) => {
         <div className="flex flex-auto">
           <div className={chooseClass(item)} style={chooseLineColor(item.name)} />
         </div>
-        <div className="text-xs font-bold">{item.label}</div>
+        <div className="text-xs font-bold">{t(item.label)}</div>
       </div>
     ));
   };

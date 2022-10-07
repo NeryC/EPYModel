@@ -8,25 +8,31 @@ import { parseD3 } from '../../utils/constants';
 import Graph from './Graph';
 import { useSelector } from 'react-redux';
 import { selectScenarios, selectRawData } from '../../store/reducers/graphInfoSlice';
+import { useTranslation } from 'next-i18next';
 
 const GraphComponent = ({ type }) => {
+  const { t } = useTranslation('common');
   const scenarios = useSelector(selectScenarios(type));
   const rawData = useSelector(selectRawData(type));
   const data = JSON.parse(JSON.stringify(rawData));
   parseD3(data);
 
-  let shouldShowDescription = () => {
-    const description = graphDescriptions[type].description;
-    if (description)
-      return <div className="text-base px-4 pb-3 whitespace-pre-line">{description}</div>;
+  let shouldShowSubtitle = () => {
+    const subtitle = graphDescriptions[type]?.subtitle;
+    if (subtitle)
+      return (
+        <div className="text-base px-4 pb-3 whitespace-pre-line">
+          {t(`${type}-subtitle`)}
+        </div>
+      );
   };
 
   return (
     <div className="rounded overflow-hidden shadow-lg bg-white mb-6 p-6 flex flex-col">
-      <div className="border-b-2 pb-2 text-2xl mb-4">{graphDescriptions[type].title}</div>
-      {shouldShowDescription()}
+      <div className="border-b-2 pb-2 text-2xl mb-4">{t(`${type}-title`)}</div>
+      {shouldShowSubtitle()}
       <div className="flex items-center justify-center text-sm">
-        <span className="pr-2">Scenario</span>
+        <span className="pr-2">{t('scenario')}</span>
         <ScenarioTooltip item={scenarios} top={false} type={type}>
           <FontAwesomeIcon icon={faInfoCircle} />
         </ScenarioTooltip>

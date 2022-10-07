@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { dinamicColorStyle } from '../../../utils/index';
+import { useTranslation } from 'next-i18next';
 
 const ScenarioTooltip = ({
   item,
@@ -16,6 +17,7 @@ const ScenarioTooltip = ({
   top: boolean;
   type: string;
 }) => {
+  const { t } = useTranslation('common');
   return (
     <div className="relative flex flex-col items-center group">
       {children}
@@ -31,9 +33,9 @@ const ScenarioTooltip = ({
                 className="font-bold px-1"
                 style={dinamicColorStyle(type, 'backgroundColor', i.name)}
               >
-                {i.label}
+                {t(i.label)}
               </span>
-              : {i.description}
+              : {t(`${i.label}-description`)}
             </div>
           ))}
         </span>
