@@ -37,7 +37,7 @@ const SelectedLines = ({ type }) => {
   };
 
   return (
-    <div className="rounded pt-6">
+    <div className="rounded">
       <div className="flex flex-wrap justify-center min-w-[100px] gap-5">
         {renderSelected()}
       </div>

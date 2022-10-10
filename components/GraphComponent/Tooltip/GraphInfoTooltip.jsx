@@ -3,15 +3,7 @@ import { dateField } from '../../../utils';
 import { useTranslation } from 'next-i18next';
 import * as d3 from 'd3';
 
-const GraphInfoTooltip = ({
-  xScale,
-  yScale,
-  width,
-  height,
-  data,
-  showedElements,
-  margin
-}) => {
+const GraphInfoTooltip = ({ xScale, yScale, width, height, data, showedElements }) => {
   const ref = useRef(null);
   const cuadroRef = useRef(null);
   const contentDotsRef = useRef(null);
@@ -26,10 +18,10 @@ const GraphInfoTooltip = ({
         .select('.tooltipLine')
         .attr('x1', x)
         .attr('x2', x)
-        .attr('y1', -margin.top)
+        .attr('y1', 20)
         .attr('y2', height);
     },
-    [ref, height, margin]
+    [ref, height]
   );
 
   const drawContent = useCallback(
@@ -44,7 +36,7 @@ const GraphInfoTooltip = ({
       });
       tooltipContent
         .select('.contentTitle')
-        .text(d3.timeFormat('%y/%m/%d')(xScale.invert(x)));
+        .text(d3.timeFormat('%d/%m/%y')(xScale.invert(x)));
     },
     [xScale, width, height]
   );

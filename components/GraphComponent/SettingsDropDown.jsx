@@ -64,10 +64,7 @@ const SettingsDropDown = ({ type, data }) => {
 
   if (settings)
     return (
-      <div
-        className="flex flex-col items-end top-10 right-14 absolute"
-        onMouseLeave={() => setDropdown(false)}
-      >
+      <div className="flex flex-col items-end top-2 right-7 md:top-10 md:right-14 absolute">
         <div
           onClick={() => setDropdown(!dropdown)}
           className="p-3 shadow-2xl mb-2 rounded-full shadow-gray-900 inline-flex text-sm border text-gray-600 
@@ -95,7 +92,7 @@ const SettingsDropDown = ({ type, data }) => {
             checkedState={settings.isSmooth}
           />
 
-          <div className="flex justify-between mb-5">
+          <div className="flex justify-between mb-8">
             <span className="text-gray-900 mr-3 flex-none">{t('date-range')}</span>
             <MultiRangeSlider
               min={0}

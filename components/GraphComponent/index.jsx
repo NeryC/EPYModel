@@ -28,8 +28,8 @@ const GraphComponent = ({ type }) => {
   };
 
   return (
-    <div className="rounded overflow-hidden shadow-lg bg-white mb-6 p-6 flex flex-col">
-      <div className="border-b-2 pb-2 text-2xl mb-4">{t(`${type}-title`)}</div>
+    <div className="rounded overflow-hidden shadow-lg bg-white mb-3 md:mb-6 p-3 md:p-6 flex flex-col">
+      <div className="border-b-2 pb-2 text-2xl mb-2 md:mb-4">{t(`${type}-title`)}</div>
       {shouldShowSubtitle()}
       <div className="flex items-center justify-center text-sm">
         <span className="pr-2">{t('scenario')}</span>

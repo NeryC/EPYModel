@@ -3,7 +3,6 @@ import useDimensions from '../../hooks/useDimensions';
 import { useRef, useId, useEffect, useMemo, useCallback } from 'react';
 import SettingsDropDown from './SettingsDropDown';
 import {
-  dimensions,
   useCreateScale,
   dynamicDateFormat,
   basicDeclareLineD3,
@@ -40,11 +39,10 @@ const Graph = ({ type, data }) => {
 
   let graphElements = {};
 
-  const { margin } = dimensions;
-  const { left, top, right, bottom } = margin;
   const clip = useId();
 
-  const [{ svgWidth, svgHeight, width, height }] = useDimensions(margin, containerRef);
+  const [{ svgWidth, svgHeight, width, height, left, top, right, bottom }] =
+    useDimensions(containerRef);
 
   const svgChart = d3.select(svgChartRef.current);
   const yAxisGroup = d3.select(yAxisRef.current);
@@ -243,7 +241,6 @@ const Graph = ({ type, data }) => {
             height={height}
             data={data}
             showedElements={showedElements}
-            margin={margin}
           />
         </g>
       </svg>

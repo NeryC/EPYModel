@@ -86,7 +86,7 @@ a {
 .slider__left-value,
 .slider__right-value {
   font-size: 12px;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 .slider__left-value {
@@ -150,3 +150,10 @@ a {
   position: relative;
 }
 
+
+.errorDate {
+  background-color: ivory;
+  border: none;
+  outline: 2px solid red;
+  border-radius: 5px;
+}

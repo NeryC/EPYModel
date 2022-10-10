@@ -17,7 +17,7 @@ export default function Header() {
               />
             </div>
           </div>
-          <div className="hidden md:flex items-center">
+          <div className="flex items-center">
             <LanguajeDropdown />
           </div>
         </div>
