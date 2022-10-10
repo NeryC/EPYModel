@@ -129,7 +129,9 @@ const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }
         <div className="slider__track bg-gray-300" />
         <div ref={range} className="slider__range bg-indigo-600" />
         <input
-          className={`slider__left-value ${formData.minInputError && 'errorDate'}`}
+          className={`slider__left-value w-[94px] ${
+            formData.minInputError && 'errorDate'
+          }`}
           type="date"
           value={formData.minInput}
           min={data[min].fecha}
@@ -137,7 +139,9 @@ const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }
           onChange={(e) => handleChangeInputDate(e, false)}
         />
         <input
-          className={`slider__right-value ${formData.maxInputError && 'errorDate'}`}
+          className={`slider__right-value w-[94px] ${
+            formData.maxInputError && 'errorDate'
+          }`}
           type="date"
           value={formData.maxInput}
           min={data[selectedMin].fecha}
