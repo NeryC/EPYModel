@@ -51,7 +51,6 @@ export const getStaticProps = wrapper.getStaticProps(
       props: {
         ...(await serverSideTranslations(locale.locale, ["common"])),
       },
-      revalidate: 60,
     };
   }
 );
