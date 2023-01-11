@@ -35,19 +35,19 @@ a {
   stroke-opacity: 0.3;
 }
 
-.border_line { 
+.border_line {
   border-top: 5px solid red;
-  height: 5px; 
+  height: 5px;
 }
 
 .circle {
-  background-color:#fff;
-  border:1px solid black;    
-  height:7px;
-  border-radius:50%;
-  -moz-border-radius:50%;
-  -webkit-border-radius:50%;
-  width:7px;
+  background-color: #fff;
+  border: 1px solid black;
+  height: 7px;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  width: 7px;
 }
 
 .container {
@@ -149,7 +149,6 @@ a {
   pointer-events: all;
   position: relative;
 }
-
 
 .errorDate {
   background-color: ivory;

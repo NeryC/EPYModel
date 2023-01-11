@@ -1,6 +1,13 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }) => {
+const MultiRangeSlider = ({
+  min,
+  max,
+  selectedMin,
+  selectedMax,
+  data,
+  onChange,
+}) => {
   const minValRef = useRef(null);
   const maxValRef = useRef(null);
   const range = useRef(null);
@@ -8,7 +15,7 @@ const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }
     minInput: data[selectedMin].fecha,
     minInputError: false,
     maxInput: data[selectedMax].fecha,
-    maxInputError: false
+    maxInputError: false,
   });
 
   // Convert to percentage
@@ -23,18 +30,29 @@ const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }
       return item.fecha == event.target.value;
     });
     if (isMax) {
-      setFormData({ ...formData, maxInput: event.target.value, maxInputError: true });
+      setFormData({
+        ...formData,
+        maxInput: event.target.value,
+        maxInputError: true,
+      });
     } else {
-      setFormData({ ...formData, minInput: event.target.value, minInputError: true });
+      setFormData({
+        ...formData,
+        minInput: event.target.value,
+        minInputError: true,
+      });
     }
     if (valueIndex > 0) {
-      if ((isMax && valueIndex < selectedMin) || (!isMax && valueIndex < selectedMax)) {
+      if (
+        (isMax && valueIndex < selectedMin) ||
+        (!isMax && valueIndex < selectedMax)
+      ) {
         setFormData({
           ...formData,
           minInput: data[valueIndex].fecha,
           maxInput: data[selectedMax].fecha,
           minInputError: false,
-          maxInputError: false
+          maxInputError: false,
         });
         onChange({ min: valueIndex, max: selectedMax });
       } else if (
@@ -46,7 +64,7 @@ const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }
           minInput: data[selectedMin].fecha,
           maxInput: data[valueIndex].fecha,
           minInputError: false,
-          maxInputError: false
+          maxInputError: false,
         });
         onChange({ min: selectedMin, max: valueIndex });
       }
@@ -62,7 +80,7 @@ const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }
       setFormData({
         ...formData,
         minInput: data[selectedMin].fecha,
-        maxInput: data[+maxValRef.current.value].fecha
+        maxInput: data[+maxValRef.current.value].fecha,
       });
 
       if (range.current) {
@@ -84,7 +102,7 @@ const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }
         minInput: data[+minValRef.current.value].fecha,
         maxInput: data[selectedMax].fecha,
         maxInputError: false,
-        minInputError: false
+        minInputError: false,
       });
 
       if (range.current) {
@@ -108,7 +126,7 @@ const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }
           event.target.value = value.toString();
         }}
         className={`thumb thumb--zindex-3 ${
-          selectedMin > max - 100 ? 'thumb--zindex-5' : ''
+          selectedMin > max - 100 ? "thumb--zindex-5" : ""
         }`}
       />
       <input
@@ -130,7 +148,7 @@ const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }
         <div ref={range} className="slider__range bg-indigo-600" />
         <input
           className={`slider__left-value w-[94px] ${
-            formData.minInputError && 'errorDate'
+            formData.minInputError && "errorDate"
           }`}
           type="date"
           value={formData.minInput}
@@ -140,7 +158,7 @@ const MultiRangeSlider = ({ min, max, selectedMin, selectedMax, data, onChange }
         />
         <input
           className={`slider__right-value w-[94px] ${
-            formData.maxInputError && 'errorDate'
+            formData.maxInputError && "errorDate"
           }`}
           type="date"
           value={formData.maxInput}

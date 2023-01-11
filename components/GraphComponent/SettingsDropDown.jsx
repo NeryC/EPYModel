@@ -1,22 +1,22 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSliders, faCameraAlt } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
-import MultiRangeSlider from './MultiRangeSlider';
-import Tooltip from './Tooltip';
-import ToogleButton from './ToogleButton';
-import { useSelector, useDispatch } from 'react-redux';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSliders, faCameraAlt } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+import MultiRangeSlider from "./MultiRangeSlider";
+import Tooltip from "./Tooltip";
+import ToogleButton from "./ToogleButton";
+import { useSelector, useDispatch } from "react-redux";
 import {
   selectSettings,
   setChecks,
   resetChecks,
-  setRange
-} from '../../store/reducers/graphInfoSlice';
-import * as d3 from 'd3';
-import { saveAs } from 'file-saver';
-import { useTranslation } from 'next-i18next';
+  setRange,
+} from "../../store/reducers/graphInfoSlice";
+import * as d3 from "d3";
+import { saveAs } from "file-saver";
+import { useTranslation } from "next-i18next";
 
 const SettingsDropDown = ({ type, data }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("common");
   const dispatch = useDispatch();
   const settings = useSelector(selectSettings(type));
 
@@ -26,7 +26,7 @@ const SettingsDropDown = ({ type, data }) => {
     dispatch(
       setChecks({
         type,
-        checkName
+        checkName,
       })
     );
   };
@@ -34,31 +34,34 @@ const SettingsDropDown = ({ type, data }) => {
   const resetSettings = () => {
     dispatch(
       resetChecks({
-        type
+        type,
       })
     );
   };
 
   const handleChangeRange = (min, max) => {
-    if (settings.range.start !== min || settings.range.finish !== max)
+    if (settings.range.start !== min || settings.range.finish !== max) {
       dispatch(
         setRange({
           type,
           start: min,
-          finish: max
+          finish: max,
         })
       );
+    }
   };
 
   const isExpanded = () => {
-    return dropdown ? 'block' : 'hidden';
+    return dropdown ? "block" : "hidden";
   };
 
   const downloadGraph = () => {
     const serializer = new XMLSerializer();
-    const xmlString = serializer.serializeToString(d3.select(`#${type}`).node());
+    const xmlString = serializer.serializeToString(
+      d3.select(`#${type}`).node()
+    );
     const imgData =
-      'data:image/svg+xml;base64,' + Buffer.from(xmlString).toString('base64');
+      "data:image/svg+xml;base64," + Buffer.from(xmlString).toString("base64");
     saveAs(imgData, `${type}.svg`);
   };
 
@@ -77,8 +80,8 @@ const SettingsDropDown = ({ type, data }) => {
           className={`${isExpanded()} shadow  border bg-white z-40 rounded flex flex-col p-2 items-center text-sm`}
         >
           <div className="border-b mb-3 w-full flex justify-between font-bold text-base">
-            {t('chart-setting')}
-            <Tooltip text={t('download-graph')}>
+            {t("chart-setting")}
+            <Tooltip text={t("download-graph")}>
               <button onClick={() => downloadGraph()}>
                 <FontAwesomeIcon icon={faCameraAlt} />
               </button>
@@ -86,14 +89,16 @@ const SettingsDropDown = ({ type, data }) => {
           </div>
 
           <ToogleButton
-            label={t('smoothed-data')} //"Smoothed data"
+            label={t("smoothed-data")} //"Smoothed data"
             name="isSmooth"
-            handleChange={() => handleChangeChecks('isSmooth')}
+            handleChange={() => handleChangeChecks("isSmooth")}
             checkedState={settings.isSmooth}
           />
 
           <div className="flex justify-between mb-8">
-            <span className="text-gray-900 mr-3 flex-none">{t('date-range')}</span>
+            <span className="text-gray-900 mr-3 flex-none">
+              {t("date-range")}
+            </span>
             <MultiRangeSlider
               min={0}
               max={settings.dataLength}
@@ -105,9 +110,9 @@ const SettingsDropDown = ({ type, data }) => {
           </div>
 
           <ToogleButton
-            label={t('uncertainty')}
+            label={t("uncertainty")}
             name="uncertainty"
-            handleChange={() => handleChangeChecks('uncertainty')}
+            handleChange={() => handleChangeChecks("uncertainty")}
             checkedState={settings.uncertainty}
           />
 
@@ -115,13 +120,13 @@ const SettingsDropDown = ({ type, data }) => {
 
           <div className="flex justify-between w-full mb-2 text-sm">
             <button className="bg-transparent hover:bg-indigo-600 text-indigo-600 font-semibold hover:text-white px-2 border border-indigo-600 hover:border-transparent rounded">
-              {t('apply-to-all')}
+              {t("apply-to-all")}
             </button>
             <button
               onClick={() => resetSettings()}
               className="bg-transparent hover:bg-indigo-600 text-indigo-600 font-semibold hover:text-white px-2 border border-indigo-600 hover:border-transparent rounded"
             >
-              {t('reset')}
+              {t("reset")}
             </button>
           </div>
         </div>

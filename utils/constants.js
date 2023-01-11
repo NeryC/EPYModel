@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
-import * as d3 from 'd3';
-import { checkLine, dateField } from './index';
-import { dotFields } from './descriptions';
+import { useMemo } from "react";
+import * as d3 from "d3";
+import { checkLine, dateField } from "./index";
+import { dotFields } from "./descriptions";
 
 export const dimensions = {
   width: 1400,
@@ -10,11 +10,11 @@ export const dimensions = {
     top: 20,
     right: 30,
     bottom: 30,
-    left: 40
-  }
+    left: 40,
+  },
 };
 
-export const parseTime = d3.timeParse('%Y-%m-%d');
+export const parseTime = d3.timeParse("%Y-%m-%d");
 
 export const parseD3 = (data) => {
   data.forEach(function (d) {
@@ -28,13 +28,13 @@ export const createZoom = (left, right, width, height, zoomed) => {
     .scaleExtent([1, 10])
     .extent([
       [left, 0],
-      [width - right, height]
+      [width - right, height],
     ])
     .translateExtent([
       [left, -Infinity],
-      [width - right, Infinity]
+      [width - right, Infinity],
     ])
-    .on('zoom', zoomed);
+    .on("zoom", zoomed);
 };
 
 //legacy
@@ -81,67 +81,67 @@ export const declareAreaD3 = (xField, y0Field, y1Field) => {
 //legacy
 export const drawAreaD3 = (baseDrawData, declare) => {
   return baseDrawData.svgChart
-    .append('path')
+    .append("path")
     .data([baseDrawData.data])
-    .attr('clip-path', 'url(#' + baseDrawData.clip + ')')
-    .attr('id', 'uncertainty')
-    .style('stroke', 'none')
-    .style('fill', lineColors.uncertainty)
-    .style('opacity', 0.1)
-    .attr('d', declare(baseDrawData.x));
+    .attr("clip-path", "url(#" + baseDrawData.clip + ")")
+    .attr("id", "uncertainty")
+    .style("stroke", "none")
+    .style("fill", lineColors.uncertainty)
+    .style("opacity", 0.1)
+    .attr("d", declare(baseDrawData.x));
 };
 //legacy
 export const drawLineD3 = (baseDrawData, title, yField, declare) => {
   return baseDrawData.svgChart
-    .append('path')
+    .append("path")
     .data([baseDrawData.data])
-    .attr('clip-path', 'url(#' + baseDrawData.clip + ')')
-    .attr('id', title)
-    .attr('class', lineClass(yField))
-    .style('stroke', lineColors[yField])
-    .attr('d', declare(baseDrawData.x));
+    .attr("clip-path", "url(#" + baseDrawData.clip + ")")
+    .attr("id", title)
+    .attr("class", lineClass(yField))
+    .style("stroke", lineColors[yField])
+    .attr("d", declare(baseDrawData.x));
 };
 
 export const dynamicDateFormat = timeFormat([
   [
-    d3.timeFormat('%Y'),
+    d3.timeFormat("%Y"),
     function () {
       return true;
-    }
+    },
   ],
   [
-    d3.timeFormat('%m-%Y'),
+    d3.timeFormat("%m-%Y"),
     function (d) {
       return d.getMonth();
-    }
+    },
   ],
   [
-    d3.timeFormat('%d-%m-%Y'),
+    d3.timeFormat("%d-%m-%Y"),
     function (d) {
       return d.getDate() != 1;
-    }
-  ]
+    },
+  ],
 ]);
 
 //legacy
 export const lineColors = {
-  dailyR_sin_subRegistro: '#1900ff',
-  dailyR: '#00ccff',
-  proy: '#1900ff',
-  q75: '#ff0000',
-  q25: '#009719',
-  X10p: '#97008f',
-  X20p: '#e134f8',
-  eq: '#039bb6',
-  X2w: '#c50000',
-  uncertainty: 'b5adff'
+  dailyR_sin_subRegistro: "#1900ff",
+  dailyR: "#00ccff",
+  proy: "#1900ff",
+  q75: "#ff0000",
+  q25: "#009719",
+  X10p: "#97008f",
+  X20p: "#e134f8",
+  eq: "#039bb6",
+  X2w: "#c50000",
+  uncertainty: "b5adff",
 };
 
-const straightLine = ['dailyR', 'dailyR_sin_subRegistro'];
+const straightLine = ["dailyR", "dailyR_sin_subRegistro"];
 
 //legacy
 const lineClass = (yField) => {
-  return `line ${!straightLine.includes(yField) ? '' : 'dotted_line'}`;
+  return `line ${!straightLine.includes(yField) ? "" : "dotted_line"}`;
 };
 
 function timeFormat(formats) {
@@ -154,7 +154,7 @@ function timeFormat(formats) {
 }
 
 export const useCreateScale = ({ range, domain, scaleType }) => {
-  const type = scaleType == 'Linear' ? d3.scaleLinear() : d3.scaleTime();
+  const type = scaleType == "Linear" ? d3.scaleLinear() : d3.scaleTime();
   return useMemo(() => type.domain(domain).range(range), [domain, range, type]);
 };
 
@@ -178,12 +178,15 @@ const getInterpolateValue = (data, type, selectedLines, bisectedDate, date) => {
   if (data[bisectedDate].mejor === null) {
     intfun = d3.interpolateNumber(
       0,
-      checkLine(selectedLines, 'dailyR')
+      checkLine(selectedLines, "dailyR")
         ? data[bisectedDate].dailyR
         : data[bisectedDate][dotFields[type]]
     );
   } else {
-    intfun = d3.interpolateNumber(data[bisectedDate - 1].q75, data[bisectedDate].peor);
+    intfun = d3.interpolateNumber(
+      data[bisectedDate - 1].q75,
+      data[bisectedDate].peor
+    );
   }
   return intfun((date - dateBefore) / (dateAfter - dateBefore));
 };
@@ -215,7 +218,7 @@ export const getYDomain = (data, type, selectedLines, xz, yScale) => {
   dataSubset.map(function (d) {
     if (d.q75 === null) {
       countSubset.push(
-        checkLine(selectedLines, 'dailyR') ? d.dailyR : d[dotFields[type]]
+        checkLine(selectedLines, "dailyR") ? d.dailyR : d[dotFields[type]]
       );
     } else {
       countSubset.push(d.peor);

@@ -1,17 +1,20 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import MultiSelect from './MultiSelect';
-import SelectedLines from './SelectedLines';
-import ScenarioTooltip from './Tooltip/ScenarioTooltip';
-import { graphDescriptions } from '../../utils/descriptions';
-import { parseD3 } from '../../utils/constants';
-import Graph from './Graph';
-import { useSelector } from 'react-redux';
-import { selectScenarios, selectRawData } from '../../store/reducers/graphInfoSlice';
-import { useTranslation } from 'next-i18next';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import MultiSelect from "./MultiSelect";
+import SelectedLines from "./SelectedLines";
+import ScenarioTooltip from "./Tooltip/ScenarioTooltip";
+import { graphDescriptions } from "../../utils/descriptions";
+import { parseD3 } from "../../utils/constants";
+import Graph from "./Graph";
+import { useSelector } from "react-redux";
+import {
+  selectScenarios,
+  selectRawData,
+} from "../../store/reducers/graphInfoSlice";
+import { useTranslation } from "next-i18next";
 
 const GraphComponent = ({ type }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("common");
   const scenarios = useSelector(selectScenarios(type));
   const rawData = useSelector(selectRawData(type));
   const data = JSON.parse(JSON.stringify(rawData));
@@ -29,10 +32,12 @@ const GraphComponent = ({ type }) => {
 
   return (
     <div className="rounded overflow-hidden shadow-lg bg-white mb-3 md:mb-6 p-3 md:p-6 flex flex-col">
-      <div className="border-b-2 pb-2 text-2xl mb-2 md:mb-4">{t(`${type}-title`)}</div>
+      <div className="border-b-2 pb-2 text-2xl mb-2 md:mb-4">
+        {t(`${type}-title`)}
+      </div>
       {shouldShowSubtitle()}
       <div className="flex items-center justify-center text-sm">
-        <span className="pr-2">{t('scenario')}</span>
+        <span className="pr-2">{t("scenario")}</span>
         <ScenarioTooltip item={scenarios} top={false} type={type}>
           <FontAwesomeIcon icon={faInfoCircle} />
         </ScenarioTooltip>

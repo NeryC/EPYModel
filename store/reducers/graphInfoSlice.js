@@ -1,24 +1,24 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { concat } from 'lodash';
-import { HYDRATE } from 'next-redux-wrapper';
+import { createSlice } from "@reduxjs/toolkit";
+import { concat } from "lodash";
+import { HYDRATE } from "next-redux-wrapper";
 
 import {
   filterLines,
   hiddableLines,
   defaultVisibleLines,
-  setNewSelectedLines
-} from '../../utils/index';
+  setNewSelectedLines,
+} from "../../utils/index";
 
-import { dotFields } from '../../utils/descriptions';
+import { dotFields } from "../../utils/descriptions";
 
 const initialElements = (type) => {
   const defaultSelectedLines = defaultVisibleLines(type);
   return {
-    scenario: filterLines(type, ['proy', dotFields[type]]),
+    scenario: filterLines(type, ["proy", dotFields[type]]),
     options: hiddableLines(type),
     selectedLines: defaultSelectedLines,
     showedElements: concat(hiddableLines(type, false), defaultSelectedLines),
-    dotField: dotFields[type]
+    dotField: dotFields[type],
   };
 };
 
@@ -28,72 +28,75 @@ const initialSettings = (amountOfData = 0) => {
     uncertainty: false,
     range: {
       start: 612,
-      finish: amountOfData
+      finish: amountOfData,
     },
-    dataLength: amountOfData
+    dataLength: amountOfData,
   };
 };
 
 const initialState = {
   reported: {
-    type: 'reported',
+    type: "reported",
     settings: initialSettings(),
     data: [],
-    elements: initialElements('reported'),
-    isReady: false
+    elements: initialElements("reported"),
+    isReady: false,
   },
   hospitalized: {
-    type: 'hospitalized',
+    type: "hospitalized",
     settings: initialSettings(),
     data: [],
-    elements: initialElements('hospitalized'),
-    isReady: false
+    elements: initialElements("hospitalized"),
+    isReady: false,
   },
   ICU: {
-    type: 'ICU',
+    type: "ICU",
     settings: initialSettings(),
     data: [],
-    elements: initialElements('ICU'),
-    isReady: false
+    elements: initialElements("ICU"),
+    isReady: false,
   },
   deceases: {
-    type: 'deceases',
+    type: "deceases",
     settings: initialSettings(),
     data: [],
-    elements: initialElements('deceases'),
-    isReady: false
-  }
+    elements: initialElements("deceases"),
+    isReady: false,
+  },
 };
 
 export const graphInfoSlice = createSlice({
-  name: 'graphInfo',
+  name: "graphInfo",
   initialState,
   reducers: {
     initGraphData(state, action) {
       action.payload.reported.sort(function (a, b) {
         return new Date(a.fecha) - new Date(b.fecha);
       });
-      const amountOfData = action.payload.reported.length - 1;
+      const amountReported = action.payload.reported.length - 1;
       state.reported.data = action.payload.reported;
-      state.reported.settings = initialSettings(amountOfData);
+      state.reported.settings = initialSettings(amountReported);
       state.reported.isReady = true;
       action.payload.hospitalized.sort(function (a, b) {
         return new Date(a.fecha) - new Date(b.fecha);
       });
+      const amountHospitalized = action.payload.hospitalized.length - 1;
       state.hospitalized.data = action.payload.hospitalized;
-      state.hospitalized.settings = initialSettings(amountOfData);
+      state.hospitalized.settings = initialSettings(amountHospitalized);
       state.hospitalized.isReady = true;
       action.payload.ICU.sort(function (a, b) {
         return new Date(a.fecha) - new Date(b.fecha);
       });
+      const amountICU = action.payload.ICU.length - 1;
       state.ICU.data = action.payload.ICU;
-      state.ICU.settings = initialSettings(amountOfData);
+      state.ICU.settings = initialSettings(amountICU);
       state.ICU.isReady = true;
       action.payload.deceases.sort(function (a, b) {
         return new Date(a.fecha) - new Date(b.fecha);
       });
+      const amountDeceases = action.payload.deceases.length - 1;
       state.deceases.data = action.payload.deceases;
-      state.deceases.settings = initialSettings(amountOfData);
+      state.deceases.settings = initialSettings(amountDeceases);
       state.deceases.isReady = true;
     },
     setSelectedLine(state, action) {
@@ -119,15 +122,15 @@ export const graphInfoSlice = createSlice({
     setRange(state, action) {
       state[action.payload.type].settings.range = {
         start: action.payload.start,
-        finish: action.payload.finish
+        finish: action.payload.finish,
       };
-    }
+    },
   },
   extraReducers(builder) {
     builder.addCase(HYDRATE, (_state, action) => {
       return action.payload;
     });
-  }
+  },
 });
 
 export const selectGraphData = (state) =>
@@ -135,7 +138,8 @@ export const selectGraphData = (state) =>
     return { type, isReady };
   });
 
-export const selectScenarios = (type) => (state) => state[type].elements.scenario;
+export const selectScenarios = (type) => (state) =>
+  state[type].elements.scenario;
 
 export const selectRawData = (type) => (state) => state[type].data;
 
@@ -151,15 +155,23 @@ export const selectSettings = (type) => (state) => state[type].settings;
 export const selectSelectedLines = (type) => (state) =>
   state[type].elements.selectedLines;
 
-export const selectIsSmooth = (type) => (state) => state[type].settings.isSmooth;
+export const selectIsSmooth = (type) => (state) =>
+  state[type].settings.isSmooth;
 
-export const selectUncertainty = (type) => (state) => state[type].settings.uncertainty;
+export const selectUncertainty = (type) => (state) =>
+  state[type].settings.uncertainty;
 
 export const selectRange = (type) => (state) => state[type].settings.range;
 
-export const selectDotField = (type) => (state) => state[type].elements.dotField;
+export const selectDotField = (type) => (state) =>
+  state[type].elements.dotField;
 
-export const { initGraphData, setSelectedLine, setChecks, resetChecks, setRange } =
-  graphInfoSlice.actions;
+export const {
+  initGraphData,
+  setSelectedLine,
+  setChecks,
+  resetChecks,
+  setRange,
+} = graphInfoSlice.actions;
 
 export default graphInfoSlice.reducer;

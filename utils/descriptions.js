@@ -1,28 +1,28 @@
 export const graphDescriptions = {
   ICU: {
-    subtitle: true
+    subtitle: true,
   },
   deceases: {
-    subtitle: true
-  }
+    subtitle: true,
+  },
 };
 
 export const dotFields = {
-  reported: 'Reportados',
-  hospitalized: 'Hospitalizados',
-  ICU: 'UTI',
-  deceases: 'Fallecidos'
+  reported: "Reportados",
+  hospitalized: "Hospitalizados",
+  ICU: "UTI",
+  deceases: "Fallecidos",
 };
 
 export const linesDescriptions = (type) => {
   switch (type) {
-    case 'reported':
+    case "reported":
       return linesDescriptionReported;
-    case 'hospitalized':
+    case "hospitalized":
       return linesDescriptionHospitalized;
-    case 'ICU':
+    case "ICU":
       return linesDescriptionICU;
-    case 'deceases':
+    case "deceases":
       return linesDescriptionDeceases;
 
     default:
@@ -31,307 +31,307 @@ export const linesDescriptions = (type) => {
 };
 const linesDescriptionReported = [
   {
-    name: 'dailyR_sin_subRegistro',
-    label: 'simulated',
-    color: '#1900ff',
+    name: "dailyR_sin_subRegistro",
+    label: "simulated",
+    color: "#1900ff",
     default: false,
     hiddable: false,
-    style: 'line'
+    style: "line",
   },
   {
-    name: 'dailyR',
-    label: 'estimated',
-    color: '#00ccff',
+    name: "dailyR",
+    label: "estimated",
+    color: "#00ccff",
     default: false,
     hiddable: true,
-    style: 'line'
+    style: "line",
   },
   {
-    name: 'proy',
-    label: 'proyected',
-    color: '#1900ff',
+    name: "proy",
+    label: "proyected",
+    color: "#1900ff",
     default: false,
     hiddable: false,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'q75',
-    label: 'percentile75',
-    color: '#ff0000',
+    name: "q75",
+    label: "percentile75",
+    color: "#ff0000",
     default: true,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'q25',
-    label: 'percentile25',
-    color: '#009719',
+    name: "q25",
+    label: "percentile25",
+    color: "#009719",
     default: true,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'X10p',
-    label: '10increase',
-    color: '#97008f',
+    name: "X10p",
+    label: "10increase",
+    color: "#97008f",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'X20p',
-    label: '20reduction',
-    color: '#e134f8',
+    name: "X20p",
+    label: "20reduction",
+    color: "#e134f8",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'eq',
-    label: 'plateau',
-    color: '#039bb6',
+    name: "eq",
+    label: "plateau",
+    color: "#039bb6",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'X2w',
-    label: 'lastMonth',
-    color: '#c50000',
+    name: "X2w",
+    label: "lastMonth",
+    color: "#c50000",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'Reportados',
-    label: 'reported',
-    color: '#000000',
+    name: "Reportados",
+    label: "reported",
+    color: "#000000",
     default: false,
     hiddable: false,
-    style: 'dot'
-  }
+    style: "dot",
+  },
 ];
 
 const linesDescriptionHospitalized = [
   {
-    name: 'H',
-    label: 'simulated',
-    color: '#1900ff',
+    name: "H",
+    label: "simulated",
+    color: "#1900ff",
     default: false,
     hiddable: false,
-    style: 'line'
+    style: "line",
   },
   {
-    name: 'proy',
-    label: 'proyected',
-    color: '#1900ff',
+    name: "proy",
+    label: "proyected",
+    color: "#1900ff",
     default: false,
     hiddable: false,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'q75',
-    label: 'percentile75',
-    color: '#ff0000',
+    name: "q75",
+    label: "percentile75",
+    color: "#ff0000",
     default: true,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'q25',
-    label: 'percentile25',
-    color: '#009719',
+    name: "q25",
+    label: "percentile25",
+    color: "#009719",
     default: true,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'X10p',
-    label: '10increase',
-    color: '#97008f',
+    name: "X10p",
+    label: "10increase",
+    color: "#97008f",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'X20p',
-    label: '20reduction',
-    color: '#e134f8',
+    name: "X20p",
+    label: "20reduction",
+    color: "#e134f8",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'eq',
-    label: 'plateau',
-    color: '#039bb6',
+    name: "eq",
+    label: "plateau",
+    color: "#039bb6",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'X2w',
-    label: 'astMonth',
-    color: '#c50000',
+    name: "X2w",
+    label: "astMonth",
+    color: "#c50000",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'Hospitalizados',
-    label: 'hospitalized',
-    color: '#000000',
+    name: "Hospitalizados",
+    label: "hospitalized",
+    color: "#000000",
     default: false,
     hiddable: false,
-    style: 'dot'
-  }
+    style: "dot",
+  },
 ];
 
 const linesDescriptionICU = [
   {
-    name: 'U',
-    label: 'simulated',
-    color: '#1900ff',
+    name: "U",
+    label: "simulated",
+    color: "#1900ff",
     default: false,
     hiddable: false,
-    style: 'line'
+    style: "line",
   },
   {
-    name: 'proy',
-    label: 'proyected',
-    color: '#1900ff',
+    name: "proy",
+    label: "proyected",
+    color: "#1900ff",
     default: false,
     hiddable: false,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'q75',
-    label: 'percentile75',
-    color: '#ff0000',
+    name: "q75",
+    label: "percentile75",
+    color: "#ff0000",
     default: true,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'q25',
-    label: 'percentile25',
-    color: '#009719',
+    name: "q25",
+    label: "percentile25",
+    color: "#009719",
     default: true,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'X10p',
-    label: '10increase',
-    color: '#97008f',
+    name: "X10p",
+    label: "10increase",
+    color: "#97008f",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'X20p',
-    label: '20reduction',
-    color: '#e134f8',
+    name: "X20p",
+    label: "20reduction",
+    color: "#e134f8",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'eq',
-    label: 'plateau',
-    color: '#039bb6',
+    name: "eq",
+    label: "plateau",
+    color: "#039bb6",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'X2w',
-    label: 'lastMonth',
-    color: '#c50000',
+    name: "X2w",
+    label: "lastMonth",
+    color: "#c50000",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'UTI',
-    label: 'UTI',
-    color: '#000000',
+    name: "UTI",
+    label: "UTI",
+    color: "#000000",
     default: false,
     hiddable: false,
-    style: 'dot'
-  }
+    style: "dot",
+  },
 ];
 const linesDescriptionDeceases = [
   {
-    name: 'dailyF',
-    label: 'simulated',
-    color: '#1900ff',
+    name: "dailyF",
+    label: "simulated",
+    color: "#1900ff",
     default: false,
     hiddable: false,
-    style: 'line'
+    style: "line",
   },
   {
-    name: 'proy',
-    label: 'proyected',
-    color: '#1900ff',
+    name: "proy",
+    label: "proyected",
+    color: "#1900ff",
     default: false,
     hiddable: false,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'q75',
-    label: 'percentile75',
-    color: '#ff0000',
+    name: "q75",
+    label: "percentile75",
+    color: "#ff0000",
     default: true,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'q25',
-    label: 'percentile25',
-    color: '#009719',
+    name: "q25",
+    label: "percentile25",
+    color: "#009719",
     default: true,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'X10p',
-    label: '10increase',
-    color: '#97008f',
+    name: "X10p",
+    label: "10increase",
+    color: "#97008f",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'X20p',
-    label: '20reduction',
-    color: '#e134f8',
+    name: "X20p",
+    label: "20reduction",
+    color: "#e134f8",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'eq',
-    label: 'plateau',
-    color: '#039bb6',
+    name: "eq",
+    label: "plateau",
+    color: "#039bb6",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'X2w',
-    label: 'lastMonth',
-    color: '#c50000',
+    name: "X2w",
+    label: "lastMonth",
+    color: "#c50000",
     default: false,
     hiddable: true,
-    style: 'dashed'
+    style: "dashed",
   },
   {
-    name: 'Fallecidos',
-    label: 'deceases',
-    color: '#000000',
+    name: "Fallecidos",
+    label: "deceases",
+    color: "#000000",
     default: false,
     hiddable: false,
-    style: 'dot'
-  }
+    style: "dot",
+  },
 ];

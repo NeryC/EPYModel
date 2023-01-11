@@ -1,10 +1,13 @@
-import React from 'react';
+import React from "react";
 
 const ToogleButton = ({ label, name, handleChange, checkedState }) => {
   return (
     <div className="flex justify-between w-full mb-2">
       <span className="text-gray-900 mr-3">{label}</span>
-      <label htmlFor={name} className="inline-flex relative items-center cursor-pointer">
+      <label
+        htmlFor={name}
+        className="inline-flex relative items-center cursor-pointer"
+      >
         <input
           type="checkbox"
           checked={checkedState}

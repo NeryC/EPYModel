@@ -1,5 +1,5 @@
-import useResize from './useResize';
-import { dimensions } from '../utils/constants';
+import useResize from "./useResize";
+import { dimensions } from "../utils/constants";
 
 const useDimensions = (containerRef) => {
   const { margin } = dimensions;
@@ -25,8 +25,8 @@ const useDimensions = (containerRef) => {
       left: conditionalLeft,
       top: conditionalTop,
       right: right,
-      bottom: bottom
-    }
+      bottom: bottom,
+    },
   ];
 };
 

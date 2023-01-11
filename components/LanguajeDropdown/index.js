@@ -1,26 +1,26 @@
-import Link from 'next/link';
-import cookie from 'js-cookie';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
+import Link from "next/link";
+import cookie from "js-cookie";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 
 export default function LanguajeDropdown() {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("common");
   const router = useRouter();
 
   const [values, setValues] = useState({
-    isMenuOpen: false
+    isMenuOpen: false,
   });
 
   const openMenu = () => {
     setValues((state) => ({
       ...state,
-      isMenuOpen: !state.isMenuOpen
+      isMenuOpen: !state.isMenuOpen,
     }));
   };
 
   const setLocale = (locale) => {
-    cookie.set('NEXT_LOCALE', locale);
+    cookie.set("NEXT_LOCALE", locale);
   };
   return (
     <div className="flex justify-center">
@@ -89,7 +89,7 @@ export default function LanguajeDropdown() {
               mt-1
               bg-blue-100
               hover:bg-blue-300
-              ${!values.isMenuOpen && 'hidden'}
+              ${!values.isMenuOpen && "hidden"}
               m-2
               bg-clip-padding
               border-none

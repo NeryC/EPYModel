@@ -1,10 +1,12 @@
-import axios from 'axios';
-import { linesDescriptions } from './descriptions';
+import axios from "axios";
+import { linesDescriptions } from "./descriptions";
 
-export const dateField = 'fechaFormateada';
+export const dateField = "fechaFormateada";
 
 export const dinamicColorStyle = (type, atribute, name) => {
-  return findLine(type, name).color ? { [atribute]: findLine(type, name).color } : {};
+  return findLine(type, name).color
+    ? { [atribute]: findLine(type, name).color }
+    : {};
 };
 
 export const hiddableLines = (type, value = true) => {
@@ -47,5 +49,5 @@ export const setNewSelectedLines = (selectedLines, item) => {
 };
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://epymodel.uaa.edu.py/api'
+  baseURL: "http://epymodel.uaa.edu.py/api",
 });

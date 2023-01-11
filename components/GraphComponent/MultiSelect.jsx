@@ -1,14 +1,21 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
-import ScenarioTooltip from './Tooltip/ScenarioTooltip';
-import { dinamicColorStyle } from '../../utils/index';
-import { selectDropdownInfo, setSelectedLine } from '../../store/reducers/graphInfoSlice';
-import { useSelector, useDispatch } from 'react-redux';
-import { useTranslation } from 'next-i18next';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faXmark,
+  faChevronDown,
+  faChevronUp,
+} from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+import ScenarioTooltip from "./Tooltip/ScenarioTooltip";
+import { dinamicColorStyle } from "../../utils/index";
+import {
+  selectDropdownInfo,
+  setSelectedLine,
+} from "../../store/reducers/graphInfoSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { useTranslation } from "next-i18next";
 
 const MultiSelect = ({ type }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("common");
   const dispatch = useDispatch();
 
   const [options, selected] = useSelector(selectDropdownInfo(type));
@@ -16,11 +23,13 @@ const MultiSelect = ({ type }) => {
   let [dropdown, setDropdown] = useState(false);
 
   let isSelected = (item) => {
-    return selected.some((element) => element.label === item.label) ? `border-l-2` : '';
+    return selected.some((element) => element.label === item.label)
+      ? `border-l-2`
+      : "";
   };
 
   let isExpanded = () => {
-    return dropdown ? 'absolute' : 'hidden';
+    return dropdown ? "absolute" : "hidden";
   };
 
   let renderSelected = () => {
@@ -28,9 +37,11 @@ const MultiSelect = ({ type }) => {
       <ScenarioTooltip item={[item]} key={item.label} type={type}>
         <div
           className={`flex justify-center items-center py-1 px-2 rounded-full text-white`}
-          style={dinamicColorStyle(type, 'backgroundColor', item.name)}
+          style={dinamicColorStyle(type, "backgroundColor", item.name)}
         >
-          <div className="text-xs font-bold cursor-default">{t(item.label)}</div>
+          <div className="text-xs font-bold cursor-default">
+            {t(item.label)}
+          </div>
           <div className="flex flex-auto" onClick={() => selectOption(item)}>
             <FontAwesomeIcon
               className="cursor-pointer hover:text-black rounded-md w-3 h-3 ml-1"
@@ -54,8 +65,10 @@ const MultiSelect = ({ type }) => {
         onClick={() => selectOption(item)}
       >
         <div
-          className={`flex w-full items-center p-2 pl-2 relative ${isSelected(item)}`}
-          style={dinamicColorStyle(type, 'borderColor', item.name)}
+          className={`flex w-full items-center p-2 pl-2 relative ${isSelected(
+            item
+          )}`}
+          style={dinamicColorStyle(type, "borderColor", item.name)}
         >
           <div className="w-full items-center flex">
             <div className="mx-2 leading-6  ">{t(item.label)}</div>

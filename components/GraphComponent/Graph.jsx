@@ -1,7 +1,7 @@
-import * as d3 from 'd3';
-import useDimensions from '../../hooks/useDimensions';
-import { useRef, useId, useEffect, useMemo, useCallback } from 'react';
-import SettingsDropDown from './SettingsDropDown';
+import * as d3 from "d3";
+import useDimensions from "../../hooks/useDimensions";
+import { useRef, useId, useEffect, useMemo, useCallback } from "react";
+import SettingsDropDown from "./SettingsDropDown";
 import {
   useCreateScale,
   dynamicDateFormat,
@@ -9,19 +9,19 @@ import {
   getYDomain,
   declareAreaD3,
   createZoom,
-  useGetDomain
-} from '../../utils/constants';
-import { checkLine, dateField } from '../../utils';
-import GraphInfoTooltip from './Tooltip/GraphInfoTooltip';
-import { useSelector } from 'react-redux';
+  useGetDomain,
+} from "../../utils/constants";
+import { checkLine, dateField } from "../../utils";
+import GraphInfoTooltip from "./Tooltip/GraphInfoTooltip";
+import { useSelector } from "react-redux";
 import {
   selectSelectedLines,
   selectShowedElements,
   selectRange,
   selectIsSmooth,
   selectUncertainty,
-  selectDotField
-} from '../../store/reducers/graphInfoSlice';
+  selectDotField,
+} from "../../store/reducers/graphInfoSlice";
 
 const Graph = ({ type, data }) => {
   const svgChartRef = useRef(null);
@@ -62,31 +62,31 @@ const Graph = ({ type, data }) => {
 
     svgChart
       .selectAll(`#${dotField}-${type}`)
-      .attr('cx', (d) => xScale(d[dateField]))
-      .attr('cy', (d) => yScale(d[dotField]));
+      .attr("cx", (d) => xScale(d[dateField]))
+      .attr("cy", (d) => yScale(d[dotField]));
   }
   //y Right
   //x bottom
   //dailyR == estimated in reported graph estimated could be higer than dotfield if it is selected
   const yDomain = useGetDomain({
     data,
-    field: checkLine(selectedLines, 'dailyR') ? 'dailyR' : dotField
+    field: checkLine(selectedLines, "dailyR") ? "dailyR" : dotField,
   });
   const yScale = useCreateScale({
     range: [height - bottom, 3],
     domain: yDomain,
-    scaleType: 'Linear',
-    size: height
+    scaleType: "Linear",
+    size: height,
   });
   const xDomain = useGetDomain({
     data,
-    field: dateField
+    field: dateField,
   });
   const xScale = useCreateScale({
     range: [0, width - right],
     domain: xDomain,
-    scaleType: 'Time',
-    size: width
+    scaleType: "Time",
+    size: width,
   });
 
   const setZoom = useCallback(() => {
@@ -97,11 +97,21 @@ const Graph = ({ type, data }) => {
       d3.zoomIdentity
         .scale(
           base /
-            (xScale(data[range.finish][dateField]) - xScale(data[range.start][dateField]))
+            (xScale(data[range.finish][dateField]) -
+              xScale(data[range.start][dateField]))
         )
         .translate(-xScale(data[range.start][dateField]), 0)
     );
-  }, [data, range.finish, range.start, right, svgChart, width, xScale, zoom.transform]);
+  }, [
+    data,
+    range.finish,
+    range.start,
+    right,
+    svgChart,
+    width,
+    xScale,
+    zoom.transform,
+  ]);
 
   useEffect(() => {
     setZoom();
@@ -123,29 +133,29 @@ const Graph = ({ type, data }) => {
             .ticks(5)
             .tickSize(-(height - bottom))
             .tickFormat(dynamicDateFormat)
-        )
+        ),
     };
   }, [bottom, height, right, width]);
 
   useEffect(() => {
     dotsGroup.selectAll(`#${dotField}-${type}`).remove();
     dotsGroup
-      .selectAll('dot')
+      .selectAll("dot")
       .data(data)
-      .join('circle')
-      .attr('cx', (d) => xScale(d[dateField]))
-      .attr('cy', (d) => yScale(d[dotField]))
-      .attr('clip-path', 'url(#' + clip + ')')
-      .attr('fill', '#FFFFFF')
-      .attr('stroke', 'black')
-      .attr('opacity', 0)
-      .attr('r', 2.7)
-      .attr('id', `${dotField}-${type}`);
+      .join("circle")
+      .attr("cx", (d) => xScale(d[dateField]))
+      .attr("cy", (d) => yScale(d[dotField]))
+      .attr("clip-path", "url(#" + clip + ")")
+      .attr("fill", "#FFFFFF")
+      .attr("stroke", "black")
+      .attr("opacity", 0)
+      .attr("r", 2.7)
+      .attr("id", `${dotField}-${type}`);
 
     dotsGroup
       .selectAll(`#${dotField}-${type}`)
       .transition()
-      .attr('opacity', 1)
+      .attr("opacity", 1)
       .delay(function (_d, i) {
         return i * 2;
       });
@@ -163,37 +173,40 @@ const Graph = ({ type, data }) => {
 
   const baseLineData = {
     xField: dateField,
-    isSmooth: isSmooth
+    isSmooth: isSmooth,
   };
 
   showedElements.forEach((element) => {
-    if (element.style == 'dot') return;
+    if (element.style == "dot") return;
 
-    graphElements[element.name] = basicDeclareLineD3(baseLineData, element.name);
+    graphElements[element.name] = basicDeclareLineD3(
+      baseLineData,
+      element.name
+    );
   });
 
-  graphElements['uncertainty'] = declareAreaD3(dateField, 'peor', 'mejor');
+  graphElements["uncertainty"] = declareAreaD3(dateField, "peor", "mejor");
 
   function drawLines() {
     showedElements.forEach((element) => {
-      if (element.style == 'dot') return;
+      if (element.style == "dot") return;
       const d = graphElements[element.name](xScale, yScale)(data);
 
       svgChart
         .select(`#${element.name}-${type}`)
-        .attr('d', d?.match(/NaN|undefined/) ? '' : d);
+        .attr("d", d?.match(/NaN|undefined/) ? "" : d);
     });
 
     uncertainty
       ? svgChart
           .select(`#uncertainty-${type}`)
-          .attr('d', graphElements['uncertainty'](xScale, yScale)(data))
-      : svgChart.select(`#uncertainty-${type}`).attr('d', null);
+          .attr("d", graphElements["uncertainty"](xScale, yScale)(data))
+      : svgChart.select(`#uncertainty-${type}`).attr("d", null);
 
-    yAxisGroup.select('.domain').remove();
-    xAxisGroup.select('.domain').remove();
-    xAxisGroup.selectAll('line').attr('stroke', 'rgba(128, 128, 128, 0.3)');
-    yAxisGroup.selectAll('line').attr('stroke', 'rgba(128, 128, 128, 0.3)');
+    yAxisGroup.select(".domain").remove();
+    xAxisGroup.select(".domain").remove();
+    xAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0.3)");
+    yAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0.3)");
   }
 
   return (
@@ -201,14 +214,27 @@ const Graph = ({ type, data }) => {
       <svg id={type} width={svgWidth} height={svgHeight} ref={svgChartRef}>
         <g id="elements" transform={`translate(${left},${top})`}>
           <clipPath id={clip}>
-            <rect x={0} y={0} width={width - right} height={height - (bottom - 5)} />
+            <rect
+              x={0}
+              y={0}
+              width={width - right}
+              height={height - (bottom - 5)}
+            />
           </clipPath>
-          <g id="YAxis" ref={yAxisRef} transform={`translate(${width - right},0)`} />
-          <g id="XAxis" ref={xAxisRef} transform={`translate(0,${height - bottom})`} />
+          <g
+            id="YAxis"
+            ref={yAxisRef}
+            transform={`translate(${width - right},0)`}
+          />
+          <g
+            id="XAxis"
+            ref={xAxisRef}
+            transform={`translate(0,${height - bottom})`}
+          />
 
           <g id="Lines" clipPath={`url(#${clip})`}>
             {showedElements.map(({ name, style, color }) => {
-              if (style !== 'dot') {
+              if (style !== "dot") {
                 return (
                   <path
                     key={name}
