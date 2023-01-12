@@ -11,6 +11,7 @@ module.exports = {
       colors: {
         "gray-theme": "#BEC9DF",
         "default-text": "#364057",
+        back: "#F7F9FF",
       },
       boxShadow: {
         "complete-box": "rgba(0, 0, 0, 0.24) 0px 3px 8px;",

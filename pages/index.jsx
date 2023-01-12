@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-page-custom-font */
 import Head from "next/head";
 import Layout from "../components/Layout";
 import GraphComponent from "../components/GraphComponent";
@@ -9,6 +10,7 @@ import { useSelector } from "react-redux";
 import { wrapper } from "../store/store";
 import { axiosInstance } from "../utils";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { TitleSection } from "../components/TitleSection";
 
 export default function Graphs() {
   const graphsStatus = useSelector(selectGraphData);
@@ -20,9 +22,16 @@ export default function Graphs() {
           href="https://www.uaa.edu.py/cdn/images/560cb5c8fdf530a9635a95eab14b.png"
           rel="icon"
         />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet"
+        />
       </Head>
       <Layout>
-        <div className="flex flex-col p-2 md:p-6 text-default-text">
+        <div className="flex flex-col p-2 md:p-6 text-default-text bg-back">
+          <TitleSection />
           {graphsStatus.map(({ type, isReady }) => {
             if (isReady) return <GraphComponent type={type} key={type} />;
           })}

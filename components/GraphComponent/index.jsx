@@ -31,8 +31,8 @@ const GraphComponent = ({ type }) => {
   };
 
   return (
-    <div className="rounded overflow-hidden shadow-lg bg-white mb-3 md:mb-6 p-3 md:p-6 flex flex-col">
-      <div className="border-b-2 pb-2 text-2xl mb-2 md:mb-4">
+    <div className="rounded-lg overflow-hidden shadow-lg bg-white mb-3 md:mb-6 p-3 md:p-6 flex flex-col border border-gray-theme text-black">
+      <div className="border-b-2 pb-2 text-2xl mb-2 md:mb-4 font-bold">
         {t(`${type}-title`)}
       </div>
       {shouldShowSubtitle()}
