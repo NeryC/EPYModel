@@ -12,6 +12,7 @@ import {
   selectRawData,
 } from "../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
+import { DownloadButton } from "./DownloadButton";
 
 const GraphComponent = ({ type }) => {
   const { t } = useTranslation("common");
@@ -32,8 +33,9 @@ const GraphComponent = ({ type }) => {
 
   return (
     <div className="rounded-lg overflow-hidden shadow-lg bg-white mb-3 md:mb-6 p-3 md:p-6 flex flex-col border border-gray-theme text-black">
-      <div className="border-b-2 pb-2 text-2xl mb-2 md:mb-4 font-bold">
+      <div className="border-b-2 pb-2 text-2xl mb-2 md:mb-4 font-bold flex justify-between w-full ">
         {t(`${type}-title`)}
+        <DownloadButton type={type} />
       </div>
       {shouldShowSubtitle()}
       <div className="flex items-center justify-center text-sm">
