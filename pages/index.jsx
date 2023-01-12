@@ -22,7 +22,7 @@ export default function Graphs() {
         />
       </Head>
       <Layout>
-        <div className="flex flex-col p-2 md:p-6">
+        <div className="flex flex-col p-2 md:p-6 text-default-text">
           {graphsStatus.map(({ type, isReady }) => {
             if (isReady) return <GraphComponent type={type} key={type} />;
           })}
