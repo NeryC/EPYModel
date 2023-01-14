@@ -25,8 +25,8 @@ const GraphInfoTooltip = ({
         .select(".tooltipLine")
         .attr("x1", x)
         .attr("x2", x)
-        .attr("y1", 20)
-        .attr("y2", height);
+        .attr("y1", 0)
+        .attr("y2", height - 30);
     },
     [ref, height]
   );

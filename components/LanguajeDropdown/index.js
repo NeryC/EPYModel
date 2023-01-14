@@ -36,8 +36,8 @@ export default function LanguajeDropdown() {
         <button
           className={`
              dropdown-toggle
-             px-4
-             py-2.5
+             px-3
+             py-2
              rounded-lg
              ${values.isMenuOpen && "shadow-complete-box"}
              hover:shadow-complete-box
@@ -77,10 +77,8 @@ export default function LanguajeDropdown() {
               rounded-lg
               shadow-lg
               mt-1
-              bg-blue-100
               hover:bg-blue-300
               ${!values.isMenuOpen && "hidden"}
-              m-2
               shadow-complete-box
               ${!values.isMenuOpen && "hidden"}
               my-2

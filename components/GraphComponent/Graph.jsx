@@ -73,7 +73,7 @@ const Graph = ({ type, data }) => {
     field: checkLine(selectedLines, "dailyR") ? "dailyR" : dotField,
   });
   const yScale = useCreateScale({
-    range: [height - bottom, 3],
+    range: [height - bottom, 0],
     domain: yDomain,
     scaleType: "Linear",
     size: height,
@@ -122,9 +122,10 @@ const Graph = ({ type, data }) => {
       y: (g, y1) =>
         g.call(
           d3
-            .axisRight(y1)
+            .axisLeft(y1)
             .ticks(5)
             .tickSize(-(width - right))
+            .tickPadding(10)
         ),
       x: (g, x1) =>
         g.call(
@@ -133,6 +134,7 @@ const Graph = ({ type, data }) => {
             .ticks(5)
             .tickSize(-(height - bottom))
             .tickFormat(dynamicDateFormat)
+            .tickPadding(10)
         ),
     };
   }, [bottom, height, right, width]);
@@ -203,10 +205,16 @@ const Graph = ({ type, data }) => {
           .attr("d", graphElements["uncertainty"](xScale, yScale)(data))
       : svgChart.select(`#uncertainty-${type}`).attr("d", null);
 
-    yAxisGroup.select(".domain").remove();
-    xAxisGroup.select(".domain").remove();
+    // yAxisGroup.select(".domain").remove();
+    // xAxisGroup.select(".domain").remove();
+    // opacity en 0 si lo quiero quitar
+    // xAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0)");
     xAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0.3)");
     yAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0.3)");
+    yAxisGroup.selectAll("path").attr("stroke", "rgba(128, 128, 128, 0.3)");
+    xAxisGroup.selectAll("path").attr("stroke", "rgba(128, 128, 128, 0.3)");
+    yAxisGroup.selectAll("text").attr("class", "font-bold text-xs");
+    xAxisGroup.selectAll("text").attr("class", "font-bold text-xs");
   }
 
   return (
@@ -221,11 +229,7 @@ const Graph = ({ type, data }) => {
               height={height - (bottom - 5)}
             />
           </clipPath>
-          <g
-            id="YAxis"
-            ref={yAxisRef}
-            transform={`translate(${width - right},0)`}
-          />
+          <g id="YAxis" ref={yAxisRef} />
           <g
             id="XAxis"
             ref={xAxisRef}

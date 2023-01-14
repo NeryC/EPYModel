@@ -34,7 +34,7 @@ export default function Graphs() {
         />
       </Head>
       <Layout>
-        <div className="flex flex-col p-2 md:p-6 text-default-text bg-back">
+        <div className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back">
           <TitleSection />
           {graphsStatus.map(({ type, isReady }) => {
             if (isReady) return <GraphComponent type={type} key={type} />;

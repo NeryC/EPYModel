@@ -12,23 +12,25 @@ const SelectedLines = ({ type }) => {
   const dotField = useSelector(selectDotField(type));
 
   const chooseClass = (item) => {
-    if (item.type == "dot") {
+    if (item.style == "dot") {
       return "circle mx-auto";
     } else {
-      return `border-t-4 w-8 ${item.type == "dashed" ? "border-dashed" : ""}`;
+      // return `border-t-4 w-8 ${item.style == "dashed" ? "border-dashed" : ""}`;
+      return `h-1.5 w-6 rounded-xl`;
     }
   };
-
+  // en caso de usar border
+  // ? dinamicColorStyle(type, "borderColor", fieldName)
   const chooseLineColor = (fieldName) =>
     fieldName != dotField
-      ? dinamicColorStyle(type, "borderColor", fieldName)
+      ? dinamicColorStyle(type, "backgroundColor", fieldName)
       : {};
 
   let renderSelected = () => {
     return showedElements.map((item) => (
       <div
         key={item.label}
-        className={`flex justify-center items-center gap-2 rounded-full`}
+        className={`flex justify-center items-center gap-2`}
       >
         <div className="flex flex-auto">
           <div
@@ -36,18 +38,12 @@ const SelectedLines = ({ type }) => {
             style={chooseLineColor(item.name)}
           />
         </div>
-        <div className="text-xs font-bold">{t(item.label)}</div>
+        <div className="text-sm font-bold">{t(item.label)}</div>
       </div>
     ));
   };
 
-  return (
-    <div className="rounded">
-      <div className="flex flex-wrap justify-center min-w-[100px] gap-5">
-        {renderSelected()}
-      </div>
-    </div>
-  );
+  return <div className="flex text-sm gap-5 py-2">{renderSelected()}</div>;
 };
 
 export default SelectedLines;

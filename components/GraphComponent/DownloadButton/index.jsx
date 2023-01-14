@@ -47,6 +47,7 @@ export const DownloadButton = ({ type }) => {
             items-center 
             ${values.isMenuOpen ? "bg-gray-200" : "bg-transparent"} 
             font-semibold 
+            py-1
             px-3 
             border 
           border-gray-theme 

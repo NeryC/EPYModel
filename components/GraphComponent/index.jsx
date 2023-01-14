@@ -33,22 +33,23 @@ const GraphComponent = ({ type }) => {
 
   return (
     <div className="rounded-lg overflow-hidden shadow-lg bg-white mb-3 md:mb-6 p-3 md:p-6 flex flex-col border border-gray-theme text-black">
-      <div className="border-b-2 pb-2 text-2xl mb-2 md:mb-4 font-bold flex justify-between w-full ">
-        {t(`${type}-title`)}
-        <DownloadButton type={type} />
+      <div className="border-b-2 pb-2 text-2xl mb-2 md:mb-4 font-bold flex flex-col w-full ">
+        <div className="flex justify-between">
+          {t(`${type}-title`)}
+          <DownloadButton type={type} />
+        </div>
+        <SelectedLines type={type} />
       </div>
       {shouldShowSubtitle()}
-      <div className="flex items-center justify-center text-sm">
+      {/* escenarios por ahora deshabilitado */}
+      {/* <div className="flex items-center justify-center text-sm">
         <span className="pr-2">{t("scenario")}</span>
         <ScenarioTooltip item={scenarios} top={false} type={type}>
           <FontAwesomeIcon icon={faInfoCircle} />
         </ScenarioTooltip>
         <MultiSelect type={type} />
-      </div>
+      </div> */}
       <Graph type={type} data={data} />
-      <div className="flex items-center justify-center text-sm">
-        <SelectedLines type={type} />
-      </div>
     </div>
   );
 };

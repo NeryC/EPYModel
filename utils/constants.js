@@ -110,7 +110,7 @@ export const dynamicDateFormat = timeFormat([
     },
   ],
   [
-    d3.timeFormat("%m-%Y"),
+    d3.timeFormat("%b-%Y"),
     function (d) {
       return d.getMonth();
     },
