@@ -13,6 +13,7 @@ module.exports = {
         "default-text": "#364057",
         back: "#F7F9FF",
         "deep-blue": "#0D39C9",
+        "dark-blue": "#111725",
       },
       boxShadow: {
         "complete-box": "rgba(0, 0, 0, 0.24) 0px 3px 8px;",

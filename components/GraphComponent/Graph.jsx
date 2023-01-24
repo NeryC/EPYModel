@@ -4,12 +4,12 @@ import { useRef, useId, useEffect, useMemo, useCallback } from "react";
 import SettingsDropDown from "./SettingsDropDown";
 import {
   useCreateScale,
-  dynamicDateFormat,
   basicDeclareLineD3,
   getYDomain,
   declareAreaD3,
   createZoom,
   useGetDomain,
+  timeFormat,
 } from "../../utils/constants";
 import { checkLine, dateField } from "../../utils";
 import GraphInfoTooltip from "./Tooltip/GraphInfoTooltip";
@@ -22,12 +22,12 @@ import {
   selectUncertainty,
   selectDotField,
 } from "../../store/reducers/graphInfoSlice";
+import useD3Locale from "../../hooks/useD3Locale";
 
 const Graph = ({ type, data }) => {
   const svgChartRef = useRef(null);
   const yAxisRef = useRef(null);
   const xAxisRef = useRef(null);
-  const dotsRef = useRef(null);
   const containerRef = useRef(null);
 
   const selectedLines = useSelector(selectSelectedLines(type));
@@ -47,7 +47,6 @@ const Graph = ({ type, data }) => {
   const svgChart = d3.select(svgChartRef.current);
   const yAxisGroup = d3.select(yAxisRef.current);
   const xAxisGroup = d3.select(xAxisRef.current);
-  const dotsGroup = d3.select(dotsRef.current);
 
   const zoom = createZoom(left, right, width, height, zoomed);
 
@@ -59,11 +58,6 @@ const Graph = ({ type, data }) => {
     xAxisGroup.call(axis.x, xz);
     yAxisGroup.call(axis.y, yz);
     drawLines();
-
-    svgChart
-      .selectAll(`#${dotField}-${type}`)
-      .attr("cx", (d) => xScale(d[dateField]))
-      .attr("cy", (d) => yScale(d[dotField]));
   }
   //y Right
   //x bottom
@@ -125,7 +119,7 @@ const Graph = ({ type, data }) => {
             .axisLeft(y1)
             .ticks(5)
             .tickSize(-(width - right))
-            .tickPadding(10)
+            .tickPadding(8)
         ),
       x: (g, x1) =>
         g.call(
@@ -133,45 +127,37 @@ const Graph = ({ type, data }) => {
             .axisBottom(x1)
             .ticks(5)
             .tickSize(-(height - bottom))
-            .tickFormat(dynamicDateFormat)
+            .tickFormat(
+              timeFormat([
+                [
+                  d3.timeFormat("%Y"),
+                  function () {
+                    return true;
+                  },
+                ],
+                [
+                  d3.timeFormat("%b %Y"),
+                  function (d) {
+                    return d.getMonth();
+                  },
+                ],
+                [
+                  d3.timeFormat("%d-%m-%Y"),
+                  function (d) {
+                    return d.getDate() != 1;
+                  },
+                ],
+              ])
+            )
             .tickPadding(10)
         ),
     };
   }, [bottom, height, right, width]);
 
   useEffect(() => {
-    dotsGroup.selectAll(`#${dotField}-${type}`).remove();
-    dotsGroup
-      .selectAll("dot")
-      .data(data)
-      .join("circle")
-      .attr("cx", (d) => xScale(d[dateField]))
-      .attr("cy", (d) => yScale(d[dotField]))
-      .attr("clip-path", "url(#" + clip + ")")
-      .attr("fill", "#FFFFFF")
-      .attr("stroke", "black")
-      .attr("opacity", 0)
-      .attr("r", 2.7)
-      .attr("id", `${dotField}-${type}`);
-
-    dotsGroup
-      .selectAll(`#${dotField}-${type}`)
-      .transition()
-      .attr("opacity", 1)
-      .delay(function (_d, i) {
-        return i * 2;
-      });
-
-    dotsGroup
-      .selectAll(`#${dotField}-${type}`)
-      .filter(function (d) {
-        return d[dotField] == null;
-      })
-      .remove();
     setZoom();
     // I only need this render in the first time or when el graph is resized
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [width]);
+  }, [setZoom, width]);
 
   const baseLineData = {
     xField: dateField,
@@ -213,8 +199,16 @@ const Graph = ({ type, data }) => {
     yAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0.3)");
     yAxisGroup.selectAll("path").attr("stroke", "rgba(128, 128, 128, 0.3)");
     xAxisGroup.selectAll("path").attr("stroke", "rgba(128, 128, 128, 0.3)");
-    yAxisGroup.selectAll("text").attr("class", "font-bold text-xs");
-    xAxisGroup.selectAll("text").attr("class", "font-bold text-xs");
+    yAxisGroup
+      .selectAll("text")
+      .attr("font-family", "Nunito, sans-serif")
+      .attr("font-size", "12px")
+      .attr("font-weight", "bold");
+    xAxisGroup
+      .selectAll("text")
+      .attr("font-family", "Nunito, sans-serif")
+      .attr("font-size", "12px")
+      .attr("font-weight", "bold");
   }
 
   return (
@@ -262,7 +256,6 @@ const Graph = ({ type, data }) => {
               opacity={0.1}
             />
           </g>
-          <g id="Dots" ref={dotsRef}></g>
 
           <GraphInfoTooltip
             xScale={xScale}

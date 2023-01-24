@@ -1,22 +1,14 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import MultiSelect from "./MultiSelect";
 import SelectedLines from "./SelectedLines";
-import ScenarioTooltip from "./Tooltip/ScenarioTooltip";
 import { graphDescriptions } from "../../utils/descriptions";
 import { parseD3 } from "../../utils/constants";
 import Graph from "./Graph";
 import { useSelector } from "react-redux";
-import {
-  selectScenarios,
-  selectRawData,
-} from "../../store/reducers/graphInfoSlice";
+import { selectRawData } from "../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
 import { DownloadButton } from "./DownloadButton";
 
 const GraphComponent = ({ type }) => {
   const { t } = useTranslation("common");
-  const scenarios = useSelector(selectScenarios(type));
   const rawData = useSelector(selectRawData(type));
   const data = JSON.parse(JSON.stringify(rawData));
   parseD3(data);

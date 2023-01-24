@@ -29,6 +29,7 @@
   "home-descrioption": "The publication was made within the PINV20-40 project co-financed by the National Council of Science, and Technology (CONACYT) with resources from the FEEI",
   "more-information": "For more information about this work, ",
   "go-here" : "go here",
+  "dateSeparator": "%b %e, %Y",
 
   "reported":"Reported",
   "reported-title":"Projection of possible new Infected/Daily reported",

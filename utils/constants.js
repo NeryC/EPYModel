@@ -38,19 +38,19 @@ export const createZoom = (left, right, width, height, zoomed) => {
 };
 
 //legacy
-export const declareLineD3 = (baseDeclareData, yField) => {
-  return (x) =>
-    d3
-      .line()
-      .x(function (d) {
-        return x(d[baseDeclareData.xField]);
-      })
-      .y(function (d) {
-        return baseDeclareData.y(d[yField]);
-      })
-      .curve(baseDeclareData.isSmooth ? d3.curveNatural : d3.curveLinear)
-      .defined((d) => d[yField] != null);
-};
+// export const declareLineD3 = (baseDeclareData, yField) => {
+//   return (x) =>
+//     d3
+//       .line()
+//       .x(function (d) {
+//         return x(d[baseDeclareData.xField]);
+//       })
+//       .y(function (d) {
+//         return baseDeclareData.y(d[yField]);
+//       })
+//       .curve(baseDeclareData.isSmooth ? d3.curveNatural : d3.curveLinear)
+//       .defined((d) => d[yField] != null);
+// };
 
 export const basicDeclareLineD3 = (baseLineData, dataYField) => {
   return (xScale, yScale) =>
@@ -78,29 +78,29 @@ export const declareAreaD3 = (xField, y0Field, y1Field) => {
       .defined((d) => d[y0Field] != null);
 };
 
-//legacy
-export const drawAreaD3 = (baseDrawData, declare) => {
-  return baseDrawData.svgChart
-    .append("path")
-    .data([baseDrawData.data])
-    .attr("clip-path", "url(#" + baseDrawData.clip + ")")
-    .attr("id", "uncertainty")
-    .style("stroke", "none")
-    .style("fill", lineColors.uncertainty)
-    .style("opacity", 0.1)
-    .attr("d", declare(baseDrawData.x));
-};
-//legacy
-export const drawLineD3 = (baseDrawData, title, yField, declare) => {
-  return baseDrawData.svgChart
-    .append("path")
-    .data([baseDrawData.data])
-    .attr("clip-path", "url(#" + baseDrawData.clip + ")")
-    .attr("id", title)
-    .attr("class", lineClass(yField))
-    .style("stroke", lineColors[yField])
-    .attr("d", declare(baseDrawData.x));
-};
+// //legacy
+// export const drawAreaD3 = (baseDrawData, declare) => {
+//   return baseDrawData.svgChart
+//     .append("path")
+//     .data([baseDrawData.data])
+//     .attr("clip-path", "url(#" + baseDrawData.clip + ")")
+//     .attr("id", "uncertainty")
+//     .style("stroke", "none")
+//     .style("fill", lineColors.uncertainty)
+//     .style("opacity", 0.1)
+//     .attr("d", declare(baseDrawData.x));
+// };
+// //legacy
+// export const drawLineD3 = (baseDrawData, title, yField, declare) => {
+//   return baseDrawData.svgChart
+//     .append("path")
+//     .data([baseDrawData.data])
+//     .attr("clip-path", "url(#" + baseDrawData.clip + ")")
+//     .attr("id", title)
+//     .attr("class", lineClass(yField))
+//     .style("stroke", lineColors[yField])
+//     .attr("d", declare(baseDrawData.x));
+// };
 
 export const dynamicDateFormat = timeFormat([
   [
@@ -110,7 +110,7 @@ export const dynamicDateFormat = timeFormat([
     },
   ],
   [
-    d3.timeFormat("%b-%Y"),
+    d3.timeFormat("%b %Y"),
     function (d) {
       return d.getMonth();
     },
@@ -124,27 +124,153 @@ export const dynamicDateFormat = timeFormat([
 ]);
 
 //legacy
-export const lineColors = {
-  dailyR_sin_subRegistro: "#1900ff",
-  dailyR: "#00ccff",
-  proy: "#1900ff",
-  q75: "#ff0000",
-  q25: "#009719",
-  X10p: "#97008f",
-  X20p: "#e134f8",
-  eq: "#039bb6",
-  X2w: "#c50000",
-  uncertainty: "b5adff",
+// export const lineColors = {
+//   dailyR_sin_subRegistro: "#1900ff",
+//   dailyR: "#00ccff",
+//   proy: "#1900ff",
+//   q75: "#ff0000",
+//   q25: "#009719",
+//   X10p: "#97008f",
+//   X20p: "#e134f8",
+//   eq: "#039bb6",
+//   X2w: "#c50000",
+//   uncertainty: "b5adff",
+// };
+
+//formatos de dias para no hacer consultas extra
+export const es = {
+  dateTime: "%A, %e de %B de %Y, %X",
+  date: "%d/%m/%Y",
+  time: "%H:%M:%S",
+  periods: ["AM", "PM"],
+  days: [
+    "domingo",
+    "lunes",
+    "martes",
+    "miércoles",
+    "jueves",
+    "viernes",
+    "sábado",
+  ],
+  shortDays: ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"],
+  months: [
+    "enero",
+    "febrero",
+    "marzo",
+    "abril",
+    "mayo",
+    "junio",
+    "julio",
+    "agosto",
+    "septiembre",
+    "octubre",
+    "noviembre",
+    "diciembre",
+  ],
+  shortMonths: [
+    "ene",
+    "feb",
+    "mar",
+    "abr",
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep",
+    "oct",
+    "nov",
+    "dic",
+  ],
+};
+export const en = {
+  dateTime: "%x, %X",
+  date: "%-m/%-d/%Y",
+  time: "%-I:%M:%S %p",
+  periods: ["AM", "PM"],
+  days: [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ],
+  shortDays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  months: [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ],
+  shortMonths: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ],
+};
+export const pt = {
+  dateTime: "%A, %e de %B de %Y. %X",
+  date: "%d/%m/%Y",
+  time: "%H:%M:%S",
+  periods: ["AM", "PM"],
+  days: ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
+  shortDays: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+  months: [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro",
+  ],
+  shortMonths: [
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez",
+  ],
 };
 
 const straightLine = ["dailyR", "dailyR_sin_subRegistro"];
 
 //legacy
-const lineClass = (yField) => {
-  return `line ${!straightLine.includes(yField) ? "" : "dotted_line"}`;
-};
+// const lineClass = (yField) => {
+//   return `line ${!straightLine.includes(yField) ? "" : "dotted_line"}`;
+// };
 
-function timeFormat(formats) {
+export function timeFormat(formats) {
   return function (date) {
     let i = formats.length - 1,
       f = formats[i];
