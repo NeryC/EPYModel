@@ -151,9 +151,9 @@ const GraphInfoTooltip = ({
 
   useEffect(() => {
     cuadro
-      .on("mouseout.tooltip", () => {
-        d3.select(ref.current).attr("opacity", 0);
-      })
+      // .on("mouseout.tooltip", () => {
+      //   d3.select(ref.current).attr("opacity", 0);
+      // })
       .on("mouseover.tooltip", () => {
         d3.select(ref.current).attr("opacity", 1);
       })
@@ -167,7 +167,7 @@ const GraphInfoTooltip = ({
   return (
     <>
       <g ref={ref} opacity={0}>
-        <line className="tooltipLine" stroke="#64748b" />
+        <line className="tooltipLine" stroke="#64748b" strokeDasharray="4 1" />
         <g className="tooltipContent">
           <rect
             className="contentBackground"

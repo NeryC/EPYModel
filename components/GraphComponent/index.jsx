@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { selectRawData } from "../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
 import { DownloadButton } from "./DownloadButton";
+import { FiltersSection } from "./FiltersSetion";
 
 const GraphComponent = ({ type }) => {
   const { t } = useTranslation("common");
@@ -32,6 +33,7 @@ const GraphComponent = ({ type }) => {
         </div>
         <SelectedLines type={type} />
       </div>
+      <FiltersSection />
       {shouldShowSubtitle()}
       {/* escenarios por ahora deshabilitado */}
       {/* <div className="flex items-center justify-center text-sm">

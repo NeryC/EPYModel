@@ -30,6 +30,7 @@
   "more-information": "For more information about this work, ",
   "go-here" : "go here",
   "dateSeparator": "%b %e, %Y",
+  "filters": "Filters:",
 
   "reported":"Reported",
   "reported-title":"Projection of possible new Infected/Daily reported",
