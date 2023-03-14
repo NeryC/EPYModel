@@ -50,5 +50,5 @@ export const setNewSelectedLines = (selectedLines, item) => {
 
 export const axiosInstance = axios.create({
   // baseURL: "http://epymodel.uaa.edu.py/api",
-  baseURL: "http://localhost:30001",
+  baseURL: "http://epymodel.uaa.edu.py:30001",
 });
