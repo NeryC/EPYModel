@@ -25,8 +25,8 @@ const GraphInfoTooltip = ({
         .select(".tooltipLine")
         .attr("x1", x)
         .attr("x2", x)
-        .attr("y1", 20)
-        .attr("y2", height);
+        .attr("y1", 0)
+        .attr("y2", height - 30);
     },
     [ref, height]
   );
@@ -43,10 +43,10 @@ const GraphInfoTooltip = ({
         return `translate(${translateX}, ${translateY})`;
       });
       tooltipContent
-        .select(".contentTitle")
-        .text(d3.timeFormat("%d/%m/%y")(xScale.invert(x)));
+        .select(".contentDate")
+        .text(d3.timeFormat(t("dateSeparator"))(xScale.invert(x)));
     },
-    [xScale, width, height]
+    [t, xScale, width, height]
   );
 
   const drawBackground = useCallback(() => {
@@ -70,13 +70,13 @@ const GraphInfoTooltip = ({
   }, []);
 
   const placeDots = useCallback(
-    (actualData, color, i, baseXPos) => {
+    (actualData, color, i, baseXPos, style) => {
       const label = showedElements[i].name;
 
       contentDots
         .append("circle")
         .attr("r", 5)
-        .attr("fill", color)
+        .attr("fill", style !== "dot" ? color : "#000000")
         .attr("cx", (_d) => baseXPos)
         .attr("cy", (_d) => yScale(actualData[label]));
     },
@@ -98,7 +98,7 @@ const GraphInfoTooltip = ({
       content.selectAll("*").remove();
       contentDots.selectAll("*").remove();
 
-      showedElements.forEach(({ label, color, name }, i) => {
+      showedElements.forEach(({ label, color, name, style }, i) => {
         if (actualData[name] === null) return;
         const insideContent = content
           .append("g")
@@ -107,15 +107,19 @@ const GraphInfoTooltip = ({
         insideContent
           .append("text")
           .attr("class", "performanceItemName")
+          .attr("fill", "white")
+          .attr("font-family", "Nunito, sans-serif")
           .attr("transform", `translate(10,6)`)
           .text(`${t(label)}`);
         insideContent
           .append("text")
           .attr("class", "performanceItemMarketValue")
+          .attr("fill", "white")
+          .attr("font-family", "Nunito, sans-serif")
           .text(Math.round(actualData[name]));
 
         baseXPos = xScale(actualData[dateField]);
-        placeDots(actualData, color, i, baseXPos);
+        placeDots(actualData, color, i, baseXPos, style);
       });
 
       const maxNameWidth = d3.max(
@@ -163,17 +167,21 @@ const GraphInfoTooltip = ({
   return (
     <>
       <g ref={ref} opacity={0}>
-        <line className="tooltipLine stroke-slate-500" />
+        <line className="tooltipLine" stroke="#64748b" strokeDasharray="4 1" />
         <g className="tooltipContent">
           <rect
-            className="contentBackground fill-slate-200"
+            className="contentBackground"
             rx={4}
             ry={4}
             opacity={0.9}
+            fill="#111725"
           />
           <text
-            className="contentTitle font-bold"
+            className="contentDate"
             transform="translate(4,20)"
+            fontFamily="Nunito, sans-serif"
+            fontWeight={"bold"}
+            fill="white"
           />
           <g ref={contentRef} transform="translate(4,32)" />
         </g>
