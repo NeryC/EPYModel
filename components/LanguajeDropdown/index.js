@@ -10,6 +10,7 @@ import Image from "next/image";
 export default function LanguajeDropdown() {
   const { t } = useTranslation("common");
   const router = useRouter();
+  let timeoutControler;
 
   const [values, setValues] = useState({
     isMenuOpen: false,
@@ -30,8 +31,24 @@ export default function LanguajeDropdown() {
     }));
   };
 
+  const handleMouseLeave = () => {
+    timeoutControler = setTimeout(() => {
+      setValues((state) => ({
+        ...state,
+        isMenuOpen: false,
+      }));
+    }, 1000);
+  };
+  const handleMouseEnter = () => {
+    timeoutControler && clearTimeout(timeoutControler);
+  };
+
   return (
-    <div className="flex justify-center text-xs font-medium">
+    <div
+      onMouseLeave={handleMouseLeave}
+      onMouseEnter={handleMouseEnter}
+      className="flex justify-center text-xs font-medium"
+    >
       <div className="dropdown relative">
         <button
           className={`

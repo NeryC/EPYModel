@@ -16,6 +16,7 @@ const SettingsDropDown = ({ type, data }) => {
   const { t } = useTranslation("common");
   const dispatch = useDispatch();
   const settings = useSelector(selectSettings(type));
+  let timeoutControler;
 
   const [dropdown, setDropdown] = useState(false);
 
@@ -49,12 +50,25 @@ const SettingsDropDown = ({ type, data }) => {
   };
 
   const isExpanded = () => {
-    return dropdown ? "block" : "hidden";
+    return dropdown ? "visible" : "invisible";
+  };
+
+  const handleMouseLeave = () => {
+    timeoutControler = setTimeout(() => {
+      setDropdown(false);
+    }, 1000);
+  };
+  const handleMouseEnter = () => {
+    timeoutControler && clearTimeout(timeoutControler);
   };
 
   if (settings)
     return (
-      <div className="flex flex-col items-end top-2 right-7 md:top-10 md:right-14 absolute">
+      <div
+        onMouseLeave={handleMouseLeave}
+        onMouseEnter={handleMouseEnter}
+        className="flex flex-col items-end top-2 right-7 md:top-10 md:right-14 absolute"
+      >
         <div
           onClick={() => setDropdown(!dropdown)}
           className="p-3 shadow-2xl mb-2 rounded-full shadow-gray-900 inline-flex text-sm border text-gray-600 
@@ -98,12 +112,9 @@ const SettingsDropDown = ({ type, data }) => {
 
           <div className="border-b mb-3 w-full" />
 
-          <div className="flex justify-between w-full mb-2 text-sm">
-            <button className="bg-transparent hover:bg-indigo-600 text-indigo-600 font-semibold hover:text-white px-2 border border-indigo-600 hover:border-transparent rounded">
-              {t("apply-to-all")}
-            </button>
+          <div className="flex flex-row-reverse w-full mb-2 text-sm">
             <button
-              onClick={() => resetSettings()}
+              onClick={resetSettings}
               className="bg-transparent hover:bg-indigo-600 text-indigo-600 font-semibold hover:text-white px-2 border border-indigo-600 hover:border-transparent rounded"
             >
               {t("reset")}

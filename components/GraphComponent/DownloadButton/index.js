@@ -8,15 +8,12 @@ import { baseURL, getDownloadPath } from "../../../utils/constants.js";
 export const DownloadButton = ({ type }) => {
   const { t } = useTranslation("common");
 
-  const [values, setValues] = useState({
-    isMenuOpen: false,
-  });
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  let timeoutControler;
 
   const openMenu = () => {
-    setValues((state) => ({
-      ...state,
-      isMenuOpen: !state.isMenuOpen,
-    }));
+    setShowDropdown(!showDropdown);
   };
 
   const downloadGraph = () => {
@@ -52,15 +49,28 @@ export const DownloadButton = ({ type }) => {
       );
   };
 
+  const handleMouseLeave = () => {
+    timeoutControler = setTimeout(() => {
+      setShowDropdown(false);
+    }, 1000);
+  };
+  const handleMouseEnter = () => {
+    timeoutControler && clearTimeout(timeoutControler);
+  };
+
   return (
-    <div className="flex justify-center text-base font-medium">
+    <div
+      className="flex justify-center text-base font-medium"
+      onMouseLeave={handleMouseLeave}
+      onMouseEnter={handleMouseEnter}
+    >
       <div className="dropdown relative text-deep-blue">
         <button
           onClick={openMenu}
           className={`
             flex 
             items-center 
-            ${values.isMenuOpen ? "bg-gray-200" : "bg-transparent"} 
+            ${showDropdown ? "bg-gray-200" : "bg-transparent"} 
             font-semibold 
             py-1
             px-3 
@@ -90,7 +100,7 @@ export const DownloadButton = ({ type }) => {
               list-none
               rounded-lg
               shadow-complete-box
-              ${!values.isMenuOpen && "hidden"}
+              ${!showDropdown && "hidden"}
               my-2
               bg-clip-padding
               border-none
