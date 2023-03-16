@@ -12,7 +12,7 @@ import {
   timeFormat,
   getMaxField,
 } from "../../utils/constants";
-import { dateField } from "../../utils";
+import { dateField } from "../../utils/constants.js";
 import GraphInfoTooltip from "./Tooltip/GraphInfoTooltip";
 import { useSelector } from "react-redux";
 import {

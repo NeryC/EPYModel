@@ -3,6 +3,7 @@ import { useTranslation } from "next-i18next";
 import { useState } from "react";
 import * as d3 from "d3";
 import { saveAs } from "file-saver";
+import { baseURL, getDownloadPath } from "../../../utils/constants.js";
 
 export const DownloadButton = ({ type }) => {
   const { t } = useTranslation("common");
@@ -18,7 +19,7 @@ export const DownloadButton = ({ type }) => {
     }));
   };
 
-  const downloadGraph = (format) => {
+  const downloadGraph = () => {
     const serializer = new XMLSerializer();
     const xmlString = serializer.serializeToString(
       d3.select(`#${type}`).node()
@@ -28,14 +29,28 @@ export const DownloadButton = ({ type }) => {
     saveAs(imgData, `${type}.svg`);
   };
 
-  const DonwloadOption = ({ text }) => (
-    <li
-      className="dropdown-item hover:bg-blue-100 px-4 py-1"
-      onClick={() => downloadGraph(text)}
-    >
-      {text}
-    </li>
-  );
+  const DonwloadOption = ({ text }) => {
+    if (text === "svg")
+      return (
+        <li className="dropdown-item hover:bg-blue-100 px-4 py-1">
+          <span className="block cursor-pointer" onClick={downloadGraph}>
+            {text}
+          </span>
+        </li>
+      );
+    if (text === "csv")
+      return (
+        <li className="dropdown-item hover:bg-blue-100 px-4 py-1">
+          <a
+            className="block cursor-pointer"
+            href={`${baseURL}${getDownloadPath[type]}`}
+            download="renamed"
+          >
+            {text}
+          </a>
+        </li>
+      );
+  };
 
   return (
     <div className="flex justify-center text-base font-medium">

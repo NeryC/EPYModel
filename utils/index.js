@@ -1,7 +1,6 @@
 import axios from "axios";
 import { linesDescriptions } from "./descriptions";
-
-export const dateField = "fechaFormateada";
+import { baseURL } from "./constants.js";
 
 export const dinamicColorStyle = (type, atribute, name) => {
   return findLine(type, name).color
@@ -50,5 +49,5 @@ export const setNewSelectedLines = (selectedLines, item) => {
 
 export const axiosInstance = axios.create({
   // baseURL: "http://epymodel.uaa.edu.py/api",
-  baseURL: "http://epymodel.uaa.edu.py:3001",
+  baseURL: baseURL,
 });
