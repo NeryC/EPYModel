@@ -150,17 +150,22 @@ const GraphInfoTooltip = ({
   );
 
   useEffect(() => {
+    const fixedPosition = false;
     cuadro
       .on("mouseout.tooltip", () => {
-        d3.select(ref.current).attr("opacity", 0);
+        !fixedPosition && d3.select(ref.current).attr("opacity", 0);
       })
       .on("mouseover.tooltip", () => {
-        d3.select(ref.current).attr("opacity", 1);
+        !fixedPosition && d3.select(ref.current).attr("opacity", 1);
       })
       .on("mousemove.tooltip", (e) => {
-        followPoints(e);
+        !fixedPosition && followPoints(e);
+      })
+      .on("click.tooltip", (e) => {
+        fixedPosition = !fixedPosition;
+        !fixedPosition && followPoints(e);
       });
-  }, [cuadro, followPoints, width]);
+  }, [cuadro, followPoints]);
 
   if (!data.length) return null;
 

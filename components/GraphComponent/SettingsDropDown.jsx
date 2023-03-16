@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSliders, faCameraAlt } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import MultiRangeSlider from "./MultiRangeSlider";
-import Tooltip from "./Tooltip";
 import ToogleButton from "./ToogleButton";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -11,8 +10,6 @@ import {
   resetChecks,
   setRange,
 } from "../../store/reducers/graphInfoSlice";
-import * as d3 from "d3";
-import { saveAs } from "file-saver";
 import { useTranslation } from "next-i18next";
 
 const SettingsDropDown = ({ type, data }) => {
@@ -55,16 +52,6 @@ const SettingsDropDown = ({ type, data }) => {
     return dropdown ? "block" : "hidden";
   };
 
-  const downloadGraph = () => {
-    const serializer = new XMLSerializer();
-    const xmlString = serializer.serializeToString(
-      d3.select(`#${type}`).node()
-    );
-    const imgData =
-      "data:image/svg+xml;base64," + Buffer.from(xmlString).toString("base64");
-    saveAs(imgData, `${type}.svg`);
-  };
-
   if (settings)
     return (
       <div className="flex flex-col items-end top-2 right-7 md:top-10 md:right-14 absolute">
@@ -79,13 +66,8 @@ const SettingsDropDown = ({ type, data }) => {
         <div
           className={`${isExpanded()} shadow  border bg-white z-40 rounded flex flex-col p-2 items-center text-sm`}
         >
-          <div className="border-b mb-3 w-full flex justify-between font-bold text-base">
+          <div className="border-b mb-3 pb-1 w-full flex justify-between font-bold text-base">
             {t("chart-setting")}
-            <Tooltip text={t("download-graph")}>
-              <button onClick={() => downloadGraph()}>
-                <FontAwesomeIcon icon={faCameraAlt} />
-              </button>
-            </Tooltip>
           </div>
 
           <ToogleButton
@@ -96,9 +78,7 @@ const SettingsDropDown = ({ type, data }) => {
           />
 
           <div className="flex justify-between mb-8">
-            <span className="text-gray-900 mr-3 flex-none">
-              {t("date-range")}
-            </span>
+            <span className="mr-3 flex-none">{t("date-range")}</span>
             <MultiRangeSlider
               min={0}
               max={settings.dataLength}
