@@ -14,8 +14,8 @@ export const dimensions = {
 
 export const dateField = "fechaFormateada";
 
-// export const baseURL = "http://epymodel.uaa.edu.py:3001";//production
-export const baseURL = "http://localhost:30001"; //local-dev
+export const baseURL = "http://epymodel.uaa.edu.py:3001"; //production
+// export const baseURL = "http://localhost:30001"; //local-dev
 
 export const getDownloadPath = {
   reported: "/get-projection-r",
