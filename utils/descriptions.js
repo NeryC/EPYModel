@@ -33,7 +33,7 @@ const linesDescriptionReported = [
   {
     name: "dailyR_sin_subRegistro",
     label: "simulated",
-    color: "#1900ff",
+    color: "#564CFA",
     default: false,
     hiddable: false,
     style: "line",
@@ -49,7 +49,7 @@ const linesDescriptionReported = [
   {
     name: "proy",
     label: "proyected",
-    color: "#1900ff",
+    color: "#564CFA",
     default: false,
     hiddable: false,
     style: "dashed",
@@ -65,7 +65,7 @@ const linesDescriptionReported = [
   {
     name: "q25",
     label: "percentile25",
-    color: "#009719",
+    color: "#FD9100",
     default: true,
     hiddable: true,
     style: "dashed",
@@ -81,7 +81,7 @@ const linesDescriptionReported = [
   {
     name: "X20p",
     label: "20reduction",
-    color: "#e134f8",
+    color: "#009719",
     default: false,
     hiddable: true,
     style: "dashed",
@@ -105,7 +105,7 @@ const linesDescriptionReported = [
   {
     name: "Reportados",
     label: "reported",
-    color: "#000000",
+    color: "#FFFFFF",
     default: false,
     hiddable: false,
     style: "dot",
@@ -116,7 +116,7 @@ const linesDescriptionHospitalized = [
   {
     name: "H",
     label: "simulated",
-    color: "#1900ff",
+    color: "#564CFA",
     default: false,
     hiddable: false,
     style: "line",
@@ -124,7 +124,7 @@ const linesDescriptionHospitalized = [
   {
     name: "proy",
     label: "proyected",
-    color: "#1900ff",
+    color: "#564CFA",
     default: false,
     hiddable: false,
     style: "dashed",
@@ -140,7 +140,7 @@ const linesDescriptionHospitalized = [
   {
     name: "q25",
     label: "percentile25",
-    color: "#009719",
+    color: "#FD9100",
     default: true,
     hiddable: true,
     style: "dashed",
@@ -156,7 +156,7 @@ const linesDescriptionHospitalized = [
   {
     name: "X20p",
     label: "20reduction",
-    color: "#e134f8",
+    color: "#009719",
     default: false,
     hiddable: true,
     style: "dashed",
@@ -171,7 +171,7 @@ const linesDescriptionHospitalized = [
   },
   {
     name: "X2w",
-    label: "astMonth",
+    label: "lastMonth",
     color: "#c50000",
     default: false,
     hiddable: true,
@@ -180,7 +180,7 @@ const linesDescriptionHospitalized = [
   {
     name: "Hospitalizados",
     label: "hospitalized",
-    color: "#000000",
+    color: "#FFFFFF",
     default: false,
     hiddable: false,
     style: "dot",
@@ -191,7 +191,7 @@ const linesDescriptionICU = [
   {
     name: "U",
     label: "simulated",
-    color: "#1900ff",
+    color: "#564CFA",
     default: false,
     hiddable: false,
     style: "line",
@@ -199,7 +199,7 @@ const linesDescriptionICU = [
   {
     name: "proy",
     label: "proyected",
-    color: "#1900ff",
+    color: "#564CFA",
     default: false,
     hiddable: false,
     style: "dashed",
@@ -215,7 +215,7 @@ const linesDescriptionICU = [
   {
     name: "q25",
     label: "percentile25",
-    color: "#009719",
+    color: "#FD9100",
     default: true,
     hiddable: true,
     style: "dashed",
@@ -231,7 +231,7 @@ const linesDescriptionICU = [
   {
     name: "X20p",
     label: "20reduction",
-    color: "#e134f8",
+    color: "#009719",
     default: false,
     hiddable: true,
     style: "dashed",
@@ -255,7 +255,7 @@ const linesDescriptionICU = [
   {
     name: "UTI",
     label: "UTI",
-    color: "#000000",
+    color: "#FFFFFF",
     default: false,
     hiddable: false,
     style: "dot",
@@ -265,7 +265,7 @@ const linesDescriptionDeceases = [
   {
     name: "dailyF",
     label: "simulated",
-    color: "#1900ff",
+    color: "#564CFA",
     default: false,
     hiddable: false,
     style: "line",
@@ -273,7 +273,7 @@ const linesDescriptionDeceases = [
   {
     name: "proy",
     label: "proyected",
-    color: "#1900ff",
+    color: "#564CFA",
     default: false,
     hiddable: false,
     style: "dashed",
@@ -289,7 +289,7 @@ const linesDescriptionDeceases = [
   {
     name: "q25",
     label: "percentile25",
-    color: "#009719",
+    color: "#FD9100",
     default: true,
     hiddable: true,
     style: "dashed",
@@ -305,7 +305,7 @@ const linesDescriptionDeceases = [
   {
     name: "X20p",
     label: "20reduction",
-    color: "#e134f8",
+    color: "#009719",
     default: false,
     hiddable: true,
     style: "dashed",
@@ -329,7 +329,7 @@ const linesDescriptionDeceases = [
   {
     name: "Fallecidos",
     label: "deceases",
-    color: "#000000",
+    color: "#FFFFFF",
     default: false,
     hiddable: false,
     style: "dot",

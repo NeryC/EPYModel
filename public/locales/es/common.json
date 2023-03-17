@@ -9,13 +9,13 @@
   "percentile75-description":"Escenario utilizando la tasa de alta contagio de alta representación histórica en Paraguay.",
   "percentile25":"Percentil 25",
   "percentile25-description":"Escenario utilizando el historial de tasa de contagio de baja contagio representativo en Paraguay.",
-  "10increase":"Aumento del 10%",
+  "10increase":"Aumento 10%",
   "10increase-description":"Escenario suponiendo que las medidas se relajen en un 10% con respecto al último mes.",
-  "20reduction":"Reducción del 20%",
+  "20reduction":"Reducción 20%",
   "20reduction-description":"Escenario suponiendo que las medidas se apreten en un 20% con respecto al último mes.",
   "plateau":"Plateau",
   "plateau-description":"Escenario para el Planteau (número de reproducción igual a la unidad).",
-  "lastMonth":"El mes pasado",
+  "lastMonth":"Mes pasado",
   "lastMonth-description":"Escenario utilizando la transmisibilidad promedio del último mes.",
   "all-rights-reserved":"Reservados todos los derechos.",
   "chart-setting":"Configuración del gráfico",
@@ -25,12 +25,18 @@
   "apply-to-all":"Aplicar a todos",
   "reset":"Reiniciar",
   "download-graph":"Descargar gráfico",
+  "home-title": "Proyecciones Covid-19 en Paraguay",
+  "home-description": "La publicación se realizó dentro del proyecto PINV20-40 cofinanciado por el Consejo Nacional de Ciencia y Tecnología (CONACYT) con recursos de la FEEI",
+  "more-information": "Para obtener mayor información acerca de este trabajo, ",
+  "go-here" : "vaya aquí",
+  "dateSeparator": "%e de %b, %Y",
+  "filters": "Filtros:",
 
   "reported":"Reportado",
   "reported-title":"Proyección de posibles nuevos infectados diarios",
   "reported-description":"Número informado de diario infectado según los datos proporcionados por los MSPYBS.",
-  "reported-estimated":"Estimada",
-  "reported-estimated-description":"Esta curva muestra las infecciones estimadas diarias después de corregir el sesgo debido a la tasa de prueba.",
+  "estimated":"Estimado",
+  "estimated-description":"Esta curva muestra las infecciones estimadas diarias después de corregir el sesgo debido a la tasa de prueba.",
 
   "hospitalized":"Hospitalizados",
   "hospitalized-title":"Proyección diaria de hospitalizados",
@@ -46,4 +52,3 @@
   "deceases-subtitle":"El número de reproducción efectivo, R, representa el número de casos nuevos que se generan a partir de un caso positivo, de acuerdo con los casos reportados por el Ministerio de Salud Pública y Bienestar Social de Paraguay. Persona y en este caso la epidemia permanece estable, observando una meseta en el número de casos. Cuando R es mayor que 1, cada caso positivo infecta a más de una persona y en este caso la epidemia se está expandiendo y aumenta los casos positivos.R es inferior a 1, cada caso positivo infecta (en promedio) menos de una persona, y en este caso la epidemia está en contracción y disminuye los casos positivos.",
   "deceases-description":"Número informado de muertes diarias según los datos proporcionados por los MSPYBS."
 }
-  

@@ -25,12 +25,18 @@
   "apply-to-all":"Apply to all",
   "reset":"Reset",
   "download-graph":"Download Graph",
+  "home-title": "Covid-19 Projections in Paraguay",
+  "home-description": "The publication was made within the PINV20-40 project co-financed by the National Council of Science, and Technology (CONACYT) with resources from the FEEI",
+  "more-information": "For more information about this work, ",
+  "go-here" : "go here",
+  "dateSeparator": "%b %e, %Y",
+  "filters": "Filters:",
 
   "reported":"Reported",
   "reported-title":"Projection of possible new Infected/Daily reported",
   "reported-description":"Reported number of daily infected according to data provided by the MSPyBS.",
-  "reported-estimated":"Estimated",
-  "reported-estimated-description":"This curve shows the daily estimated infections after correcting for bias due to the testing rate.",
+  "estimated":"Estimated",
+  "estimated-description":"This curve shows the daily estimated infections after correcting for bias due to the testing rate.",
 
   "hospitalized":"Hospitalized",
   "hospitalized-title":"Daily death projection",
@@ -47,4 +53,3 @@
   "deceases-description":"Reported number of daily deaths according to data provided by the MSPyBS."
 
 }
-  

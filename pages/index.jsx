@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-page-custom-font */
 import Head from "next/head";
 import Layout from "../components/Layout";
 import GraphComponent from "../components/GraphComponent";
@@ -9,6 +10,7 @@ import { useSelector } from "react-redux";
 import { wrapper } from "../store/store";
 import { axiosInstance } from "../utils";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { TitleSection } from "../components/TitleSection";
 
 export default function Graphs() {
   const graphsStatus = useSelector(selectGraphData);
@@ -20,9 +22,20 @@ export default function Graphs() {
           href="https://www.uaa.edu.py/cdn/images/560cb5c8fdf530a9635a95eab14b.png"
           rel="icon"
         />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet"
+        />
       </Head>
       <Layout>
-        <div className="flex flex-col p-2 md:p-6">
+        <div className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back">
+          <TitleSection />
           {graphsStatus.map(({ type, isReady }) => {
             if (isReady) return <GraphComponent type={type} key={type} />;
           })}
@@ -34,10 +47,15 @@ export default function Graphs() {
 
 export const getStaticProps = wrapper.getStaticProps(
   (store) => async (locale) => {
-    const reported = await axiosInstance(`/proyeccionR`);
-    const hospitalized = await axiosInstance(`/proyeccionH`);
-    const ICU = await axiosInstance(`/proyeccionU`);
-    const deceases = await axiosInstance(`/proyeccionF`);
+    // const reported = await axiosInstance(`/proyeccionR`);
+    // const hospitalized = await axiosInstance(`/proyeccionH`);
+    // const ICU = await axiosInstance(`/proyeccionU`);
+    // const deceases = await axiosInstance(`/proyeccionF`);
+
+    const reported = await axiosInstance(`/projection-r`);
+    const hospitalized = await axiosInstance(`/projection-h`);
+    const ICU = await axiosInstance(`/projection-u`);
+    const deceases = await axiosInstance(`/projection-f`);
 
     store.dispatch(
       initGraphData({

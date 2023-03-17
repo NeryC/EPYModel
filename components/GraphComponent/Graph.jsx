@@ -4,14 +4,15 @@ import { useRef, useId, useEffect, useMemo, useCallback } from "react";
 import SettingsDropDown from "./SettingsDropDown";
 import {
   useCreateScale,
-  dynamicDateFormat,
   basicDeclareLineD3,
   getYDomain,
   declareAreaD3,
   createZoom,
   useGetDomain,
+  timeFormat,
+  getMaxField,
 } from "../../utils/constants";
-import { checkLine, dateField } from "../../utils";
+import { dateField } from "../../utils/constants.js";
 import GraphInfoTooltip from "./Tooltip/GraphInfoTooltip";
 import { useSelector } from "react-redux";
 import {
@@ -52,28 +53,29 @@ const Graph = ({ type, data }) => {
   const zoom = createZoom(left, right, width, height, zoomed);
 
   function zoomed(e) {
+    const newLines = [...selectedLines, dotField, uncertainty && "peor"];
     const xz = e.transform.rescaleX(xScale);
-    const yz = getYDomain(data, type, selectedLines, xz, yScale);
+    const yz = getYDomain(data, newLines, xz, yScale);
     xScale.domain(xz.domain());
 
     xAxisGroup.call(axis.x, xz);
     yAxisGroup.call(axis.y, yz);
     drawLines();
-
-    svgChart
-      .selectAll(`#${dotField}-${type}`)
-      .attr("cx", (d) => xScale(d[dateField]))
-      .attr("cy", (d) => yScale(d[dotField]));
   }
+
+  const maxField = getMaxField(data, [
+    ...selectedLines,
+    dotField,
+    uncertainty && "peor",
+  ]);
   //y Right
   //x bottom
-  //dailyR == estimated in reported graph estimated could be higer than dotfield if it is selected
   const yDomain = useGetDomain({
     data,
-    field: checkLine(selectedLines, "dailyR") ? "dailyR" : dotField,
+    field: maxField,
   });
   const yScale = useCreateScale({
-    range: [height - bottom, 3],
+    range: [height - bottom, 0],
     domain: yDomain,
     scaleType: "Linear",
     size: height,
@@ -88,6 +90,11 @@ const Graph = ({ type, data }) => {
     scaleType: "Time",
     size: width,
   });
+
+  svgChart
+    .selectAll(`#${dotField}-${type}`)
+    .attr("cx", (d) => xScale(d[dateField]))
+    .attr("cy", (d) => yScale(d[dotField]));
 
   const setZoom = useCallback(() => {
     const base = width - right;
@@ -122,9 +129,10 @@ const Graph = ({ type, data }) => {
       y: (g, y1) =>
         g.call(
           d3
-            .axisRight(y1)
+            .axisLeft(y1)
             .ticks(5)
             .tickSize(-(width - right))
+          // .tickPadding(8)
         ),
       x: (g, x1) =>
         g.call(
@@ -132,7 +140,29 @@ const Graph = ({ type, data }) => {
             .axisBottom(x1)
             .ticks(5)
             .tickSize(-(height - bottom))
-            .tickFormat(dynamicDateFormat)
+            .tickFormat(
+              timeFormat([
+                [
+                  d3.timeFormat("%Y"),
+                  function () {
+                    return true;
+                  },
+                ],
+                [
+                  d3.timeFormat("%b %Y"),
+                  function (d) {
+                    return d.getMonth();
+                  },
+                ],
+                [
+                  d3.timeFormat("%d-%m-%Y"),
+                  function (d) {
+                    return d.getDate() != 1;
+                  },
+                ],
+              ])
+            )
+            .tickPadding(10)
         ),
     };
   }, [bottom, height, right, width]);
@@ -157,7 +187,7 @@ const Graph = ({ type, data }) => {
       .transition()
       .attr("opacity", 1)
       .delay(function (_d, i) {
-        return i * 2;
+        return 300;
       });
 
     dotsGroup
@@ -169,7 +199,7 @@ const Graph = ({ type, data }) => {
     setZoom();
     // I only need this render in the first time or when el graph is resized
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [width]);
+  }, [width, xScale, yScale]);
 
   const baseLineData = {
     xField: dateField,
@@ -203,10 +233,22 @@ const Graph = ({ type, data }) => {
           .attr("d", graphElements["uncertainty"](xScale, yScale)(data))
       : svgChart.select(`#uncertainty-${type}`).attr("d", null);
 
-    yAxisGroup.select(".domain").remove();
-    xAxisGroup.select(".domain").remove();
+    // opacity en 0 si lo quiero quitar
+    // xAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0)");
     xAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0.3)");
     yAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0.3)");
+    yAxisGroup.selectAll("path").attr("stroke", "rgba(128, 128, 128, 0.3)");
+    xAxisGroup.selectAll("path").attr("stroke", "rgba(128, 128, 128, 0.3)");
+    yAxisGroup
+      .selectAll("text")
+      .attr("font-family", "Nunito, sans-serif")
+      .attr("font-size", "12px")
+      .attr("font-weight", "bold");
+    xAxisGroup
+      .selectAll("text")
+      .attr("font-family", "Nunito, sans-serif")
+      .attr("font-size", "12px")
+      .attr("font-weight", "bold");
   }
 
   return (
@@ -221,11 +263,7 @@ const Graph = ({ type, data }) => {
               height={height - (bottom - 5)}
             />
           </clipPath>
-          <g
-            id="YAxis"
-            ref={yAxisRef}
-            transform={`translate(${width - right},0)`}
-          />
+          <g id="YAxis" ref={yAxisRef} />
           <g
             id="XAxis"
             ref={xAxisRef}

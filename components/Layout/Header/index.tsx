@@ -1,14 +1,13 @@
 import Image from 'next/image';
-import { Popover } from '@headlessui/react';
 import LanguajeDropdown from '../../LanguajeDropdown';
 
 export default function Header() {
   return (
-    <Popover className="relative bg-white">
+    <div className="relative bg-white border-b-2 border-b-gray-theme drop-shadow-md">
       <div className="mx-auto px-4 sm:px-6">
-        <div className="flex justify-between items-center py-1">
+        <div className="flex justify-between items-center py-2">
           <div className="relative flex justify-start md:flex-0">
-            <div className="w-24 h-16">
+            <div className="h-9 w-16">
               <Image
                 src="/logo.png"
                 alt="Picture of something nice"
@@ -22,6 +21,6 @@ export default function Header() {
           </div>
         </div>
       </div>
-    </Popover>
+    </div>
   );
 }
