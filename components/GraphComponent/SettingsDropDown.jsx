@@ -50,7 +50,7 @@ const SettingsDropDown = ({ type, data }) => {
   };
 
   const isExpanded = () => {
-    return dropdown ? "visible" : "invisible";
+    return dropdown ? "block" : "hidden";
   };
 
   const handleMouseLeave = () => {
