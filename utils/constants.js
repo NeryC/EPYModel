@@ -8,14 +8,14 @@ export const dimensions = {
     top: 20,
     right: 10,
     bottom: 30,
-    left: 40,
+    left: 60,
   },
 };
 
 export const dateField = "fechaFormateada";
 
-export const baseURL = "http://epymodel.uaa.edu.py:3001"; //production
-// export const baseURL = "http://localhost:30001"; //local-dev
+// export const baseURL = "http://epymodel.uaa.edu.py:3001"; //production
+export const baseURL = "http://localhost:3001"; //local-dev
 
 export const getDownloadPath = {
   reported: "/get-projection-r",
@@ -63,12 +63,16 @@ export const createZoom = (left, right, width, height, zoomed) => {
 // };
 
 export const basicDeclareLineD3 = (baseLineData, dataYField) => {
+  const isSmooth =
+    !baseLineData.hasOwnProperty("isSmooth") || baseLineData.isSmooth
+      ? d3.curveNatural
+      : d3.curveLinear;
   return (xScale, yScale) =>
     d3
       .line()
       .x((d) => xScale(d[baseLineData.xField]))
       .y((d) => yScale(d[dataYField]))
-      .curve(baseLineData.isSmooth ? d3.curveNatural : d3.curveLinear)
+      .curve(isSmooth)
       .defined((d) => d[dataYField] != null);
 };
 
@@ -339,7 +343,7 @@ export const getMaxField = (data, lines) => {
 //   return intfun((date - dateBefore) / (dateAfter - dateBefore));
 // };
 
-export const getYDomain = (data, selectedLines, xz, yScale, maxField2) => {
+export const getYDomain = (data, selectedLines, xz, yScale) => {
   // get the min and max date in focus
   const xleft = new Date(xz.domain()[0]);
   const xright = new Date(xz.domain()[1]);
@@ -349,12 +353,8 @@ export const getYDomain = (data, selectedLines, xz, yScale, maxField2) => {
     return d[dateField] >= xleft && d[dateField] <= xright;
   });
 
-  const countSubset = [];
   const maxField = getMaxField(dataSubset, selectedLines);
-  //dailyR == estimated in reported graph estimated could be higer than dotfield if it is selected
-  dataSubset.map(function (d) {
-    countSubset.push(d[maxField]);
-  });
+  const countSubset = dataSubset.map((d) => d[maxField]);
 
   // add the edge values of the line to the array of counts in view, get the max y;
   let ymax_new = d3.max(countSubset);
@@ -364,5 +364,26 @@ export const getYDomain = (data, selectedLines, xz, yScale, maxField2) => {
   }
   // reset and redraw the yaxis
   yScale.domain([0, ymax_new]);
+  return yScale;
+};
+
+export const getYDomainSingleLine = (data, xz, yScale) => {
+  // get the min and max date in focus
+  const xleft = xz.domain()[0];
+  const xright = xz.domain()[1];
+
+  // get the y values of all the actual data points that are in view
+  const dataSubset = data.filter(function (d) {
+    return d.day >= xleft && d.day <= xright;
+  });
+
+  const countSubset = dataSubset.map((d) => d.value);
+
+  // add the edge values of the line to the array of counts in view, get the max y;
+  let ymax_new = d3.max(countSubset);
+  let ymin_new = d3.min(countSubset);
+
+  // reset and redraw the yaxis
+  yScale.domain([ymin_new, ymax_new]);
   return yScale;
 };

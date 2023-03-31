@@ -1,20 +1,18 @@
 import useResize from "./useResize";
 import { dimensions } from "../utils/constants";
 
-const useDimensions = (containerRef) => {
+const useDimensions = (containerRef, height) => {
   const { margin } = dimensions;
   const { left, top, right, bottom } = margin;
 
   const { width } = useResize(containerRef);
 
-  const conditionalLeft = width < 380 ? 0 : left || 0;
-  const conditionalRight = width < 380 ? 0 : right || 0;
-  const conditionalTop = width < 380 ? 0 : top || 0;
-  const conditionalBottom = width < 380 ? 0 : bottom || 0;
+  const conditionalLeft = left || 0;
+  const conditionalRight = right || 0;
+  const conditionalTop = top || 0;
 
-  const height = 534;
   const innerWidth = width - conditionalLeft - conditionalRight;
-  const innerHeight = height - conditionalTop - conditionalBottom;
+  const innerHeight = height - conditionalTop;
 
   return [
     {

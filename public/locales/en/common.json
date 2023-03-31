@@ -31,6 +31,7 @@
   "go-here" : "go here",
   "dateSeparator": "%b %e, %Y",
   "filters": "Filters:",
+  "day":"Day",
 
   "reported":"Reported",
   "reported-title":"Projection of possible new Infected/Daily reported",

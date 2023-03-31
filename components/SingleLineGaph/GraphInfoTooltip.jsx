@@ -1,16 +1,8 @@
 import { useRef, useEffect, useCallback } from "react";
-import { dateField } from "../../../utils/constants.js";
 import { useTranslation } from "next-i18next";
 import * as d3 from "d3";
 
-const GraphInfoTooltip = ({
-  xScale,
-  yScale,
-  width,
-  height,
-  data,
-  showedElements,
-}) => {
+const GraphInfoTooltip = ({ xScale, yScale, width, height, data }) => {
   const ref = useRef(null);
   const cuadroRef = useRef(null);
   const contentDotsRef = useRef(null);
@@ -19,6 +11,8 @@ const GraphInfoTooltip = ({
   const content = d3.select(contentRef.current);
   const contentDots = d3.select(contentDotsRef.current);
   const { t } = useTranslation("common");
+  const dateField = "day";
+  const valueField = "value";
   const drawLine = useCallback(
     (x) => {
       d3.select(ref.current)
@@ -44,9 +38,10 @@ const GraphInfoTooltip = ({
       });
       tooltipContent
         .select(".contentDate")
-        .text(d3.timeFormat(t("dateSeparator"))(xScale.invert(x)));
+        .text(`${t("day")} ${parseInt(xScale.invert(x))}`);
     },
-    [t, xScale, width, height]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [xScale, width, height]
   );
 
   const drawBackground = useCallback(() => {
@@ -54,7 +49,7 @@ const GraphInfoTooltip = ({
     const contentBackground = d3
       .select(ref.current)
       .select(".contentBackground");
-    contentBackground.attr("width", 125).attr("height", 40);
+    contentBackground.attr("width", 0).attr("height", 0);
 
     // calculate new background size
     const tooltipContentElement = d3
@@ -64,23 +59,22 @@ const GraphInfoTooltip = ({
     if (!tooltipContentElement) return;
 
     const contentSize = tooltipContentElement.getBoundingClientRect();
+    console.log(contentSize.width);
     contentBackground
-      .attr("width", contentSize.width + 8)
-      .attr("height", contentSize.height + 4);
+      .attr("width", contentSize.width + 10)
+      .attr("height", contentSize.height + 6);
   }, []);
 
   const placeDots = useCallback(
-    (actualData, color, i, baseXPos, style) => {
-      const label = showedElements[i].name;
-
+    (actualData, color, baseXPos) => {
       contentDots
         .append("circle")
         .attr("r", 5)
-        .attr("fill", style !== "dot" ? color : "#000000")
+        .attr("fill", color)
         .attr("cx", (_d) => baseXPos)
-        .attr("cy", (_d) => yScale(actualData[label]));
+        .attr("cy", (_d) => yScale(actualData[valueField]));
     },
-    [contentDots, showedElements, yScale]
+    [contentDots, yScale]
   );
 
   const followPoints = useCallback(
@@ -92,44 +86,29 @@ const GraphInfoTooltip = ({
       const index = bisectDate(data, x, 1),
         d0 = data[index - 1],
         d1 = data[index],
-        actualData = x - d0[dateField] > d1?.fechaFormateada - x ? d1 : d0;
+        actualData = x - d0[dateField] > d1?.day - x ? d1 : d0;
 
-      let elementsCounter = 0;
       content.selectAll("*").remove();
       contentDots.selectAll("*").remove();
 
-      showedElements.forEach(({ label, color, name, style }, i) => {
-        if (actualData[name] === null) return;
-        const insideContent = content
-          .append("g")
-          .attr("transform", `translate(6,${22 * elementsCounter++ + 5})`);
-        insideContent.append("circle").attr("r", 6).attr("fill", color);
-        insideContent
-          .append("text")
-          .attr("class", "performanceItemName")
-          .attr("fill", "white")
-          .attr("font-family", "Nunito, sans-serif")
-          .attr("transform", `translate(10,6)`)
-          .text(`${t(label)}`);
-        insideContent
-          .append("text")
-          .attr("class", "performanceItemMarketValue")
-          .attr("fill", "white")
-          .attr("font-family", "Nunito, sans-serif")
-          .text(Math.round(actualData[name]));
+      if (actualData[valueField] === null) return;
+      const insideContent = content
+        .append("g")
+        .attr("transform", `translate(6,5)`);
+      insideContent.append("circle").attr("r", 6).attr("fill", "red");
+      insideContent
+        .append("text")
+        .attr("class", "performanceItemMarketValue")
+        .attr("fill", "white")
+        .attr("font-family", "Nunito, sans-serif")
+        .text(Math.round(actualData[valueField]).toLocaleString());
 
-        baseXPos = xScale(actualData[dateField]);
-        placeDots(actualData, color, i, baseXPos, style);
-      });
-
-      const maxNameWidth = d3.max(
-        d3.selectAll(".performanceItemName").nodes(),
-        (node) => node.getBoundingClientRect().width
-      );
+      baseXPos = xScale(actualData[dateField]);
+      placeDots(actualData, "red", baseXPos);
 
       d3.selectAll(".performanceItemMarketValue").attr(
         "transform",
-        `translate(${maxNameWidth + 30},6)`
+        `translate(10,6)`
       );
       drawLine(baseXPos);
       drawContent(baseXPos, e.layerY);
@@ -141,7 +120,6 @@ const GraphInfoTooltip = ({
       data,
       content,
       contentDots,
-      showedElements,
       drawLine,
       drawContent,
       drawBackground,

@@ -33,6 +33,14 @@ const initialSettings = (amountOfData = 0) => {
     dataLength: amountOfData,
   };
 };
+const initialSettingsSingleLine = (amountOfData = 0) => {
+  return {
+    range: {
+      start: 0,
+      finish: amountOfData,
+    },
+  };
+};
 
 const initialState = {
   main: {
@@ -66,14 +74,38 @@ const initialState = {
     },
   },
   simulation: {
-    cumulative: { data: [] },
-    cumulative_deaths: { data: [] },
-    exposed: { data: [] },
-    hospitalized: { data: [] },
-    immune: { data: [] },
-    infectious: { data: [] },
-    susceptible: { data: [] },
-    uci: { data: [] },
+    cumulative: {
+      type: "cumulative",
+      data: [],
+      settings: initialSettingsSingleLine(),
+    },
+    cumulative_deaths: {
+      type: "cumulative_deaths",
+      data: [],
+      settings: initialSettingsSingleLine(),
+    },
+    exposed: {
+      type: "exposed",
+      data: [],
+      settings: initialSettingsSingleLine(),
+    },
+    hospitalized: {
+      type: "hospitalized",
+      data: [],
+      settings: initialSettingsSingleLine(),
+    },
+    immune: { type: "immune", data: [], settings: initialSettingsSingleLine() },
+    infectious: {
+      type: "infectious",
+      data: [],
+      settings: initialSettingsSingleLine(),
+    },
+    susceptible: {
+      type: "susceptible",
+      data: [],
+      settings: initialSettingsSingleLine(),
+    },
+    uci: { type: "uci", data: [], settings: initialSettingsSingleLine() },
   },
 };
 
@@ -114,14 +146,38 @@ export const graphInfoSlice = createSlice({
     },
     initSimulation(state, action) {
       const simulation = state.simulation;
+      const amount = action.payload.cumulative.length - 1;
       simulation.cumulative.data = action.payload.cumulative;
+      simulation.cumulative.isReady = true;
+      simulation.cumulative.settings = initialSettingsSingleLine(amount);
+
       simulation.cumulative_deaths.data = action.payload.cumulative_deaths;
+      simulation.cumulative_deaths.isReady = true;
+      simulation.cumulative_deaths.settings = initialSettingsSingleLine(amount);
+
       simulation.exposed.data = action.payload.exposed;
+      simulation.exposed.isReady = true;
+      simulation.exposed.settings = initialSettingsSingleLine(amount);
+
       simulation.hospitalized.data = action.payload.hospitalized;
+      simulation.hospitalized.isReady = true;
+      simulation.hospitalized.settings = initialSettingsSingleLine(amount);
+
       simulation.immune.data = action.payload.immune;
+      simulation.immune.isReady = true;
+      simulation.immune.settings = initialSettingsSingleLine(amount);
+
       simulation.infectious.data = action.payload.infectious;
+      simulation.infectious.isReady = true;
+      simulation.infectious.settings = initialSettingsSingleLine(amount);
+
       simulation.susceptible.data = action.payload.susceptible;
+      simulation.susceptible.isReady = true;
+      simulation.susceptible.settings = initialSettingsSingleLine(amount);
+
       simulation.uci.data = action.payload.uci;
+      simulation.uci.isReady = true;
+      simulation.uci.settings = initialSettingsSingleLine(amount);
     },
     setSelectedLine(state, action) {
       const main = state.main;
@@ -165,6 +221,11 @@ export const selectGraphData = ({ main }) =>
     return { type, isReady };
   });
 
+export const selectSingleLineGraphData = ({ simulation }) =>
+  Object.values(simulation).map(({ type, isReady }) => {
+    return { type, isReady };
+  });
+
 export const selectScenarios =
   (type) =>
   ({ main }) =>
@@ -174,6 +235,11 @@ export const selectRawData =
   (type) =>
   ({ main }) =>
     main[type].data;
+
+export const selectRawDataSimulation =
+  (type) =>
+  ({ simulation }) =>
+    simulation[type].data;
 
 export const selectShowedElements =
   (type) =>
@@ -210,6 +276,11 @@ export const selectRange =
   (type) =>
   ({ main }) =>
     main[type].settings.range;
+
+export const selectRangeSingleLine =
+  (type) =>
+  ({ simulation }) =>
+    simulation[type].settings.range;
 
 export const selectDotField =
   (type) =>

@@ -43,7 +43,7 @@ const Graph = ({ type, data }) => {
   const clip = useId();
 
   const [{ svgWidth, svgHeight, width, height, left, top, right, bottom }] =
-    useDimensions(containerRef);
+    useDimensions(containerRef, 534);
 
   const svgChart = d3.select(svgChartRef.current);
   const yAxisGroup = d3.select(yAxisRef.current);
@@ -252,7 +252,7 @@ const Graph = ({ type, data }) => {
   }
 
   return (
-    <div className="w-full h-[534px] relative" ref={containerRef}>
+    <div className="w-full relative" ref={containerRef}>
       <svg id={type} width={svgWidth} height={svgHeight} ref={svgChartRef}>
         <g id="elements" transform={`translate(${left},${top})`}>
           <clipPath id={clip}>

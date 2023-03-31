@@ -31,6 +31,7 @@
   "go-here" : "vaya aquí",
   "dateSeparator": "%e de %b, %Y",
   "filters": "Filtros:",
+  "day":"Día",
 
   "reported":"Reportado",
   "reported-title":"Proyección de posibles nuevos infectados diarios",
@@ -45,7 +46,7 @@
   "ICU":"UTI",
   "ICU-title":"Número de reproducción efectivo",
   "ICU-subtitle":"El gráfico muestra la evolución de las proporciones de casos positivos que pasan a ser hospitalizados, una unidad de cuidados intensivos y casos fallecidos",
-  "ICU-description":"Número informado de la UTI diaria hospitalizada de acuerdo con los datos proporcionados por los MSPYBS.",
+  "ICU-description":"Número informado de la ICU diaria hospitalizada de acuerdo con los datos proporcionados por los MSPYBS.",
   
   "deceases":"Fallecidos",
   "deceases-title":"Fallecidos",
