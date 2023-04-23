@@ -59,7 +59,6 @@ const GraphInfoTooltip = ({ xScale, yScale, width, height, data }) => {
     if (!tooltipContentElement) return;
 
     const contentSize = tooltipContentElement.getBoundingClientRect();
-    console.log(contentSize.width);
     contentBackground
       .attr("width", contentSize.width + 10)
       .attr("height", contentSize.height + 6);

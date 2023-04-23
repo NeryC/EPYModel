@@ -20,7 +20,6 @@ const Graph = ({ type, data }) => {
   const dayField = "day";
   const valueField = "value";
 
-  console.log("render graph");
   const range = useSelector(selectRangeSingleLine(type));
 
   const clip = useId();

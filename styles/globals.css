@@ -13,6 +13,23 @@ body {
   box-sizing: border-box;
 }
 
+.styledRange::-webkit-slider-thumb {
+  width: 15px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 15px;
+  cursor: ew-resize;
+  background: #fff;
+  box-shadow: -405px 0 0 400px #605e5c;
+  border: 2px solid black;
+  border-radius: 50%;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .dotted_line {
   stroke-dasharray: 5;
 }

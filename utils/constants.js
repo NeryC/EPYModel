@@ -318,31 +318,6 @@ export const getMaxField = (data, lines) => {
   return maxvalue.name;
 };
 
-// const getInterpolateValue = (data, bisectedDate, date, lines) => {
-//   const maxField = getMaxField(data, lines);
-//   if (data[bisectedDate] == undefined || data[bisectedDate - 1] == undefined) {
-//     return 0;
-//   }
-
-//   const dateBefore = data[bisectedDate - 1][dateField],
-//     dateAfter = data[bisectedDate][dateField];
-//   let intfun;
-//   //dailyR == estimated in reported graph estimated could be higer than dotfield if it is selected
-//   // console.log("test: ", data[bisectedDate]);
-//   // if (data[bisectedDate].mejor === null) {
-//   // console.log("paso1");
-//   intfun = d3.interpolateNumber(0, data[bisectedDate][maxField]);
-//   console.log(intfun((date - dateBefore) / (dateAfter - dateBefore)));
-//   // } else {
-//   //   // console.log("paso2");
-//   //   intfun = d3.interpolateNumber(
-//   //     data[bisectedDate - 1].q75,
-//   //     data[bisectedDate].peor
-//   //   );
-//   // }
-//   return intfun((date - dateBefore) / (dateAfter - dateBefore));
-// };
-
 export const getYDomain = (data, selectedLines, xz, yScale) => {
   // get the min and max date in focus
   const xleft = new Date(xz.domain()[0]);

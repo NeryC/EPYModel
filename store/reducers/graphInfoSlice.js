@@ -144,7 +144,7 @@ export const graphInfoSlice = createSlice({
       main.deceases.settings = initialSettings(amountDeceases);
       main.deceases.isReady = true;
     },
-    initSimulation(state, action) {
+    setSimulation(state, action) {
       const simulation = state.simulation;
       const amount = action.payload.cumulative.length - 1;
       simulation.cumulative.data = action.payload.cumulative;
@@ -294,6 +294,7 @@ export const {
   setChecks,
   resetChecks,
   setRange,
+  setSimulation,
 } = graphInfoSlice.actions;
 
 export default graphInfoSlice.reducer;
