@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import useDimensions from "../../hooks/useDimensions";
 import { useRef, useId, useEffect, useMemo, useCallback } from "react";
-import SettingsDropDown from "./SettingsDropDown";
+import SettingsComponent from "./SettingsComponent";
 import {
   useCreateScale,
   basicDeclareLineD3,
@@ -13,7 +13,7 @@ import {
   getMaxField,
 } from "../../utils/constants";
 import { dateField } from "../../utils/constants.js";
-import GraphInfoTooltip from "./Tooltip/GraphInfoTooltip";
+import GraphInfoTooltip from "./Tooltips/GraphInfoTooltip";
 import { useSelector } from "react-redux";
 import {
   selectSelectedLines,
@@ -35,7 +35,7 @@ const Graph = ({ type, data }) => {
   const showedElements = useSelector(selectShowedElements(type));
   const isSmooth = useSelector(selectIsSmooth(type));
   const uncertainty = useSelector(selectUncertainty(type));
-  const range = useSelector(selectRange(type));
+  const range = useSelector(selectRange("main", type));
   const dotField = useSelector(selectDotField(type));
 
   let graphElements = {};
@@ -308,7 +308,7 @@ const Graph = ({ type, data }) => {
           />
         </g>
       </svg>
-      <SettingsDropDown type={type} data={data} />
+      <SettingsComponent type={type} data={data} />
     </div>
   );
 };

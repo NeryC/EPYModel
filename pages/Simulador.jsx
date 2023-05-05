@@ -2,19 +2,19 @@
 import Head from "next/head";
 import { axiosInstance } from "../utils";
 import {
-  selectSingleLineGraphData,
+  selectGraphData,
   setSimulation,
 } from "../store/reducers/graphInfoSlice";
 import { wrapper } from "../store/store";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useSelector } from "react-redux";
 import Layout from "../components/Layout";
-import SingleLineGaph from "../components/SingleLineGaph";
+import SimulationGraph from "../components/SimulationGraph";
 import { TitleSection } from "../components/TitleSection";
-import SimulationFilter from "../components/SimulationFilter";
+import SimulationFilter from "../components/SimulationGraph/SimulationFilter";
 
 const ChartsPage = () => {
-  const graphsStatus = useSelector(selectSingleLineGraphData);
+  const graphsStatus = useSelector(selectGraphData("simulation"));
   return (
     <>
       <Head>
@@ -42,7 +42,7 @@ const ChartsPage = () => {
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 mb-6 w-full">
             {graphsStatus.map(({ type, isReady }) => {
-              if (isReady) return <SingleLineGaph type={type} key={type} />;
+              if (isReady) return <SimulationGraph type={type} key={type} />;
             })}
           </div>
         </div>

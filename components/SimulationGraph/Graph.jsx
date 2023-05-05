@@ -4,13 +4,13 @@ import { useRef, useId, useEffect, useMemo, useCallback } from "react";
 import {
   useCreateScale,
   basicDeclareLineD3,
-  getYDomainSingleLine,
+  getYDomainSimulation,
   createZoom,
   useGetDomain,
 } from "../../utils/constants";
-import GraphInfoTooltip from "./GraphInfoTooltip.jsx";
+import SimulationTooltip from "./Tooltip/index.jsx";
 import { useSelector } from "react-redux";
-import { selectRangeSingleLine } from "../../store/reducers/graphInfoSlice";
+import { selectRange } from "../../store/reducers/graphInfoSlice";
 
 const Graph = ({ type, data }) => {
   const svgChartRef = useRef(null);
@@ -20,7 +20,7 @@ const Graph = ({ type, data }) => {
   const dayField = "day";
   const valueField = "value";
 
-  const range = useSelector(selectRangeSingleLine(type));
+  const range = useSelector(selectRange("simulation", type));
 
   const clip = useId();
 
@@ -35,7 +35,7 @@ const Graph = ({ type, data }) => {
 
   function zoomed(e) {
     const xz = e.transform.rescaleX(xScale);
-    const yz = getYDomainSingleLine(data, xz, yScale);
+    const yz = getYDomainSimulation(data, xz, yScale);
     xScale.domain(xz.domain());
 
     xAxisGroup.call(axis.x, xz);
@@ -174,7 +174,7 @@ const Graph = ({ type, data }) => {
             />
           </g>
 
-          <GraphInfoTooltip
+          <SimulationTooltip
             xScale={xScale}
             yScale={yScale}
             width={width}
@@ -183,7 +183,6 @@ const Graph = ({ type, data }) => {
           />
         </g>
       </svg>
-      {/* <SettingsDropDown type={type} data={data} /> */}
     </div>
   );
 };

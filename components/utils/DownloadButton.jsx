@@ -4,8 +4,9 @@ import { useState } from "react";
 import * as d3 from "d3";
 import { saveAs } from "file-saver";
 import { CSVLink } from "react-csv";
+import { baseURL, getDownloadPath } from "../../utils/constants.js";
 
-export const DownloadButton = ({ type, data }) => {
+export const DownloadButton = ({ page, type, data }) => {
   const { t } = useTranslation("common");
 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -36,22 +37,35 @@ export const DownloadButton = ({ type, data }) => {
         </li>
       );
     if (text === "csv") {
-      console.log(data);
-      const headers = [
-        { label: "day", key: "day" },
-        { label: type, key: "value" },
-      ];
-      return (
-        <CSVLink
-          headers={headers}
-          data={data}
-          filename={`${type}.csv`}
-          className="block dropdown-item hover:bg-blue-100 px-4 py-1"
-          target="_blank"
-        >
-          {text}
-        </CSVLink>
-      );
+      if (page == "main") {
+        return (
+          <li className="dropdown-item hover:bg-blue-100 px-4 py-1">
+            <a
+              className="block cursor-pointer"
+              href={`${baseURL}${getDownloadPath[type]}`}
+              download="renamed"
+            >
+              {text}
+            </a>
+          </li>
+        );
+      } else {
+        const headers = [
+          { label: "day", key: "day" },
+          { label: type, key: "value" },
+        ];
+        return (
+          <CSVLink
+            headers={headers}
+            data={data}
+            filename={`${type}.csv`}
+            className="block dropdown-item hover:bg-blue-100 px-4 py-1"
+            target="_blank"
+          >
+            {text}
+          </CSVLink>
+        );
+      }
     }
   };
 

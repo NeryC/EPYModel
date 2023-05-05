@@ -2,7 +2,7 @@ import { useRef, useEffect, useCallback } from "react";
 import { useTranslation } from "next-i18next";
 import * as d3 from "d3";
 
-const GraphInfoTooltip = ({ xScale, yScale, width, height, data }) => {
+const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
   const ref = useRef(null);
   const cuadroRef = useRef(null);
   const contentDotsRef = useRef(null);
@@ -186,4 +186,4 @@ const GraphInfoTooltip = ({ xScale, yScale, width, height, data }) => {
   );
 };
 
-export default GraphInfoTooltip;
+export default SimulationTooltip;

@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { default_filters } from "./constants.js";
 import { requestFilteredData } from "./ultis.js";
 import { useDispatch } from "react-redux";
-import { setSimulation } from "../../store/reducers/graphInfoSlice.js";
+import { setSimulation } from "../../../store/reducers/graphInfoSlice.js";
 import { useTranslation } from "next-i18next";
 
 function SimulationFilter() {
@@ -101,6 +101,7 @@ function SimulationFilter() {
                   min="0"
                   max="2"
                   step="0.1"
+                  readOnly={true}
                   value={RtList[index]}
                 />
                 <button

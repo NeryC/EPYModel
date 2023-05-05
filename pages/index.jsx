@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-page-custom-font */
 import Head from "next/head";
 import Layout from "../components/Layout";
-import GraphComponent from "../components/GraphComponent";
+import MainGraph from "../components/MainGraph";
 import { initMain, selectGraphData } from "../store/reducers/graphInfoSlice";
 import { useSelector } from "react-redux";
 import { wrapper } from "../store/store";
@@ -10,7 +10,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { TitleSection } from "../components/TitleSection";
 
 export default function Graphs() {
-  const graphsStatus = useSelector(selectGraphData);
+  const graphsStatus = useSelector(selectGraphData("main"));
   return (
     <>
       <Head>
@@ -34,7 +34,7 @@ export default function Graphs() {
         <div className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back">
           <TitleSection />
           {graphsStatus.map(({ type, isReady }) => {
-            if (isReady) return <GraphComponent type={type} key={type} />;
+            if (isReady) return <MainGraph type={type} key={type} />;
           })}
         </div>
       </Layout>

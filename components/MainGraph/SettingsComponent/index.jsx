@@ -9,10 +9,10 @@ import {
   setChecks,
   resetChecks,
   setRange,
-} from "../../store/reducers/graphInfoSlice";
+} from "../../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
 
-const SettingsDropDown = ({ type, data }) => {
+const SettingsComponent = ({ type, data }) => {
   const { t } = useTranslation("common");
   const dispatch = useDispatch();
   const settings = useSelector(selectSettings(type));
@@ -125,4 +125,4 @@ const SettingsDropDown = ({ type, data }) => {
     );
 };
 
-export default SettingsDropDown;
+export default SettingsComponent;

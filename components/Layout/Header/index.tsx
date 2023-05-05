@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import LanguajeDropdown from '../../LanguajeDropdown';
+import LanguajeDropdown from './LanguajeDropdown';
 import Link from 'next/link';
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";

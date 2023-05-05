@@ -14,8 +14,8 @@ export const dimensions = {
 
 export const dateField = "fechaFormateada";
 
-export const baseURL = "http://epymodel.uaa.edu.py:3001"; //production
-// export const baseURL = "http://localhost:3001"; //local-dev
+// export const baseURL = "http://epymodel.uaa.edu.py:3001"; //production
+export const baseURL = "http://localhost:3001"; //local-dev
 
 export const getDownloadPath = {
   reported: "/get-projection-r",
@@ -342,7 +342,7 @@ export const getYDomain = (data, selectedLines, xz, yScale) => {
   return yScale;
 };
 
-export const getYDomainSingleLine = (data, xz, yScale) => {
+export const getYDomainSimulation = (data, xz, yScale) => {
   // get the min and max date in focus
   const xleft = xz.domain()[0];
   const xright = xz.domain()[1];

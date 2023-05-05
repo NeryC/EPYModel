@@ -1,17 +1,15 @@
-export const graphDescriptions = {
-  ICU: true,
-  deceases: true,
-};
-
-export const simulationDescriptions = {
-  uci: true,
-  susceptible: true,
-  cumulative: true,
-  cumulative_deaths: true,
-  exposed: true,
-  immune: true,
-  infectious: true,
-  hospitalized: true,
+export const descriptions = {
+  main: { ICU: true, deceases: true },
+  simulation: {
+    uci: true,
+    susceptible: true,
+    cumulative: true,
+    cumulative_deaths: true,
+    exposed: true,
+    immune: true,
+    infectious: true,
+    hospitalized: true,
+  },
 };
 
 export const dotFields = {

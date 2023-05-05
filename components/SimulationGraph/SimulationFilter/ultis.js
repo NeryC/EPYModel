@@ -1,4 +1,4 @@
-import { axiosInstance } from "../../utils";
+import { axiosInstance } from "../../../utils";
 export const requestFilteredData = (filters) => {
   return axiosInstance.get("/get-simulation", {
     params: {

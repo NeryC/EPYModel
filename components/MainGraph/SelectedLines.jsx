@@ -1,6 +1,6 @@
 import { dinamicColorStyle } from "../../utils/index";
 import { useSelector, useDispatch } from "react-redux";
-import ScenarioTooltip from "./Tooltip/ScenarioTooltip";
+import ScenarioTooltip from "./Tooltips/ScenarioTooltip";
 import {
   selectDotField,
   selectDropdownInfo,

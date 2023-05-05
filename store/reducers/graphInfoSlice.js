@@ -27,13 +27,13 @@ const initialSettings = (amountOfData = 0) => {
     isSmooth: true,
     uncertainty: false,
     range: {
-      start: 612,
+      start: 820,
       finish: amountOfData,
     },
     dataLength: amountOfData,
   };
 };
-const initialSettingsSingleLine = (amountOfData = 0) => {
+const initialSettingsSimulation = (amountOfData = 0) => {
   return {
     range: {
       start: 0,
@@ -77,35 +77,35 @@ const initialState = {
     cumulative: {
       type: "cumulative",
       data: [],
-      settings: initialSettingsSingleLine(),
+      settings: initialSettingsSimulation(),
     },
     cumulative_deaths: {
       type: "cumulative_deaths",
       data: [],
-      settings: initialSettingsSingleLine(),
+      settings: initialSettingsSimulation(),
     },
     exposed: {
       type: "exposed",
       data: [],
-      settings: initialSettingsSingleLine(),
+      settings: initialSettingsSimulation(),
     },
     hospitalized: {
       type: "hospitalized",
       data: [],
-      settings: initialSettingsSingleLine(),
+      settings: initialSettingsSimulation(),
     },
-    immune: { type: "immune", data: [], settings: initialSettingsSingleLine() },
+    immune: { type: "immune", data: [], settings: initialSettingsSimulation() },
     infectious: {
       type: "infectious",
       data: [],
-      settings: initialSettingsSingleLine(),
+      settings: initialSettingsSimulation(),
     },
     susceptible: {
       type: "susceptible",
       data: [],
-      settings: initialSettingsSingleLine(),
+      settings: initialSettingsSimulation(),
     },
-    uci: { type: "uci", data: [], settings: initialSettingsSingleLine() },
+    uci: { type: "uci", data: [], settings: initialSettingsSimulation() },
   },
 };
 
@@ -149,35 +149,35 @@ export const graphInfoSlice = createSlice({
       const amount = action.payload.cumulative.length - 1;
       simulation.cumulative.data = action.payload.cumulative;
       simulation.cumulative.isReady = true;
-      simulation.cumulative.settings = initialSettingsSingleLine(amount);
+      simulation.cumulative.settings = initialSettingsSimulation(amount);
 
       simulation.cumulative_deaths.data = action.payload.cumulative_deaths;
       simulation.cumulative_deaths.isReady = true;
-      simulation.cumulative_deaths.settings = initialSettingsSingleLine(amount);
+      simulation.cumulative_deaths.settings = initialSettingsSimulation(amount);
 
       simulation.exposed.data = action.payload.exposed;
       simulation.exposed.isReady = true;
-      simulation.exposed.settings = initialSettingsSingleLine(amount);
+      simulation.exposed.settings = initialSettingsSimulation(amount);
 
       simulation.hospitalized.data = action.payload.hospitalized;
       simulation.hospitalized.isReady = true;
-      simulation.hospitalized.settings = initialSettingsSingleLine(amount);
+      simulation.hospitalized.settings = initialSettingsSimulation(amount);
 
       simulation.immune.data = action.payload.immune;
       simulation.immune.isReady = true;
-      simulation.immune.settings = initialSettingsSingleLine(amount);
+      simulation.immune.settings = initialSettingsSimulation(amount);
 
       simulation.infectious.data = action.payload.infectious;
       simulation.infectious.isReady = true;
-      simulation.infectious.settings = initialSettingsSingleLine(amount);
+      simulation.infectious.settings = initialSettingsSimulation(amount);
 
       simulation.susceptible.data = action.payload.susceptible;
       simulation.susceptible.isReady = true;
-      simulation.susceptible.settings = initialSettingsSingleLine(amount);
+      simulation.susceptible.settings = initialSettingsSimulation(amount);
 
       simulation.uci.data = action.payload.uci;
       simulation.uci.isReady = true;
-      simulation.uci.settings = initialSettingsSingleLine(amount);
+      simulation.uci.settings = initialSettingsSimulation(amount);
     },
     setSelectedLine(state, action) {
       const main = state.main;
@@ -216,13 +216,8 @@ export const graphInfoSlice = createSlice({
   },
 });
 
-export const selectGraphData = ({ main }) =>
-  Object.values(main).map(({ type, isReady }) => {
-    return { type, isReady };
-  });
-
-export const selectSingleLineGraphData = ({ simulation }) =>
-  Object.values(simulation).map(({ type, isReady }) => {
+export const selectGraphData = (graphsType) => (state) =>
+  Object.values(state[graphsType]).map(({ type, isReady }) => {
     return { type, isReady };
   });
 
@@ -272,15 +267,8 @@ export const selectUncertainty =
   ({ main }) =>
     main[type].settings.uncertainty;
 
-export const selectRange =
-  (type) =>
-  ({ main }) =>
-    main[type].settings.range;
-
-export const selectRangeSingleLine =
-  (type) =>
-  ({ simulation }) =>
-    simulation[type].settings.range;
+export const selectRange = (graphsType, type) => (state) =>
+  state[graphsType][type].settings.range;
 
 export const selectDotField =
   (type) =>
