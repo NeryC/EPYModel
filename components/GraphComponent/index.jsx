@@ -14,7 +14,7 @@ const GraphComponent = ({ type }) => {
   parseD3(data);
 
   let shouldShowSubtitle = () => {
-    const subtitle = graphDescriptions[type]?.subtitle;
+    const subtitle = graphDescriptions[type];
     if (subtitle)
       return (
         <div className="text-base w-4/5 text-text-secondary whitespace-pre-line">

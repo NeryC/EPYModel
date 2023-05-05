@@ -37,12 +37,19 @@
   "simulator":"Simulador",
   "home":"Inicio",
   "cumulative":"Acumulado",
+  "cumulative-subtitle":"Cumulative-subtitle",
   "cumulative_deaths": "Muertes acumuladas",
+  "cumulative_deaths-subtitle": "Cumulative Deaths-subtitle",
   "exposed": "Expuesto",
+  "exposed-subtitle": "Exposed-subtitle",
   "immune":"Inmune",
+  "immune-subtitle":"Inmune-subtitle",
   "infectious": "Infectados",
+  "infectious-subtitle": "Infectious-subtitle",
   "susceptible":"Susceptible",
+  "susceptible-subtitle":"Susceptible-subtitle",
   "uci":"UCI",
+  "uci-subtitle":"UTI-subtitle",
 
   "reported":"Reportado",
   "reported-title":"Proyección de posibles nuevos infectados diarios",
@@ -51,6 +58,7 @@
   "estimated-description":"Esta curva muestra las infecciones estimadas diarias después de corregir el sesgo debido a la tasa de prueba.",
 
   "hospitalized":"Hospitalizados",
+  "hospitalized-subtitle":"Hospitalized-subtitle",
   "hospitalized-title":"Proyección diaria de hospitalizados",
   "hospitalized-description":"Número informado de hospitalizados diarios de acuerdo con los datos proporcionados por los MSPYBS.",
 

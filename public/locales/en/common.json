@@ -37,12 +37,19 @@
   "simulator":"Simulator",
   "home":"Home",
   "cumulative":"Cumulative",
+  "cumulative-subtitle":"Cumulative-subtitle",
   "cumulative_deaths": "Cumulative Deaths",
+  "cumulative_deaths-subtitle": "Cumulative Deaths-subtitle",
   "exposed": "Exposed",
+  "exposed-subtitle": "Exposed-subtitle",
   "immune":"Inmune",
+  "immune-subtitle":"Inmune-subtitle",
   "infectious": "Infectious",
+  "infectious-subtitle": "Infectious-subtitle",
   "susceptible":"Susceptible",
+  "susceptible-subtitle":"Susceptible-subtitle",
   "uci":"UTI",
+  "uci-subtitle":"UTI-subtitle",
 
   "reported":"Reported",
   "reported-title":"Projection of possible new Infected/Daily reported",
@@ -51,6 +58,7 @@
   "estimated-description":"This curve shows the daily estimated infections after correcting for bias due to the testing rate.",
 
   "hospitalized":"Hospitalized",
+  "hospitalized-subtitle":"Hospitalized-subtitle",
   "hospitalized-title":"Daily death projection",
   "hospitalized-description":"Reported number of daily hospitalized according to data provided by the MSPyBS.",
 

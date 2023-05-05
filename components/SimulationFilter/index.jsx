@@ -117,12 +117,15 @@ function SimulationFilter() {
         </div>
         <div className="flex gap-16">
           <div className="flex items-center w-auto">
-            <label htmlFor="uci" className="text-sm dark:text-white font-bold">
+            <label
+              htmlFor="uci_input"
+              className="text-sm dark:text-white font-bold"
+            >
               {t("uci")}
             </label>
             <input
               type="number"
-              id="uci"
+              id="uci_input"
               min="0"
               max="5000"
               value={UCIRef.current}
