@@ -8,7 +8,7 @@ export const dimensions = {
     top: 20,
     right: 10,
     bottom: 30,
-    left: 60,
+    left: 45,
   },
 };
 
@@ -47,21 +47,6 @@ export const createZoom = (left, right, width, height, zoomed) => {
     .on("zoom", zoomed);
 };
 
-//legacy
-// export const declareLineD3 = (baseDeclareData, yField) => {
-//   return (x) =>
-//     d3
-//       .line()
-//       .x(function (d) {
-//         return x(d[baseDeclareData.xField]);
-//       })
-//       .y(function (d) {
-//         return baseDeclareData.y(d[yField]);
-//       })
-//       .curve(baseDeclareData.isSmooth ? d3.curveNatural : d3.curveLinear)
-//       .defined((d) => d[yField] != null);
-// };
-
 export const basicDeclareLineD3 = (baseLineData, dataYField) => {
   const isSmooth =
     !baseLineData.hasOwnProperty("isSmooth") || baseLineData.isSmooth
@@ -91,31 +76,6 @@ export const declareAreaD3 = (xField, y0Field, y1Field) => {
       })
       .defined((d) => d[y0Field] != null);
 };
-
-// //legacy
-// export const drawAreaD3 = (baseDrawData, declare) => {
-//   return baseDrawData.svgChart
-//     .append("path")
-//     .data([baseDrawData.data])
-//     .attr("clip-path", "url(#" + baseDrawData.clip + ")")
-//     .attr("id", "uncertainty")
-//     .style("stroke", "none")
-//     .style("fill", lineColors.uncertainty)
-//     .style("opacity", 0.1)
-//     .attr("d", declare(baseDrawData.x));
-// };
-// //legacy
-// export const drawLineD3 = (baseDrawData, title, yField, declare) => {
-//   return baseDrawData.svgChart
-//     .append("path")
-//     .data([baseDrawData.data])
-//     .attr("clip-path", "url(#" + baseDrawData.clip + ")")
-//     .attr("id", title)
-//     .attr("class", lineClass(yField))
-//     .style("stroke", lineColors[yField])
-//     .attr("d", declare(baseDrawData.x));
-// };
-
 export const dynamicDateFormat = timeFormat([
   [
     d3.timeFormat("%Y"),
@@ -136,20 +96,6 @@ export const dynamicDateFormat = timeFormat([
     },
   ],
 ]);
-
-//legacy
-// export const lineColors = {
-//   dailyR_sin_subRegistro: "#1900ff",
-//   dailyR: "#00ccff",
-//   proy: "#1900ff",
-//   q75: "#ff0000",
-//   q25: "#009719",
-//   X10p: "#97008f",
-//   X20p: "#e134f8",
-//   eq: "#039bb6",
-//   X2w: "#c50000",
-//   uncertainty: "b5adff",
-// };
 
 //formatos de dias para no hacer consultas extra
 export const es = {
@@ -276,13 +222,6 @@ export const pt = {
     "Dez",
   ],
 };
-
-// const straightLine = ["dailyR", "dailyR_sin_subRegistro"];
-
-//legacy
-// const lineClass = (yField) => {
-//   return `line ${!straightLine.includes(yField) ? "" : "dotted_line"}`;
-// };
 
 export function timeFormat(formats) {
   return function (date) {

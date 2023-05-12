@@ -14,15 +14,17 @@ const MainGraph = ({ type }) => {
   parseD3(data);
 
   return (
-    <div className="rounded-lg overflow-hidden shadow-lg bg-white mb-3 md:mb-6 p-3 md:p-6 flex flex-col border border-gray-theme text-black">
-      <div className="border-b-2 text-2xl md:mb-2 font-bold flex flex-col w-full pb-4">
-        <div className="flex justify-between">
-          {t(`${type}-title`)}
-          <DownloadButton page="main" type={type} />
+    <div className="rounded-lg overflow-hidden shadow-lg bg-white mb-3 md:mb-6 py-3 md:py-6 flex flex-col border border-gray-theme text-black">
+      <div className="px-3 md:px-6">
+        <div className="border-b-2 text-2xl md:mb-2 font-bold flex flex-col w-full pb-2 md:pb-4">
+          <div className="flex justify-between">
+            {t(`${type}-title`)}
+            <DownloadButton page="main" type={type} />
+          </div>
+          <Subtitle page="main" type={type} />
         </div>
-        <Subtitle page="main" type={type} />
+        <SelectedLines type={type} />
       </div>
-      <SelectedLines type={type} />
       <Graph type={type} data={data} />
     </div>
   );

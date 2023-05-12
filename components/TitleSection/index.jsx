@@ -2,7 +2,7 @@ import { useTranslation } from "next-i18next";
 
 export const TitleSection = ({ tab = "main" }) => {
   const { t } = useTranslation("common");
-  const borderClass = `text-xl ${
+  const borderClass = `text-lg md:text-xl ${
     tab == "main" && "border-b border-gray-theme pb-5"
   }`;
   const containerClass = `flex flex-col mt-3 mb-5 ${

@@ -138,7 +138,7 @@ const Graph = ({ type, data }) => {
         g.call(
           d3
             .axisBottom(x1)
-            .ticks(5)
+            .ticks(4)
             .tickSize(-(height - bottom))
             .tickFormat(
               timeFormat([
@@ -182,13 +182,12 @@ const Graph = ({ type, data }) => {
       .attr("r", 2.7)
       .attr("id", `${dotField}-${type}`);
 
-    dotsGroup
-      .selectAll(`#${dotField}-${type}`)
-      .transition()
-      .attr("opacity", 1)
-      .delay(function (_d, i) {
-        return 300;
-      });
+    setTimeout(() => {
+      dotsGroup
+        .selectAll(`#${dotField}-${type}`)
+        .transition()
+        .attr("opacity", 0.8);
+    }, 1000);
 
     dotsGroup
       .selectAll(`#${dotField}-${type}`)
@@ -196,10 +195,9 @@ const Graph = ({ type, data }) => {
         return d[dotField] == null;
       })
       .remove();
-    setZoom();
     // I only need this render in the first time or when el graph is resized
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [width, xScale, yScale]);
+  }, [xScale, yScale]);
 
   const baseLineData = {
     xField: dateField,
@@ -252,7 +250,7 @@ const Graph = ({ type, data }) => {
   }
 
   return (
-    <div className="w-full relative" ref={containerRef}>
+    <div className="w-full relative px-1 md:px-3" ref={containerRef}>
       <svg id={type} width={svgWidth} height={svgHeight} ref={svgChartRef}>
         <g id="elements" transform={`translate(${left},${top})`}>
           <clipPath id={clip}>
@@ -269,7 +267,7 @@ const Graph = ({ type, data }) => {
             ref={xAxisRef}
             transform={`translate(0,${height - bottom})`}
           />
-
+          <g id="Dots" ref={dotsRef}></g>
           <g id="Lines" clipPath={`url(#${clip})`}>
             {showedElements.map(({ name, style, color }) => {
               if (style !== "dot") {
@@ -296,7 +294,6 @@ const Graph = ({ type, data }) => {
               opacity={0.1}
             />
           </g>
-          <g id="Dots" ref={dotsRef}></g>
 
           <GraphInfoTooltip
             xScale={xScale}

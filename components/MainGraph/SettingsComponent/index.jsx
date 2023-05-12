@@ -67,7 +67,7 @@ const SettingsComponent = ({ type, data }) => {
       <div
         onMouseLeave={handleMouseLeave}
         onMouseEnter={handleMouseEnter}
-        className="flex flex-col items-end top-2 right-7 md:top-10 md:right-14 absolute"
+        className="flex flex-col items-end top-6 right-7 md:top-10 md:right-14 absolute"
       >
         <div
           onClick={() => setDropdown(!dropdown)}

@@ -28,7 +28,6 @@ const SelectedLines = ({ type }) => {
     }
   };
   // en caso de usar border
-  // ? dinamicColorStyle(type, "borderColor", fieldName)
   const chooseLineColor = (fieldName) =>
     fieldName != dotField
       ? dinamicColorStyle(type, "backgroundColor", fieldName)
@@ -43,17 +42,15 @@ const SelectedLines = ({ type }) => {
       <ScenarioTooltip item={[item]} key={item.label} type={type}>
         <button
           key={item.label}
-          className={`flex justify-center items-center gap-2 border rounded-3xl py-1 px-3 ${isSelected(
+          className={`flex items-center gap-2 border rounded-3xl py-1 px-3 w-full md:w-auto ${isSelected(
             item
           )}`}
           onClick={() => selectOption(item)}
         >
-          <div className="flex flex-auto">
-            <div
-              className={chooseClass(item)}
-              style={chooseLineColor(item.name)}
-            />
-          </div>
+          <div
+            className={chooseClass(item)}
+            style={chooseLineColor(item.name)}
+          />
           <div className="text-sm font-bold">{t(item.label)}</div>
         </button>
       </ScenarioTooltip>
@@ -61,7 +58,7 @@ const SelectedLines = ({ type }) => {
   };
 
   return (
-    <div className="flex text-sm gap-5 py-2 justify-center">
+    <div className="grid md:flex grid-cols-2 gap-2 md:gap-4 text-sm pt-3 md:pt-1 justify-center">
       {renderSelected()}
     </div>
   );

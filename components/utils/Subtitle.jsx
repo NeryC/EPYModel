@@ -7,7 +7,7 @@ const Subtitle = ({ page, type }) => {
 
   if (subtitle)
     return (
-      <div className="text-base w-4/5 text-text-secondary whitespace-pre-line">
+      <div className="text-base pt-2 text-text-secondary whitespace-pre-line">
         {t(`${type}-subtitle`)}
       </div>
     );

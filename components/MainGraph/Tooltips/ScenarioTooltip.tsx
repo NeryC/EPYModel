@@ -19,7 +19,7 @@ const ScenarioTooltip = ({
 }) => {
   const { t } = useTranslation('common');
   return (
-    <div className="relative flex flex-col items-center group">
+    <div className="relative flex items-center group">
       {children}
       <div
         className={`absolute ${

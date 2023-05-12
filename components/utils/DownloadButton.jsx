@@ -30,7 +30,7 @@ export const DownloadButton = ({ page, type, data }) => {
   const DonwloadOption = ({ text }) => {
     if (text === "svg")
       return (
-        <li className="dropdown-item hover:bg-blue-100 px-4 py-1">
+        <li className="dropdown-item hover:bg-blue-100 px-5 md:px-4 py-3 md:py-1">
           <span className="block cursor-pointer" onClick={downloadGraph}>
             {text}
           </span>
@@ -39,7 +39,7 @@ export const DownloadButton = ({ page, type, data }) => {
     if (text === "csv") {
       if (page == "main") {
         return (
-          <li className="dropdown-item hover:bg-blue-100 px-4 py-1">
+          <li className="dropdown-item hover:bg-blue-100 px-5 md:px-4 py-3 md:py-1">
             <a
               className="block cursor-pointer"
               href={`${baseURL}${getDownloadPath[type]}`}
@@ -80,11 +80,11 @@ export const DownloadButton = ({ page, type, data }) => {
 
   return (
     <div
-      className="flex justify-center text-base font-medium"
+      className="flex justify-center text-base font-medium items-center"
       onMouseLeave={handleMouseLeave}
       onMouseEnter={handleMouseEnter}
     >
-      <div className="dropdown relative text-deep-blue">
+      <div className="dropdown relative text-deep-blue w-16 md:w-auto">
         <button
           onClick={openMenu}
           className={`
@@ -92,22 +92,25 @@ export const DownloadButton = ({ page, type, data }) => {
             items-center 
             ${showDropdown ? "bg-gray-200" : "bg-transparent"} 
             font-semibold 
-            py-1
+            py-3
+            md:py-1
             px-3 
             border 
           border-gray-theme 
             rounded-3xl
           `}
         >
-          <div className="mr-2 flex">
+          <div className="md:mr-2 flex w-max">
             <Image
               src="/assets/icons/download.svg"
-              height={15}
-              width={15}
+              height={20}
+              width={20}
               alt="Download Icon"
             />
           </div>
-          <span className="font-bold">{t("download-graph")}</span>
+          <span className="font-bold hidden md:block">
+            {t("download-graph")}
+          </span>
         </button>
         <ul
           className={`
