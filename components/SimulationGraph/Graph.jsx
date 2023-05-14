@@ -7,6 +7,7 @@ import {
   getYDomainSimulation,
   createZoom,
   useGetDomain,
+  SIM_GRAPH,
 } from "../../utils/constants";
 import SimulationTooltip from "./Tooltip/index.jsx";
 import { useSelector } from "react-redux";
@@ -20,7 +21,7 @@ const Graph = ({ type, data }) => {
   const dayField = "day";
   const valueField = "value";
 
-  const range = useSelector(selectRange("simulation", type));
+  const range = useSelector(selectRange(SIM_GRAPH, type));
 
   const clip = useId();
 
@@ -48,6 +49,7 @@ const Graph = ({ type, data }) => {
   const yDomain = useGetDomain({
     data,
     field: valueField,
+    shouldReduce: true,
   });
   const yScale = useCreateScale({
     range: [height - bottom, 0],
@@ -119,7 +121,7 @@ const Graph = ({ type, data }) => {
     xField: dayField,
   };
 
-  const dataLine = basicDeclareLineD3(baseLineData, valueField);
+  const dataLine = basicDeclareLineD3(baseLineData, valueField, true);
 
   function drawLines() {
     const d = dataLine(xScale, yScale)(data);

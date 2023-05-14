@@ -11,6 +11,7 @@ import {
   useGetDomain,
   timeFormat,
   getMaxField,
+  MAIN_GRAPH,
 } from "../../utils/constants";
 import { dateField } from "../../utils/constants.js";
 import GraphInfoTooltip from "./Tooltips/GraphInfoTooltip";
@@ -35,7 +36,7 @@ const Graph = ({ type, data }) => {
   const showedElements = useSelector(selectShowedElements(type));
   const isSmooth = useSelector(selectIsSmooth(type));
   const uncertainty = useSelector(selectUncertainty(type));
-  const range = useSelector(selectRange("main", type));
+  const range = useSelector(selectRange(MAIN_GRAPH, type));
   const dotField = useSelector(selectDotField(type));
 
   let graphElements = {};

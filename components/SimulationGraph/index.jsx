@@ -4,6 +4,7 @@ import { selectRawDataSimulation } from "../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
 import { DownloadButton } from "../utils/DownloadButton";
 import Subtitle from "../utils/Subtitle";
+import { SIM_GRAPH } from "../../utils/constants";
 
 const SimulationGraph = ({ type }) => {
   const rawData = useSelector(selectRawDataSimulation(type));
@@ -14,9 +15,9 @@ const SimulationGraph = ({ type }) => {
       <div className="border-b-2 text-2xl md:mb-2 font-bold flex flex-col w-full pb-4">
         <div className="flex justify-between">
           {t(type)}
-          <DownloadButton page="simulation" type={type} data={rawData} />
+          <DownloadButton page={SIM_GRAPH} type={type} data={rawData} />
         </div>
-        <Subtitle page="simulation" type={type} />
+        <Subtitle page={SIM_GRAPH} type={type} />
       </div>
       <Graph type={type} data={rawData} />
     </div>

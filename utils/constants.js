@@ -14,6 +14,9 @@ export const dimensions = {
 
 export const dateField = "fechaFormateada";
 
+export const SIM_GRAPH = "simulation";
+export const MAIN_GRAPH = "main";
+
 // export const baseURL = "http://epymodel.uaa.edu.py:3001"; //production
 export const baseURL = "http://localhost:3001"; //local-dev
 
@@ -47,7 +50,11 @@ export const createZoom = (left, right, width, height, zoomed) => {
     .on("zoom", zoomed);
 };
 
-export const basicDeclareLineD3 = (baseLineData, dataYField) => {
+export const basicDeclareLineD3 = (
+  baseLineData,
+  dataYField,
+  shouldReduce = false
+) => {
   const isSmooth =
     !baseLineData.hasOwnProperty("isSmooth") || baseLineData.isSmooth
       ? d3.curveNatural
@@ -56,7 +63,7 @@ export const basicDeclareLineD3 = (baseLineData, dataYField) => {
     d3
       .line()
       .x((d) => xScale(d[baseLineData.xField]))
-      .y((d) => yScale(d[dataYField]))
+      .y((d) => yScale(shouldReduce ? d[dataYField] / 1000 : d[dataYField]))
       .curve(isSmooth)
       .defined((d) => d[dataYField] != null);
 };
@@ -237,12 +244,12 @@ export const useCreateScale = ({ range, domain, scaleType }) => {
   return useMemo(() => type.domain(domain).range(range), [domain, range, type]);
 };
 
-export const useGetDomain = ({ data, field }) => {
+export const useGetDomain = ({ data, field, shouldReduce = false }) => {
   return useMemo(() => {
     return d3.extent(data, function (d) {
-      return d[field];
+      return shouldReduce ? d[field] / 1000 : d[field];
     });
-  }, [data, field]);
+  }, [data, field, shouldReduce]);
 };
 
 export const getMaxField = (data, lines) => {
@@ -291,7 +298,7 @@ export const getYDomainSimulation = (data, xz, yScale) => {
     return d.day >= xleft && d.day <= xright;
   });
 
-  const countSubset = dataSubset.map((d) => d.value);
+  const countSubset = dataSubset.map((d) => d.value / 1000);
 
   // add the edge values of the line to the array of counts in view, get the max y;
   let ymax_new = d3.max(countSubset);

@@ -12,9 +12,10 @@ import Layout from "../components/Layout";
 import SimulationGraph from "../components/SimulationGraph";
 import { TitleSection } from "../components/TitleSection";
 import SimulationFilter from "../components/SimulationGraph/SimulationFilter";
+import { SIM_GRAPH } from "../utils/constants";
 
 const ChartsPage = () => {
-  const graphsStatus = useSelector(selectGraphData("simulation"));
+  const graphsStatus = useSelector(selectGraphData(SIM_GRAPH));
   return (
     <>
       <Head>
@@ -36,8 +37,8 @@ const ChartsPage = () => {
       </Head>
       <Layout>
         <div className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back">
-          <div className="flex justify-between gap-3 border-b border-gray-theme pb-5 mb-6">
-            <TitleSection tab="simulation" />
+          <div className="flex flex-col md:flex-row justify-between gap-3 border-b border-gray-theme pb-5 mb-6">
+            <TitleSection tab={SIM_GRAPH} />
             <SimulationFilter />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 mb-6 w-full">

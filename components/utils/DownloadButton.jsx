@@ -4,7 +4,7 @@ import { useState } from "react";
 import * as d3 from "d3";
 import { saveAs } from "file-saver";
 import { CSVLink } from "react-csv";
-import { baseURL, getDownloadPath } from "../../utils/constants.js";
+import { MAIN_GRAPH, baseURL, getDownloadPath } from "../../utils/constants.js";
 
 export const DownloadButton = ({ page, type, data }) => {
   const { t } = useTranslation("common");
@@ -37,7 +37,7 @@ export const DownloadButton = ({ page, type, data }) => {
         </li>
       );
     if (text === "csv") {
-      if (page == "main") {
+      if (page == MAIN_GRAPH) {
         return (
           <li className="dropdown-item hover:bg-blue-100 px-5 md:px-4 py-3 md:py-1">
             <a

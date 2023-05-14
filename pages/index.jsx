@@ -8,9 +8,10 @@ import { wrapper } from "../store/store";
 import { axiosInstance } from "../utils";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { TitleSection } from "../components/TitleSection";
+import { MAIN_GRAPH } from "../utils/constants";
 
 export default function Graphs() {
-  const graphsStatus = useSelector(selectGraphData("main"));
+  const graphsStatus = useSelector(selectGraphData(MAIN_GRAPH));
   return (
     <>
       <Head>
