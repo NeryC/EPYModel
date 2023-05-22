@@ -8,7 +8,7 @@ export default function Header() {
   const router = useRouter();
   const { t } = useTranslation("common");
   const getClass = (actualRoute: string): string =>{
-    return actualRoute === router.route ? "text-blue-700": "hover:text-blue-700"
+    return actualRoute === router.route ? "text-blue-700 hidden sm:block": "hover:text-blue-700"
   }
   return (
     <div className="relative bg-white border-b-2 border-b-gray-theme drop-shadow-md">

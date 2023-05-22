@@ -88,7 +88,7 @@ function SimulationFilter() {
               >
                 <button
                   data-action="decrement"
-                  className="disabled:hover:bg-gray-200 disabled:bg-gray-200 px-5 md:px-1 bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full rounded-l cursor-pointer"
+                  className="disabled:hover:bg-gray-200 disabled:bg-gray-200 px-2 ssm:px-5 md:px-1 bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full rounded-l cursor-pointer"
                   disabled={RtList[index] == 0}
                   onClick={() => handleRTChange(index, "decrement")}
                 >
@@ -106,7 +106,7 @@ function SimulationFilter() {
                 />
                 <button
                   data-action="increment"
-                  className="disabled:hover:bg-gray-200 disabled:bg-gray-200 px-5 md:px-1 bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full rounded-r"
+                  className="disabled:hover:bg-gray-200 disabled:bg-gray-200 px-2 ssm:px-5 md:px-1 bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full rounded-r"
                   disabled={RtList[index] == 2}
                   onClick={() => handleRTChange(index, "increment")}
                 >
