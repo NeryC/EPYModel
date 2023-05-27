@@ -24,6 +24,7 @@
   "smoothed-data":"Smoothed data",
   "date-range":"Date range",
   "uncertainty":"Uncertainty",
+  "show-dots":"Display exact points",
   "apply-to-all":"Apply to all",
   "reset":"Reset",
   "download-graph":"Download Graph",

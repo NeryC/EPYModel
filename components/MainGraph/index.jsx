@@ -8,7 +8,7 @@ import { DownloadButton } from "../utils/DownloadButton";
 import Subtitle from "../utils/Subtitle";
 import { MAIN_GRAPH } from "../../utils/constants";
 
-const MainGraph = ({ type }) => {
+const MainGraph = ({ type, dimensions }) => {
   const { t } = useTranslation("common");
   const rawData = useSelector(selectRawData(type));
   const data = JSON.parse(JSON.stringify(rawData));
@@ -26,7 +26,7 @@ const MainGraph = ({ type }) => {
         </div>
         <SelectedLines type={type} />
       </div>
-      <Graph type={type} data={data} />
+      <Graph type={type} data={data} dimensions={dimensions} />
     </div>
   );
 };

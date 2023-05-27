@@ -110,6 +110,13 @@ const SettingsComponent = ({ type, data }) => {
             checkedState={settings.uncertainty}
           />
 
+          <ToogleButton
+            label={t("show-dots")}
+            name="dotsOption"
+            handleChange={() => handleChangeChecks("dotsOption")}
+            checkedState={settings.dotsOption}
+          />
+
           <div className="border-b mb-3 w-full" />
 
           <div className="flex flex-row-reverse w-full mb-2 text-sm">

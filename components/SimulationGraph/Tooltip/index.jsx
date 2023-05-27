@@ -150,7 +150,7 @@ const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
       });
   }, [cuadro, followPoints]);
 
-  if (!data.length) return null;
+  if (!data.length || width <= 0) return null;
 
   return (
     <>

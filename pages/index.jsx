@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-page-custom-font */
+import { useRef } from "react";
 import Head from "next/head";
 import Layout from "../components/Layout";
 import MainGraph from "../components/MainGraph";
@@ -9,9 +10,12 @@ import { axiosInstance } from "../utils";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { TitleSection } from "../components/TitleSection";
 import { MAIN_GRAPH } from "../utils/constants";
+import useDimensions from "../hooks/useDimensions";
 
 export default function Graphs() {
+  const containerRef = useRef(null);
   const graphsStatus = useSelector(selectGraphData(MAIN_GRAPH));
+  const dimensions = useDimensions(containerRef, 534);
   return (
     <>
       <Head>
@@ -32,11 +36,18 @@ export default function Graphs() {
         />
       </Head>
       <Layout>
-        <div className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back">
+        <div
+          className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back"
+          ref={containerRef}
+        >
           <TitleSection />
-          {graphsStatus.map(({ type, isReady }) => {
-            if (isReady) return <MainGraph type={type} key={type} />;
-          })}
+          {dimensions.width > 0 &&
+            graphsStatus.map(({ type, isReady }) => {
+              if (isReady)
+                return (
+                  <MainGraph type={type} key={type} dimensions={dimensions} />
+                );
+            })}
         </div>
       </Layout>
     </>

@@ -1,7 +1,6 @@
 import * as d3 from "d3";
-import useDimensions from "../../hooks/useDimensions";
 import { useRef, useId, useEffect, useMemo, useCallback } from "react";
-import SettingsComponent from "./SettingsComponent";
+import SettingsComponent from "../SettingsComponent";
 import {
   useCreateScale,
   basicDeclareLineD3,
@@ -12,9 +11,9 @@ import {
   timeFormat,
   getMaxField,
   MAIN_GRAPH,
-} from "../../utils/constants";
-import { dateField } from "../../utils/constants.js";
-import GraphInfoTooltip from "./Tooltips/GraphInfoTooltip";
+} from "../../../utils/constants";
+import { dateField } from "../../../utils/constants.js";
+import GraphInfoTooltip from "../Tooltips/GraphInfoTooltip";
 import { useSelector } from "react-redux";
 import {
   selectSelectedLines,
@@ -22,20 +21,22 @@ import {
   selectRange,
   selectIsSmooth,
   selectUncertainty,
+  selectDotsOption,
   selectDotField,
-} from "../../store/reducers/graphInfoSlice";
+} from "../../../store/reducers/graphInfoSlice";
+import { getNewLines, drawLines } from "./utils";
 
-const Graph = ({ type, data }) => {
+const Graph = ({ type, data, dimensions }) => {
   const svgChartRef = useRef(null);
   const yAxisRef = useRef(null);
   const xAxisRef = useRef(null);
   const dotsRef = useRef(null);
-  const containerRef = useRef(null);
 
   const selectedLines = useSelector(selectSelectedLines(type));
   const showedElements = useSelector(selectShowedElements(type));
   const isSmooth = useSelector(selectIsSmooth(type));
   const uncertainty = useSelector(selectUncertainty(type));
+  const hasDots = useSelector(selectDotsOption(type));
   const range = useSelector(selectRange(MAIN_GRAPH, type));
   const dotField = useSelector(selectDotField(type));
 
@@ -43,8 +44,8 @@ const Graph = ({ type, data }) => {
 
   const clip = useId();
 
-  const [{ svgWidth, svgHeight, width, height, left, top, right, bottom }] =
-    useDimensions(containerRef, 534);
+  const { svgWidth, svgHeight, width, height, left, top, right, bottom } =
+    dimensions;
 
   const svgChart = d3.select(svgChartRef.current);
   const yAxisGroup = d3.select(yAxisRef.current);
@@ -54,21 +55,30 @@ const Graph = ({ type, data }) => {
   const zoom = createZoom(left, right, width, height, zoomed);
 
   function zoomed(e) {
-    const newLines = [...selectedLines, dotField, uncertainty && "peor"];
+    const newLines = getNewLines(selectedLines, uncertainty, hasDots, dotField);
     const xz = e.transform.rescaleX(xScale);
     const yz = getYDomain(data, newLines, xz, yScale);
     xScale.domain(xz.domain());
 
     xAxisGroup.call(axis.x, xz);
     yAxisGroup.call(axis.y, yz);
-    drawLines();
+    drawLines(
+      showedElements,
+      graphElements,
+      svgChart,
+      uncertainty,
+      type,
+      xScale,
+      yScale,
+      data,
+      xAxisGroup,
+      yAxisGroup
+    );
   }
 
-  const maxField = getMaxField(data, [
-    ...selectedLines,
-    dotField,
-    uncertainty && "peor",
-  ]);
+  const newLines = getNewLines(selectedLines, uncertainty, hasDots, dotField);
+
+  const maxField = getMaxField(data, newLines);
   //y Right
   //x bottom
   const yDomain = useGetDomain({
@@ -121,10 +131,6 @@ const Graph = ({ type, data }) => {
     zoom.transform,
   ]);
 
-  useEffect(() => {
-    setZoom();
-  }, [range, isSmooth, uncertainty, selectedLines, setZoom]);
-
   const axis = useMemo(() => {
     return {
       y: (g, y1) =>
@@ -168,38 +174,6 @@ const Graph = ({ type, data }) => {
     };
   }, [bottom, height, right, width]);
 
-  useEffect(() => {
-    dotsGroup.selectAll(`#${dotField}-${type}`).remove();
-    dotsGroup
-      .selectAll("dot")
-      .data(data)
-      .join("circle")
-      .attr("cx", (d) => xScale(d[dateField]))
-      .attr("cy", (d) => yScale(d[dotField]))
-      .attr("clip-path", "url(#" + clip + ")")
-      .attr("fill", "#FFFFFF")
-      .attr("stroke", "black")
-      .attr("opacity", 0)
-      .attr("r", 2.7)
-      .attr("id", `${dotField}-${type}`);
-
-    setTimeout(() => {
-      dotsGroup
-        .selectAll(`#${dotField}-${type}`)
-        .transition()
-        .attr("opacity", 0.8);
-    }, 1000);
-
-    dotsGroup
-      .selectAll(`#${dotField}-${type}`)
-      .filter(function (d) {
-        return d[dotField] == null;
-      })
-      .remove();
-    // I only need this render in the first time or when el graph is resized
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [xScale, yScale]);
-
   const baseLineData = {
     xField: dateField,
     isSmooth: isSmooth,
@@ -216,42 +190,47 @@ const Graph = ({ type, data }) => {
 
   graphElements["uncertainty"] = declareAreaD3(dateField, "peor", "mejor");
 
-  function drawLines() {
-    showedElements.forEach((element) => {
-      if (element.style == "dot") return;
-      const d = graphElements[element.name](xScale, yScale)(data);
+  useEffect(() => {
+    setZoom();
+  }, [range, isSmooth, uncertainty, selectedLines, setZoom, hasDots]);
 
-      svgChart
-        .select(`#${element.name}-${type}`)
-        .attr("d", d?.match(/NaN|undefined/) ? "" : d);
-    });
+  useEffect(() => {
+    dotsGroup.selectAll(`#${dotField}-${type}`).remove();
+    hasDots &&
+      dotsGroup
+        .selectAll("dot")
+        .data(data)
+        .join("circle")
+        .attr("cx", (d) => xScale(d[dateField]))
+        .attr("cy", (d) => yScale(d[dotField]))
+        .attr("clip-path", "url(#" + clip + ")")
+        .attr("fill", "#FFFFFF")
+        .attr("stroke", "black")
+        .attr("opacity", 0)
+        .attr("r", 2.7)
+        .attr("id", `${dotField}-${type}`);
 
-    uncertainty
-      ? svgChart
-          .select(`#uncertainty-${type}`)
-          .attr("d", graphElements["uncertainty"](xScale, yScale)(data))
-      : svgChart.select(`#uncertainty-${type}`).attr("d", null);
+    if (hasDots)
+      setTimeout(() => {
+        dotsGroup
+          .selectAll(`#${dotField}-${type}`)
+          .transition()
+          .attr("opacity", 0.8);
+      }, 1000);
 
-    // opacity en 0 si lo quiero quitar
-    // xAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0)");
-    xAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0.3)");
-    yAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0.3)");
-    yAxisGroup.selectAll("path").attr("stroke", "rgba(128, 128, 128, 0.3)");
-    xAxisGroup.selectAll("path").attr("stroke", "rgba(128, 128, 128, 0.3)");
-    yAxisGroup
-      .selectAll("text")
-      .attr("font-family", "Nunito, sans-serif")
-      .attr("font-size", "12px")
-      .attr("font-weight", "bold");
-    xAxisGroup
-      .selectAll("text")
-      .attr("font-family", "Nunito, sans-serif")
-      .attr("font-size", "12px")
-      .attr("font-weight", "bold");
-  }
+    hasDots &&
+      dotsGroup
+        .selectAll(`#${dotField}-${type}`)
+        .filter(function (d) {
+          return d[dotField] == null;
+        })
+        .remove();
+    // I only need this render in the first time or when el graph is resized
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [xScale, yScale, hasDots]);
 
   return (
-    <div className="w-full relative px-1 md:px-3" ref={containerRef}>
+    <div className="w-full relative px-1 md:px-3">
       <svg id={type} width={svgWidth} height={svgHeight} ref={svgChartRef}>
         <g id="elements" transform={`translate(${left},${top})`}>
           <clipPath id={clip}>

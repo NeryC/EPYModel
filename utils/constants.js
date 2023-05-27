@@ -6,7 +6,7 @@ export const dimensions = {
   height: 400,
   margin: {
     top: 20,
-    right: 10,
+    right: 20,
     bottom: 30,
     left: 45,
   },

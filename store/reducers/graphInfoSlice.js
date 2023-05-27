@@ -26,6 +26,7 @@ const initialSettings = (amountOfData = 0) => {
   return {
     isSmooth: true,
     uncertainty: false,
+    dotsOption: false,
     range: {
       start: 820,
       finish: amountOfData,
@@ -266,6 +267,11 @@ export const selectUncertainty =
   (type) =>
   ({ main }) =>
     main[type].settings.uncertainty;
+
+export const selectDotsOption =
+  (type) =>
+  ({ main }) =>
+    main[type].settings.dotsOption;
 
 export const selectRange = (graphsType, type) => (state) =>
   state[graphsType][type].settings.range;

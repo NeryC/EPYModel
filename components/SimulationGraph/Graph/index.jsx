@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import useDimensions from "../../hooks/useDimensions";
+import useDimensions from "../../../hooks/useDimensions";
 import { useRef, useId, useEffect, useMemo, useCallback } from "react";
 import {
   useCreateScale,
@@ -8,12 +8,13 @@ import {
   createZoom,
   useGetDomain,
   SIM_GRAPH,
-} from "../../utils/constants";
-import SimulationTooltip from "./Tooltip/index.jsx";
+} from "../../../utils/constants";
+import SimulationTooltip from "../Tooltip/index.jsx";
 import { useSelector } from "react-redux";
-import { selectRange } from "../../store/reducers/graphInfoSlice";
+import { selectRange } from "../../../store/reducers/graphInfoSlice";
+import { drawLines } from "./utils";
 
-const Graph = ({ type, data }) => {
+const Graph = ({ type, data, dimensions }) => {
   const svgChartRef = useRef(null);
   const yAxisRef = useRef(null);
   const xAxisRef = useRef(null);
@@ -25,7 +26,7 @@ const Graph = ({ type, data }) => {
 
   const clip = useId();
 
-  const [{ svgWidth, svgHeight, width, height, left, top, right, bottom }] =
+  const { svgWidth, svgHeight, width, height, left, top, right, bottom } =
     useDimensions(containerRef, 300);
 
   const svgChart = d3.select(svgChartRef.current);
@@ -41,7 +42,16 @@ const Graph = ({ type, data }) => {
 
     xAxisGroup.call(axis.x, xz);
     yAxisGroup.call(axis.y, yz);
-    drawLines();
+    drawLines(
+      dataLine,
+      svgChart,
+      type,
+      xScale,
+      yScale,
+      data,
+      xAxisGroup,
+      yAxisGroup
+    );
   }
 
   //y Right
@@ -92,10 +102,6 @@ const Graph = ({ type, data }) => {
     zoom.transform,
   ]);
 
-  useEffect(() => {
-    setZoom();
-  }, [range, setZoom, width, xScale, yScale]);
-
   const axis = useMemo(() => {
     return {
       y: (g, y1) =>
@@ -123,41 +129,24 @@ const Graph = ({ type, data }) => {
 
   const dataLine = basicDeclareLineD3(baseLineData, valueField, true);
 
-  function drawLines() {
-    const d = dataLine(xScale, yScale)(data);
-
-    svgChart.select(`#${type}`).attr("d", d?.match(/NaN|undefined/) ? "" : d);
-
-    // opacity en 0 si lo quiero quitar
-    // xAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0)");
-    xAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0.3)");
-    yAxisGroup.selectAll("line").attr("stroke", "rgba(128, 128, 128, 0.3)");
-    yAxisGroup.selectAll("path").attr("stroke", "rgba(128, 128, 128, 0.3)");
-    xAxisGroup.selectAll("path").attr("stroke", "rgba(128, 128, 128, 0.3)");
-    yAxisGroup
-      .selectAll("text")
-      .attr("font-family", "Nunito, sans-serif")
-      .attr("font-size", "12px")
-      .attr("font-weight", "bold");
-    xAxisGroup
-      .selectAll("text")
-      .attr("font-family", "Nunito, sans-serif")
-      .attr("font-size", "12px")
-      .attr("font-weight", "bold");
-  }
+  useEffect(() => {
+    setZoom();
+  }, [range, setZoom, width, xScale, yScale]);
 
   return (
     <div className="w-full relative" ref={containerRef}>
       <svg id={type} width={svgWidth} height={svgHeight} ref={svgChartRef}>
         <g id="elements" transform={`translate(${left},${top})`}>
-          <clipPath id={clip}>
-            <rect
-              x={0}
-              y={0}
-              width={width - right}
-              height={height - (bottom - 5)}
-            />
-          </clipPath>
+          {width > 0 && (
+            <clipPath id={clip}>
+              <rect
+                x={0}
+                y={0}
+                width={width - right}
+                height={height - (bottom - 5)}
+              />
+            </clipPath>
+          )}
           <g id="YAxis" ref={yAxisRef} />
           <g
             id="XAxis"

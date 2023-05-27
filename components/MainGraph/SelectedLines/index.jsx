@@ -1,11 +1,11 @@
-import { dinamicColorStyle } from "../../utils/index";
+import { dinamicColorStyle } from "../../../utils/index";
 import { useSelector, useDispatch } from "react-redux";
-import ScenarioTooltip from "./Tooltips/ScenarioTooltip";
+import ScenarioTooltip from "../Tooltips/ScenarioTooltip";
 import {
   selectDotField,
   selectDropdownInfo,
   setSelectedLine,
-} from "../../store/reducers/graphInfoSlice";
+} from "../../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
 
 const SelectedLines = ({ type }) => {

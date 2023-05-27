@@ -14,18 +14,16 @@ const useDimensions = (containerRef, height) => {
   const innerWidth = width - conditionalLeft - conditionalRight;
   const innerHeight = height - conditionalTop;
 
-  return [
-    {
-      svgWidth: width,
-      svgHeight: height,
-      width: innerWidth,
-      height: innerHeight,
-      left: conditionalLeft,
-      top: conditionalTop,
-      right: right,
-      bottom: bottom,
-    },
-  ];
+  return {
+    svgWidth: width,
+    svgHeight: height,
+    width: innerWidth,
+    height: innerHeight,
+    left: conditionalLeft,
+    top: conditionalTop,
+    right: right,
+    bottom: bottom,
+  };
 };
 
 export default useDimensions;
