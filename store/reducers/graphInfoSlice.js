@@ -1,14 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { concat } from "lodash";
 import { HYDRATE } from "next-redux-wrapper";
-
 import {
   filterLines,
   hiddableLines,
   defaultVisibleLines,
   setNewSelectedLines,
 } from "../../utils/index";
-
 import { dotFields } from "../../utils/descriptions";
 
 const initialElements = (type) => {
@@ -34,6 +32,7 @@ const initialSettings = (amountOfData = 0) => {
     dataLength: amountOfData,
   };
 };
+
 const initialSettingsSimulation = (amountOfData = 0) => {
   return {
     range: {
@@ -115,39 +114,38 @@ export const graphInfoSlice = createSlice({
   initialState,
   reducers: {
     initMain(state, action) {
-      const main = state.main;
-      action.payload.reported.sort(function (a, b) {
-        return new Date(a.fecha) - new Date(b.fecha);
-      });
+      const { main } = state;
+
+      const sortDataByFecha = (a, b) => new Date(a.fecha) - new Date(b.fecha);
+
+      action.payload.reported.sort(sortDataByFecha);
       const amountReported = action.payload.reported.length - 1;
       main.reported.data = action.payload.reported;
       main.reported.settings = initialSettings(amountReported);
       main.reported.isReady = true;
-      action.payload.hospitalized.sort(function (a, b) {
-        return new Date(a.fecha) - new Date(b.fecha);
-      });
+
+      action.payload.hospitalized.sort(sortDataByFecha);
       const amountHospitalized = action.payload.hospitalized.length - 1;
       main.hospitalized.data = action.payload.hospitalized;
       main.hospitalized.settings = initialSettings(amountHospitalized);
       main.hospitalized.isReady = true;
-      action.payload.ICU.sort(function (a, b) {
-        return new Date(a.fecha) - new Date(b.fecha);
-      });
+
+      action.payload.ICU.sort(sortDataByFecha);
       const amountICU = action.payload.ICU.length - 1;
       main.ICU.data = action.payload.ICU;
       main.ICU.settings = initialSettings(amountICU);
       main.ICU.isReady = true;
-      action.payload.deceases.sort(function (a, b) {
-        return new Date(a.fecha) - new Date(b.fecha);
-      });
+
+      action.payload.deceases.sort(sortDataByFecha);
       const amountDeceases = action.payload.deceases.length - 1;
       main.deceases.data = action.payload.deceases;
       main.deceases.settings = initialSettings(amountDeceases);
       main.deceases.isReady = true;
     },
     setSimulation(state, action) {
-      const simulation = state.simulation;
+      const { simulation } = state;
       const amount = action.payload.cumulative.length - 1;
+
       simulation.cumulative.data = action.payload.cumulative;
       simulation.cumulative.isReady = true;
       simulation.cumulative.settings = initialSettingsSimulation(amount);
@@ -181,7 +179,7 @@ export const graphInfoSlice = createSlice({
       simulation.uci.settings = initialSettingsSimulation(amount);
     },
     setSelectedLine(state, action) {
-      const main = state.main;
+      const { main } = state;
       const type = action.payload.type;
       const newSelectedLines = setNewSelectedLines(
         main[type].elements.selectedLines,
@@ -194,33 +192,33 @@ export const graphInfoSlice = createSlice({
       );
     },
     setChecks(state, action) {
-      const main = state.main;
-      main[action.payload.type].settings[action.payload.checkName] =
-        !main[action.payload.type].settings[action.payload.checkName];
+      const { main } = state;
+      const { type, checkName } = action.payload;
+      main[type].settings[checkName] = !main[type].settings[checkName];
     },
     resetChecks(state, action) {
-      const main = state.main;
-      const amountOfData = main[action.payload.type].settings.dataLength;
-      main[action.payload.type].settings = initialSettings(amountOfData);
+      const { main } = state;
+      const { type } = action.payload;
+      const amountOfData = main[type].settings.dataLength;
+      main[type].settings = initialSettings(amountOfData);
     },
     setRange(state, action) {
-      state.main[action.payload.type].settings.range = {
-        start: action.payload.start,
-        finish: action.payload.finish,
-      };
+      const { type, start, finish } = action.payload;
+      state.main[type].settings.range = { start, finish };
     },
   },
   extraReducers(builder) {
-    builder.addCase(HYDRATE, (_state, action) => {
-      return action.payload;
+    builder.addCase(HYDRATE, (state, action) => {
+      return { ...state, ...action.payload };
     });
   },
 });
 
 export const selectGraphData = (graphsType) => (state) =>
-  Object.values(state[graphsType]).map(({ type, isReady }) => {
-    return { type, isReady };
-  });
+  Object.values(state[graphsType]).map(({ type, isReady }) => ({
+    type,
+    isReady,
+  }));
 
 export const selectScenarios =
   (type) =>
@@ -244,9 +242,8 @@ export const selectShowedElements =
 
 export const selectDropdownInfo =
   (type) =>
-  ({ main }) => {
-    return [main[type].elements.options, main[type].elements.selectedLines];
-  };
+  ({ main }) =>
+    [main[type].elements.options, main[type].elements.selectedLines];
 
 export const selectSettings =
   (type) =>
@@ -283,12 +280,11 @@ export const selectDotField =
 
 export const {
   initMain,
-  initSimulation,
+  setSimulation,
   setSelectedLine,
   setChecks,
   resetChecks,
   setRange,
-  setSimulation,
 } = graphInfoSlice.actions;
 
 export default graphInfoSlice.reducer;

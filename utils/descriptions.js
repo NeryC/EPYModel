@@ -20,20 +20,16 @@ export const dotFields = {
 };
 
 export const linesDescriptions = (type) => {
-  switch (type) {
-    case "reported":
-      return linesDescriptionReported;
-    case "hospitalized":
-      return linesDescriptionHospitalized;
-    case "ICU":
-      return linesDescriptionICU;
-    case "deceases":
-      return linesDescriptionDeceases;
+  const descriptionMap = {
+    reported: linesDescriptionReported,
+    hospitalized: linesDescriptionHospitalized,
+    ICU: linesDescriptionICU,
+    deceases: linesDescriptionDeceases,
+  };
 
-    default:
-      return [];
-  }
+  return descriptionMap[type] || [];
 };
+
 const linesDescriptionReported = [
   {
     name: "dailyR_sin_subRegistro",

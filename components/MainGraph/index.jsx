@@ -1,5 +1,5 @@
 import SelectedLines from "./SelectedLines";
-import { parseD3 } from "../../utils/constants";
+import { parseD3 } from "./utils";
 import Graph from "./Graph";
 import { useSelector } from "react-redux";
 import { selectRawData } from "../../store/reducers/graphInfoSlice";

@@ -14,31 +14,25 @@ const SelectedLines = ({ type }) => {
   const [options, selected] = useSelector(selectDropdownInfo(type));
   const dotField = useSelector(selectDotField(type));
 
-  let isSelected = (item) => {
-    return selected.some((element) => element.label === item.label)
-      ? `border-2 border-blue-600 bg-light-background`
+  const isSelected = (item) =>
+    selected.some((element) => element.label === item.label)
+      ? "border-2 border-blue-600 bg-light-background"
       : "border-gray-theme";
-  };
 
-  const chooseClass = (item) => {
-    if (item.style == "dot") {
-      return "circle mx-auto";
-    } else {
-      return `h-1.5 w-6 rounded-xl`;
-    }
-  };
-  // en caso de usar border
+  const chooseClass = (item) =>
+    item.style === "dot" ? "circle mx-auto" : "h-1.5 w-6 rounded-xl";
+
   const chooseLineColor = (fieldName) =>
-    fieldName != dotField
+    fieldName !== dotField
       ? dinamicColorStyle(type, "backgroundColor", fieldName)
       : {};
 
-  let selectOption = (selectedLine) => {
+  const selectOption = (selectedLine) => {
     dispatch(setSelectedLine({ type, selectedLine }));
   };
 
-  let renderSelected = () => {
-    return options.map((item) => (
+  const renderSelected = () =>
+    options.map((item) => (
       <ScenarioTooltip item={[item]} key={item.label} type={type}>
         <button
           key={item.label}
@@ -55,7 +49,6 @@ const SelectedLines = ({ type }) => {
         </button>
       </ScenarioTooltip>
     ));
-  };
 
   return (
     <div className="grid md:flex grid-cols-2 gap-2 md:gap-4 text-sm pt-3 md:pt-1 justify-center">

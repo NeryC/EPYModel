@@ -12,13 +12,11 @@ const SimulationGraph = ({ type }) => {
 
   return (
     <div className="rounded-lg overflow-hidden shadow-lg bg-white p-3 md:p-6 flex flex-col border border-gray-theme text-black h-fit">
-      <div className="border-b-2 text-2xl md:mb-2 font-bold flex flex-col w-full pb-4">
-        <div className="flex justify-between">
-          {t(type)}
-          <DownloadButton page={SIM_GRAPH} type={type} data={rawData} />
-        </div>
-        <Subtitle page={SIM_GRAPH} type={type} />
+      <div className="border-b-2 text-2xl md:mb-2 font-bold flex justify-between items-center pb-4">
+        <span>{t(type)}</span>
+        <DownloadButton page={SIM_GRAPH} type={type} data={rawData} />
       </div>
+      <Subtitle page={SIM_GRAPH} type={type} />
       <Graph type={type} data={rawData} />
     </div>
   );

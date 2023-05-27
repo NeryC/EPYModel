@@ -8,7 +8,6 @@ import { MAIN_GRAPH, baseURL, getDownloadPath } from "../../utils/constants.js";
 
 export const DownloadButton = ({ page, type, data }) => {
   const { t } = useTranslation("common");
-
   const [showDropdown, setShowDropdown] = useState(false);
 
   let timeoutControler;
@@ -27,45 +26,44 @@ export const DownloadButton = ({ page, type, data }) => {
     saveAs(imgData, `${type}.svg`);
   };
 
-  const DonwloadOption = ({ text }) => {
-    if (text === "svg")
+  const DownloadOption = ({ text, onClick }) => (
+    <li className="dropdown-item hover:bg-blue-100 px-5 md:px-4 py-3 md:py-1">
+      <span className="block cursor-pointer" onClick={onClick}>
+        {text}
+      </span>
+    </li>
+  );
+
+  const DownloadCSVOption = () => {
+    if (page === MAIN_GRAPH) {
       return (
-        <li className="dropdown-item hover:bg-blue-100 px-5 md:px-4 py-3 md:py-1">
-          <span className="block cursor-pointer" onClick={downloadGraph}>
-            {text}
-          </span>
-        </li>
+        <DownloadOption
+          text="csv"
+          onClick={() => {
+            const link = document.createElement("a");
+            link.href = `${baseURL}${getDownloadPath[type]}`;
+            link.download = "renamed";
+            link.click();
+          }}
+        />
       );
-    if (text === "csv") {
-      if (page == MAIN_GRAPH) {
-        return (
-          <li className="dropdown-item hover:bg-blue-100 px-5 md:px-4 py-3 md:py-1">
-            <a
-              className="block cursor-pointer"
-              href={`${baseURL}${getDownloadPath[type]}`}
-              download="renamed"
-            >
-              {text}
-            </a>
-          </li>
-        );
-      } else {
-        const headers = [
-          { label: "day", key: "day" },
-          { label: type, key: "value" },
-        ];
-        return (
-          <CSVLink
-            headers={headers}
-            data={data}
-            filename={`${type}.csv`}
-            className="block dropdown-item hover:bg-blue-100 px-4 py-1"
-            target="_blank"
-          >
-            {text}
-          </CSVLink>
-        );
-      }
+    } else {
+      const headers = [
+        { label: "day", key: "day" },
+        { label: type, key: "value" },
+      ];
+
+      return (
+        <CSVLink
+          headers={headers}
+          data={data}
+          filename={`${type}.csv`}
+          className="block dropdown-item hover:bg-blue-100 px-4 py-1"
+          target="_blank"
+        >
+          csv
+        </CSVLink>
+      );
     }
   };
 
@@ -96,7 +94,7 @@ export const DownloadButton = ({ page, type, data }) => {
             md:py-1
             px-3 
             border 
-          border-gray-theme 
+            border-gray-theme 
             rounded-3xl
           `}
         >
@@ -114,23 +112,23 @@ export const DownloadButton = ({ page, type, data }) => {
         </button>
         <ul
           className={`
-              w-full
-              dropdown-menu
-              absolute
-              bg-white
-              z-50
-              py-2
-              list-none
-              rounded-lg
-              shadow-complete-box
-              ${!showDropdown && "hidden"}
-              my-2
-              bg-clip-padding
-              border-none
-            `}
+            w-full
+            dropdown-menu
+            absolute
+            bg-white
+            z-50
+            py-2
+            list-none
+            rounded-lg
+            shadow-complete-box
+            ${!showDropdown && "hidden"}
+            my-2
+            bg-clip-padding
+            border-none
+          `}
         >
-          <DonwloadOption text={"svg"} />
-          <DonwloadOption text={"csv"} />
+          <DownloadOption text="svg" onClick={downloadGraph} />
+          <DownloadCSVOption />
         </ul>
       </div>
     </div>

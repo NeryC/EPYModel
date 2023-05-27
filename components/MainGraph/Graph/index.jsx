@@ -1,17 +1,7 @@
 import * as d3 from "d3";
 import { useRef, useId, useEffect, useMemo, useCallback } from "react";
 import SettingsComponent from "../SettingsComponent";
-import {
-  useCreateScale,
-  basicDeclareLineD3,
-  getYDomain,
-  declareAreaD3,
-  createZoom,
-  useGetDomain,
-  timeFormat,
-  getMaxField,
-  MAIN_GRAPH,
-} from "../../../utils/constants";
+import { MAIN_GRAPH } from "../../../utils/constants";
 import { dateField } from "../../../utils/constants.js";
 import GraphInfoTooltip from "../Tooltips/GraphInfoTooltip";
 import { useSelector } from "react-redux";
@@ -24,7 +14,20 @@ import {
   selectDotsOption,
   selectDotField,
 } from "../../../store/reducers/graphInfoSlice";
-import { getNewLines, drawLines } from "./utils";
+import {
+  getNewLines,
+  drawLines,
+  timeFormat,
+  declareAreaD3,
+  getYDomain,
+  getMaxField,
+} from "./utils";
+import {
+  createZoom,
+  basicDeclareLineD3,
+  useCreateScale,
+  useGetDomain,
+} from "../../utils";
 
 const Graph = ({ type, data, dimensions }) => {
   const svgChartRef = useRef(null);

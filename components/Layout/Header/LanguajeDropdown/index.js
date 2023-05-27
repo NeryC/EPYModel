@@ -1,47 +1,42 @@
-import Link from "next/link";
-import cookie from "js-cookie";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
+import Link from "next/link";
+import cookie from "js-cookie";
 
-export default function LanguajeDropdown() {
+const LanguageDropdown = () => {
   const { t } = useTranslation("common");
   const router = useRouter();
-  let timeoutControler;
-
-  const [values, setValues] = useState({
-    isMenuOpen: false,
-  });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const timeoutControllerRef = useRef(null);
 
   const openMenu = () => {
-    setValues((state) => ({
-      ...state,
-      isMenuOpen: !state.isMenuOpen,
-    }));
+    setIsMenuOpen(!isMenuOpen);
   };
 
   const setLocale = (locale) => {
     cookie.set("NEXT_LOCALE", locale);
-    setValues((state) => ({
-      ...state,
-      isMenuOpen: !state.isMenuOpen,
-    }));
+    setIsMenuOpen(false);
   };
 
   const handleMouseLeave = () => {
-    timeoutControler = setTimeout(() => {
-      setValues((state) => ({
-        ...state,
-        isMenuOpen: false,
-      }));
+    timeoutControllerRef.current = setTimeout(() => {
+      setIsMenuOpen(false);
     }, 1000);
   };
+
   const handleMouseEnter = () => {
-    timeoutControler && clearTimeout(timeoutControler);
+    clearTimeout(timeoutControllerRef.current);
   };
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timeoutControllerRef.current);
+    };
+  }, []);
 
   return (
     <div
@@ -56,7 +51,7 @@ export default function LanguajeDropdown() {
              px-3
              py-2
              rounded-lg
-             ${values.isMenuOpen && "shadow-complete-box"}
+             ${isMenuOpen && "shadow-complete-box"}
              hover:shadow-complete-box
              flex
              items-center
@@ -77,7 +72,7 @@ export default function LanguajeDropdown() {
           </div>
           {t(router.locale)}
           <FontAwesomeIcon
-            icon={!values.isMenuOpen ? faChevronDown : faChevronUp}
+            icon={!isMenuOpen ? faChevronDown : faChevronUp}
             className="ml-2"
           />
         </button>
@@ -95,9 +90,9 @@ export default function LanguajeDropdown() {
               shadow-lg
               mt-1
               hover:bg-blue-300
-              ${!values.isMenuOpen && "hidden"}
+              ${!isMenuOpen && "hidden"}
               shadow-complete-box
-              ${!values.isMenuOpen && "hidden"}
+              ${!isMenuOpen && "hidden"}
               my-2
               bg-clip-padding
               border-none
@@ -113,18 +108,15 @@ export default function LanguajeDropdown() {
                   className="dropdown-item hover:bg-blue-100 px-4 py-1"
                 >
                   <Link
-                    className="
-                      py-2
-                      px-4
-                      block
-                      w-full
-                    "
+                    className="py-2 px-4 block w-full"
                     href={router.asPath}
                     locale={locale}
                     passHref
-                    onClick={() => setLocale(locale)}
                   >
-                    <a className="flex items-center">
+                    <a
+                      className="flex items-center"
+                      onClick={() => setLocale(locale)}
+                    >
                       <div className="mr-2 flex">
                         <Image
                           src={`/assets/icons/${locale}.svg`}
@@ -143,4 +135,6 @@ export default function LanguajeDropdown() {
       </div>
     </div>
   );
-}
+};
+
+export default LanguageDropdown;

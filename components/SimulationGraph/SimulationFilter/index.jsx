@@ -15,16 +15,15 @@ function SimulationFilter() {
 
   const handleRTChange = (index, action) => {
     const newListadoRT = [...RtList];
-    let newValue;
     const matrix = {
       decrement: -0.1,
-      increment: +0.1,
+      increment: 0.1,
     };
-    const aux = parseFloat(newListadoRT[index] + matrix[action]).toFixed(1);
-    newValue =
-      aux >= 0 && aux <= 2.0 ? newListadoRT[index] + matrix[action] : -1;
-    if (newValue >= 0) {
-      newListadoRT[index] = parseFloat(parseFloat(newValue).toFixed(1));
+    const newValue = parseFloat(
+      (newListadoRT[index] + matrix[action]).toFixed(1)
+    );
+    if (newValue >= 0 && newValue <= 2.0) {
+      newListadoRT[index] = newValue;
       setRtList(newListadoRT);
     }
   };
@@ -41,7 +40,7 @@ function SimulationFilter() {
     lambdaItoHRef.current = parseFloat(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formValues = {
       Rt: JSON.stringify(RtList),
@@ -49,25 +48,24 @@ function SimulationFilter() {
       V_filtered: vFilteredRef.current,
       lambda_I_to_H: lambdaItoHRef.current,
     };
-    requestFilteredData(formValues)
-      .then((response) => {
-        const chartData = JSON.parse(response.data);
-        dispatch(
-          setSimulation({
-            cumulative: chartData.cumulative,
-            cumulative_deaths: chartData.cumulative_deaths,
-            exposed: chartData.exposed,
-            hospitalized: chartData.hospitalized,
-            immune: chartData.immune,
-            infectious: chartData.infectious,
-            susceptible: chartData.susceptible,
-            uci: chartData.uci,
-          })
-        );
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      const response = await requestFilteredData(formValues);
+      const chartData = JSON.parse(response.data);
+      dispatch(
+        setSimulation({
+          cumulative: chartData.cumulative,
+          cumulative_deaths: chartData.cumulative_deaths,
+          exposed: chartData.exposed,
+          hospitalized: chartData.hospitalized,
+          immune: chartData.immune,
+          infectious: chartData.infectious,
+          susceptible: chartData.susceptible,
+          uci: chartData.uci,
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    }
 
     // Aquí puedes agregar la lógica para enviar los datos del SimulationFilter
   };
@@ -88,8 +86,10 @@ function SimulationFilter() {
               >
                 <button
                   data-action="decrement"
-                  className="disabled:hover:bg-gray-200 disabled:bg-gray-200 px-2 ssm:px-5 md:px-1 bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full rounded-l cursor-pointer"
-                  disabled={RtList[index] == 0}
+                  className={`disabled:hover:bg-gray-200 disabled:bg-gray-200 px-2 ssm:px-5 md:px-1 bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full rounded-l cursor-pointer ${
+                    RtList[index] === 0 ? "cursor-not-allowed" : ""
+                  }`}
+                  disabled={RtList[index] === 0}
                   onClick={() => handleRTChange(index, "decrement")}
                 >
                   <span className="m-auto text-2xl font-thin">−</span>
@@ -106,8 +106,10 @@ function SimulationFilter() {
                 />
                 <button
                   data-action="increment"
-                  className="disabled:hover:bg-gray-200 disabled:bg-gray-200 px-2 ssm:px-5 md:px-1 bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full rounded-r"
-                  disabled={RtList[index] == 2}
+                  className={`disabled:hover:bg-gray-200 disabled:bg-gray-200 px-2 ssm:px-5 md:px-1 bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full rounded-r ${
+                    RtList[index] === 2 ? "cursor-not-allowed" : ""
+                  }`}
+                  disabled={RtList[index] === 2}
                   onClick={() => handleRTChange(index, "increment")}
                 >
                   <span className="m-auto text-2xl font-thin">+</span>

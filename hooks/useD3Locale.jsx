@@ -1,17 +1,17 @@
 import { useRouter } from "next/router";
 import { es, en, pr } from "../utils/constants";
 
-export default function useD3Locale() {
+const useD3Locale = () => {
   const router = useRouter();
-  switch (router.locale) {
-    case "es":
-      return es;
-    case "en":
-      return en;
-    case "pr":
-      return pr;
+  const locale = router.locale;
 
-    default:
-      break;
-  }
-}
+  const localeMap = {
+    es,
+    en,
+    pr,
+  };
+
+  return localeMap[locale] || es;
+};
+
+export default useD3Locale;

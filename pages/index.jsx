@@ -1,25 +1,25 @@
 /* eslint-disable @next/next/no-page-custom-font */
 import { useRef } from "react";
 import Head from "next/head";
+import { useSelector } from "react-redux";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Layout from "../components/Layout";
 import MainGraph from "../components/MainGraph";
 import { initMain, selectGraphData } from "../store/reducers/graphInfoSlice";
-import { useSelector } from "react-redux";
 import { wrapper } from "../store/store";
 import { axiosInstance } from "../utils";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { TitleSection } from "../components/TitleSection";
 import { MAIN_GRAPH } from "../utils/constants";
 import useDimensions from "../hooks/useDimensions";
 
-export default function Graphs() {
+const Graphs = () => {
   const containerRef = useRef(null);
   const graphsStatus = useSelector(selectGraphData(MAIN_GRAPH));
   const dimensions = useDimensions(containerRef, 534);
   return (
     <>
       <Head>
-        <meta name="description" content="Graficos del covid en paraguay" />
+        <meta name="description" content="Gráficos del COVID-19 en Paraguay" />
         <link
           href="https://www.uaa.edu.py/cdn/images/560cb5c8fdf530a9635a95eab14b.png"
           rel="icon"
@@ -43,36 +43,41 @@ export default function Graphs() {
           <TitleSection />
           {dimensions.width > 0 &&
             graphsStatus.map(({ type, isReady }) => {
-              if (isReady)
-                return (
-                  <MainGraph type={type} key={type} dimensions={dimensions} />
-                );
+              return isReady ? (
+                <MainGraph type={type} key={type} dimensions={dimensions} />
+              ) : null;
             })}
         </div>
       </Layout>
     </>
   );
-}
+};
 
 export const getStaticProps = wrapper.getStaticProps(
-  (store) => async (locale) => {
-    const reported = await axiosInstance(`/projection-r`);
-    const hospitalized = await axiosInstance(`/projection-h`);
-    const ICU = await axiosInstance(`/projection-u`);
-    const deceases = await axiosInstance(`/projection-f`);
+  (store) =>
+    async ({ locale }) => {
+      const [reported, hospitalized, icu, deceases] = await Promise.all([
+        axiosInstance.get("/projection-r"),
+        axiosInstance.get("/projection-h"),
+        axiosInstance.get("/projection-u"),
+        axiosInstance.get("/projection-f"),
+      ]);
 
-    store.dispatch(
-      initMain({
-        reported: reported.data,
-        hospitalized: hospitalized.data,
-        ICU: ICU.data,
-        deceases: deceases.data,
-      })
-    );
-    return {
-      props: {
-        ...(await serverSideTranslations(locale.locale, ["common"])),
-      },
-    };
-  }
+      store.dispatch(
+        initMain({
+          reported: reported.data,
+          hospitalized: hospitalized.data,
+          ICU: icu.data,
+          deceases: deceases.data,
+        })
+      );
+
+      return {
+        props: {
+          ...(await serverSideTranslations(locale, ["common"])),
+        },
+      };
+    }
 );
+
+export default Graphs;

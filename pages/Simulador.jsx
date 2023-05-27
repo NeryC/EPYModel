@@ -1,25 +1,25 @@
 /* eslint-disable @next/next/no-page-custom-font */
 import Head from "next/head";
-import { axiosInstance } from "../utils";
+import { useSelector } from "react-redux";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import {
   selectGraphData,
   setSimulation,
 } from "../store/reducers/graphInfoSlice";
 import { wrapper } from "../store/store";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { useSelector } from "react-redux";
+import { axiosInstance } from "../utils";
 import Layout from "../components/Layout";
 import SimulationGraph from "../components/SimulationGraph";
 import { TitleSection } from "../components/TitleSection";
 import SimulationFilter from "../components/SimulationGraph/SimulationFilter";
 import { SIM_GRAPH } from "../utils/constants";
 
-const ChartsPage = () => {
+const Simulador = () => {
   const graphsStatus = useSelector(selectGraphData(SIM_GRAPH));
   return (
     <>
       <Head>
-        <meta name="description" content="Graficos del covid en paraguay" />
+        <meta name="description" content="Gráficos del COVID-19 en Paraguay" />
         <link
           href="https://www.uaa.edu.py/cdn/images/560cb5c8fdf530a9635a95eab14b.png"
           rel="icon"
@@ -43,7 +43,9 @@ const ChartsPage = () => {
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 mb-6 w-full">
             {graphsStatus.map(({ type, isReady }) => {
-              if (isReady) return <SimulationGraph type={type} key={type} />;
+              return isReady ? (
+                <SimulationGraph type={type} key={type} />
+              ) : null;
             })}
           </div>
         </div>
@@ -53,27 +55,29 @@ const ChartsPage = () => {
 };
 
 export const getStaticProps = wrapper.getStaticProps(
-  (store) => async (locale) => {
-    const response = await axiosInstance(`/get-first-simulation`);
-    const chartData = response.data;
-    store.dispatch(
-      setSimulation({
-        cumulative: chartData.cumulative,
-        cumulative_deaths: chartData.cumulative_deaths,
-        exposed: chartData.exposed,
-        hospitalized: chartData.hospitalized,
-        immune: chartData.immune,
-        infectious: chartData.infectious,
-        susceptible: chartData.susceptible,
-        uci: chartData.uci,
-      })
-    );
-    return {
-      props: {
-        ...(await serverSideTranslations(locale.locale, ["common"])),
-      },
-    };
-  }
+  (store) =>
+    async ({ locale }) => {
+      const response = await axiosInstance(`/get-first-simulation`);
+      const chartData = response.data;
+      store.dispatch(
+        setSimulation({
+          cumulative: chartData.cumulative,
+          cumulative_deaths: chartData.cumulative_deaths,
+          exposed: chartData.exposed,
+          hospitalized: chartData.hospitalized,
+          immune: chartData.immune,
+          infectious: chartData.infectious,
+          susceptible: chartData.susceptible,
+          uci: chartData.uci,
+        })
+      );
+
+      return {
+        props: {
+          ...(await serverSideTranslations(locale, ["common"])),
+        },
+      };
+    }
 );
 
-export default ChartsPage;
+export default Simulador;

@@ -5,14 +5,12 @@ import * as d3 from "d3";
 const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
   const ref = useRef(null);
   const cuadroRef = useRef(null);
-  const contentDotsRef = useRef(null);
   const contentRef = useRef(null);
-  const cuadro = d3.select(cuadroRef.current);
-  const content = d3.select(contentRef.current);
-  const contentDots = d3.select(contentDotsRef.current);
+  const contentDotsRef = useRef(null);
   const { t } = useTranslation("common");
   const dateField = "day";
   const valueField = "value";
+
   const drawLine = useCallback(
     (x) => {
       d3.select(ref.current)
@@ -40,18 +38,15 @@ const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
         .select(".contentDate")
         .text(`${t("day")} ${parseInt(xScale.invert(x))}`);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [xScale, width, height]
+    [xScale, width, height, t]
   );
 
   const drawBackground = useCallback(() => {
-    // reset background size to defaults
     const contentBackground = d3
       .select(ref.current)
       .select(".contentBackground");
     contentBackground.attr("width", 0).attr("height", 0);
 
-    // calculate new background size
     const tooltipContentElement = d3
       .select(ref.current)
       .select(".tooltipContent")
@@ -66,6 +61,7 @@ const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
 
   const placeDots = useCallback(
     (actualData, color, baseXPos) => {
+      const contentDots = d3.select(contentDotsRef.current);
       contentDots
         .append("circle")
         .attr("r", 5)
@@ -73,7 +69,7 @@ const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
         .attr("cx", (_d) => baseXPos)
         .attr("cy", (_d) => yScale(actualData[valueField]));
     },
-    [contentDots, yScale]
+    [contentDotsRef, yScale, valueField]
   );
 
   const followPoints = useCallback(
@@ -82,10 +78,13 @@ const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
       const bisectDate = d3.bisector((d) => d[dateField]).left;
       let baseXPos = 0;
 
-      const index = bisectDate(data, x, 1),
-        d0 = data[index - 1],
-        d1 = data[index],
-        actualData = x - d0[dateField] > d1?.day - x ? d1 : d0;
+      const index = bisectDate(data, x, 1);
+      const d0 = data[index - 1];
+      const d1 = data[index];
+      const actualData = x - d0[dateField] > d1?.day - x ? d1 : d0;
+
+      const content = d3.select(contentRef.current);
+      const contentDots = d3.select(contentDotsRef.current);
 
       content.selectAll("*").remove();
       contentDots.selectAll("*").remove();
@@ -113,21 +112,23 @@ const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
       drawContent(baseXPos, e.layerY);
       drawBackground();
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       xScale,
       data,
-      content,
-      contentDots,
+      contentRef,
+      contentDotsRef,
       drawLine,
       drawContent,
       drawBackground,
       placeDots,
+      dateField,
+      valueField,
     ]
   );
 
   useEffect(() => {
     const fixedPosition = false;
+    const cuadro = d3.select(cuadroRef.current);
     cuadro
       .on("mouseout.tooltip", () => {
         !fixedPosition && d3.select(ref.current).attr("opacity", 0);
@@ -148,7 +149,7 @@ const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
         }
         fixedPosition = !fixedPosition;
       });
-  }, [cuadro, followPoints]);
+  }, [cuadroRef, ref, followPoints]);
 
   if (!data.length || width <= 0) return null;
 

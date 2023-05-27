@@ -1,7 +1,7 @@
 import Header from './Header';
 import Footer from './Footer';
 
-export default function Layout({ children }) {
+const Layout = ({ children }) => {
   return (
     <div className="bg-gray-200 text-black relative">
       <Header />
@@ -10,3 +10,5 @@ export default function Layout({ children }) {
     </div>
   );
 }
+
+export default Layout;

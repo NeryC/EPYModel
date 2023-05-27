@@ -1,20 +1,19 @@
 import * as d3 from "d3";
 import useDimensions from "../../../hooks/useDimensions";
 import { useRef, useId, useEffect, useMemo, useCallback } from "react";
-import {
-  useCreateScale,
-  basicDeclareLineD3,
-  getYDomainSimulation,
-  createZoom,
-  useGetDomain,
-  SIM_GRAPH,
-} from "../../../utils/constants";
+import { SIM_GRAPH } from "../../../utils/constants";
 import SimulationTooltip from "../Tooltip/index.jsx";
 import { useSelector } from "react-redux";
 import { selectRange } from "../../../store/reducers/graphInfoSlice";
-import { drawLines } from "./utils";
+import { drawLines, getYDomain } from "./utils";
+import {
+  createZoom,
+  basicDeclareLineD3,
+  useCreateScale,
+  useGetDomain,
+} from "../../utils";
 
-const Graph = ({ type, data, dimensions }) => {
+const Graph = ({ type, data }) => {
   const svgChartRef = useRef(null);
   const yAxisRef = useRef(null);
   const xAxisRef = useRef(null);
@@ -37,7 +36,7 @@ const Graph = ({ type, data, dimensions }) => {
 
   function zoomed(e) {
     const xz = e.transform.rescaleX(xScale);
-    const yz = getYDomainSimulation(data, xz, yScale);
+    const yz = getYDomain(data, xz, yScale);
     xScale.domain(xz.domain());
 
     xAxisGroup.call(axis.x, xz);
