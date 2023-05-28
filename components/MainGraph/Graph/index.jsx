@@ -21,19 +21,16 @@ import {
   declareAreaD3,
   getYDomain,
   getMaxField,
-} from "./utils";
-import {
   createZoom,
-  basicDeclareLineD3,
-  useCreateScale,
-  useGetDomain,
-} from "../../utils";
+} from "./utils";
+import { basicDeclareLineD3, useCreateScale, useGetDomain } from "../../utils";
 
 const Graph = ({ type, data, dimensions }) => {
   const svgChartRef = useRef(null);
   const yAxisRef = useRef(null);
   const xAxisRef = useRef(null);
   const dotsRef = useRef(null);
+  const timeoutControllerRef = useRef(null);
 
   const selectedLines = useSelector(selectSelectedLines(type));
   const showedElements = useSelector(selectShowedElements(type));
@@ -43,7 +40,25 @@ const Graph = ({ type, data, dimensions }) => {
   const range = useSelector(selectRange(MAIN_GRAPH, type));
   const dotField = useSelector(selectDotField(type));
 
-  let graphElements = {};
+  const graphElements = useMemo(() => {
+    const elements = {};
+
+    showedElements.forEach((element) => {
+      if (element.style !== "dot") {
+        elements[element.name] = basicDeclareLineD3(
+          {
+            xField: dateField,
+            isSmooth: isSmooth,
+          },
+          element.name
+        );
+      }
+    });
+
+    elements["uncertainty"] = declareAreaD3(dateField, "peor", "mejor");
+
+    return elements;
+  }, [showedElements, isSmooth]);
 
   const clip = useId();
 
@@ -79,7 +94,10 @@ const Graph = ({ type, data, dimensions }) => {
     );
   }
 
-  const newLines = getNewLines(selectedLines, uncertainty, hasDots, dotField);
+  const newLines = useMemo(
+    () => getNewLines(selectedLines, uncertainty, hasDots, dotField),
+    [selectedLines, uncertainty, hasDots, dotField]
+  );
 
   const maxField = getMaxField(data, newLines);
   //y Right
@@ -94,6 +112,7 @@ const Graph = ({ type, data, dimensions }) => {
     scaleType: "Linear",
     size: height,
   });
+
   const xDomain = useGetDomain({
     data,
     field: dateField,
@@ -104,11 +123,6 @@ const Graph = ({ type, data, dimensions }) => {
     scaleType: "Time",
     size: width,
   });
-
-  svgChart
-    .selectAll(`#${dotField}-${type}`)
-    .attr("cx", (d) => xScale(d[dateField]))
-    .attr("cy", (d) => yScale(d[dotField]));
 
   const setZoom = useCallback(() => {
     const base = width - right;
@@ -123,16 +137,7 @@ const Graph = ({ type, data, dimensions }) => {
         )
         .translate(-xScale(data[range.start][dateField]), 0)
     );
-  }, [
-    data,
-    range.finish,
-    range.start,
-    right,
-    svgChart,
-    width,
-    xScale,
-    zoom.transform,
-  ]);
+  }, [data, range.finish, range.start, right, svgChart, width, xScale, zoom]);
 
   const axis = useMemo(() => {
     return {
@@ -142,7 +147,6 @@ const Graph = ({ type, data, dimensions }) => {
             .axisLeft(y1)
             .ticks(5)
             .tickSize(-(width - right))
-          // .tickPadding(8)
         ),
       x: (g, x1) =>
         g.call(
@@ -177,60 +181,47 @@ const Graph = ({ type, data, dimensions }) => {
     };
   }, [bottom, height, right, width]);
 
-  const baseLineData = {
-    xField: dateField,
-    isSmooth: isSmooth,
-  };
-
-  showedElements.forEach((element) => {
-    if (element.style == "dot") return;
-
-    graphElements[element.name] = basicDeclareLineD3(
-      baseLineData,
-      element.name
-    );
-  });
-
-  graphElements["uncertainty"] = declareAreaD3(dateField, "peor", "mejor");
+  useEffect(() => {
+    svgChart
+      .selectAll(`#${dotField}-${type}`)
+      .attr("cx", (d) => xScale(d[dateField]))
+      .attr("cy", (d) => yScale(d[dotField]));
+  }, [data, dotField, svgChart, type, xScale, yScale]);
 
   useEffect(() => {
     setZoom();
-  }, [range, isSmooth, uncertainty, selectedLines, setZoom, hasDots]);
+  }, [data, range, right, setZoom, width, xScale]);
 
   useEffect(() => {
     dotsGroup.selectAll(`#${dotField}-${type}`).remove();
-    hasDots &&
+    if (hasDots) {
       dotsGroup
         .selectAll("dot")
         .data(data)
         .join("circle")
         .attr("cx", (d) => xScale(d[dateField]))
         .attr("cy", (d) => yScale(d[dotField]))
-        .attr("clip-path", "url(#" + clip + ")")
+        .attr("clip-path", `url(#${clip})`)
         .attr("fill", "#FFFFFF")
         .attr("stroke", "black")
         .attr("opacity", 0)
         .attr("r", 2.7)
         .attr("id", `${dotField}-${type}`);
 
-    if (hasDots)
-      setTimeout(() => {
+      clearTimeout(timeoutControllerRef.current);
+      timeoutControllerRef.current = setTimeout(() => {
         dotsGroup
           .selectAll(`#${dotField}-${type}`)
           .transition()
           .attr("opacity", 0.8);
       }, 1000);
 
-    hasDots &&
       dotsGroup
         .selectAll(`#${dotField}-${type}`)
-        .filter(function (d) {
-          return d[dotField] == null;
-        })
+        .filter((d) => d[dotField] == null)
         .remove();
-    // I only need this render in the first time or when el graph is resized
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [xScale, yScale, hasDots]);
+    }
+  }, [data, dotField, dotsGroup, hasDots, type, xScale, yScale, clip]);
 
   return (
     <div className="w-full relative px-1 md:px-3">
@@ -266,6 +257,7 @@ const Graph = ({ type, data, dimensions }) => {
                   />
                 );
               }
+              return null;
             })}
           </g>
           <g id="uncertaintyContainer">

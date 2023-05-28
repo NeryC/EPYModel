@@ -108,3 +108,18 @@ export const declareAreaD3 = (xField, y0Field, y1Field) => {
       .y1((d) => yScale(d[y1Field]))
       .defined((d) => d[y0Field] != null);
 };
+
+export const createZoom = (left, right, width, height, zoomed) => {
+  return d3
+    .zoom()
+    .scaleExtent([1, 10])
+    .extent([
+      [left, 0],
+      [width - right, height],
+    ])
+    .translateExtent([
+      [left, -Infinity],
+      [width - right, Infinity],
+    ])
+    .on("zoom", zoomed);
+};

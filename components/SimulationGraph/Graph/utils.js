@@ -1,5 +1,3 @@
-import * as d3 from "d3";
-
 export const drawLines = (
   dataLine,
   svgChart,
@@ -30,16 +28,4 @@ export const drawLines = (
     .attr("font-family", "Nunito, sans-serif")
     .attr("font-size", "12px")
     .attr("font-weight", "bold");
-};
-
-export const getYDomain = (data, xz, yScale) => {
-  const [xleft, xright] = xz.domain();
-
-  const dataSubset = data.filter((d) => d.day >= xleft && d.day <= xright);
-  const countSubset = dataSubset.map((d) => d.value / 1000);
-
-  const [ymin_new, ymax_new] = d3.extent(countSubset);
-
-  yScale.domain([ymin_new, ymax_new]);
-  return yScale;
 };

@@ -1,17 +1,9 @@
 import * as d3 from "d3";
+import { useRef, useEffect, useId } from "react";
+import { drawLines } from "./utils";
+import { basicDeclareLineD3, useCreateScale, useGetDomain } from "../../utils";
 import useDimensions from "../../../hooks/useDimensions";
-import { useRef, useId, useEffect, useMemo, useCallback } from "react";
-import { SIM_GRAPH } from "../../../utils/constants";
 import SimulationTooltip from "../Tooltip/index.jsx";
-import { useSelector } from "react-redux";
-import { selectRange } from "../../../store/reducers/graphInfoSlice";
-import { drawLines, getYDomain } from "./utils";
-import {
-  createZoom,
-  basicDeclareLineD3,
-  useCreateScale,
-  useGetDomain,
-} from "../../utils";
 
 const Graph = ({ type, data }) => {
   const svgChartRef = useRef(null);
@@ -21,8 +13,6 @@ const Graph = ({ type, data }) => {
   const dayField = "day";
   const valueField = "value";
 
-  const range = useSelector(selectRange(SIM_GRAPH, type));
-
   const clip = useId();
 
   const { svgWidth, svgHeight, width, height, left, top, right, bottom } =
@@ -31,27 +21,6 @@ const Graph = ({ type, data }) => {
   const svgChart = d3.select(svgChartRef.current);
   const yAxisGroup = d3.select(yAxisRef.current);
   const xAxisGroup = d3.select(xAxisRef.current);
-
-  const zoom = createZoom(left, right, width, height, zoomed);
-
-  function zoomed(e) {
-    const xz = e.transform.rescaleX(xScale);
-    const yz = getYDomain(data, xz, yScale);
-    xScale.domain(xz.domain());
-
-    xAxisGroup.call(axis.x, xz);
-    yAxisGroup.call(axis.y, yz);
-    drawLines(
-      dataLine,
-      svgChart,
-      type,
-      xScale,
-      yScale,
-      data,
-      xAxisGroup,
-      yAxisGroup
-    );
-  }
 
   //y Right
   //x bottom
@@ -77,51 +46,6 @@ const Graph = ({ type, data }) => {
     size: width,
   });
 
-  const setZoom = useCallback(() => {
-    const base = width - right;
-    if (base < 0) return;
-    svgChart.call(
-      zoom.transform,
-      d3.zoomIdentity
-        .scale(
-          base /
-            (xScale(data[range.finish][dayField]) -
-              xScale(data[range.start][dayField]))
-        )
-        .translate(-xScale(data[range.start][dayField]), 0)
-    );
-  }, [
-    data,
-    range.finish,
-    range.start,
-    right,
-    svgChart,
-    width,
-    xScale,
-    zoom.transform,
-  ]);
-
-  const axis = useMemo(() => {
-    return {
-      y: (g, y1) =>
-        g.call(
-          d3
-            .axisLeft(y1)
-            .ticks(5)
-            .tickSize(-(width - right))
-          // .tickPadding(8)
-        ),
-      x: (g, x1) =>
-        g.call(
-          d3
-            .axisBottom(x1)
-            .ticks(5)
-            .tickSize(-(height - bottom))
-          // .tickPadding(10)
-        ),
-    };
-  }, [bottom, height, right, width]);
-
   const baseLineData = {
     xField: dayField,
   };
@@ -129,8 +53,42 @@ const Graph = ({ type, data }) => {
   const dataLine = basicDeclareLineD3(baseLineData, valueField, true);
 
   useEffect(() => {
-    setZoom();
-  }, [range, setZoom, width, xScale, yScale]);
+    xAxisGroup.call(
+      d3
+        .axisBottom(xScale)
+        // .ticks(5)
+        .tickSize(-(height - bottom))
+    );
+    yAxisGroup.call(
+      d3
+        .axisLeft(yScale)
+        .ticks(5)
+        .tickSize(-(width - right))
+    );
+    drawLines(
+      dataLine,
+      svgChart,
+      type,
+      xScale,
+      yScale,
+      data,
+      xAxisGroup,
+      yAxisGroup
+    );
+  }, [
+    bottom,
+    data,
+    dataLine,
+    height,
+    right,
+    svgChart,
+    type,
+    width,
+    xAxisGroup,
+    xScale,
+    yAxisGroup,
+    yScale,
+  ]);
 
   return (
     <div className="w-full relative" ref={containerRef}>
@@ -156,8 +114,8 @@ const Graph = ({ type, data }) => {
           <g id="Lines" clipPath={`url(#${clip})`}>
             <path
               clipPath={`url(#${clip})`}
-              id={`${type}`}
-              stroke={"blue"}
+              id={type}
+              stroke="blue"
               strokeWidth={2}
               fill="none"
               opacity={1}

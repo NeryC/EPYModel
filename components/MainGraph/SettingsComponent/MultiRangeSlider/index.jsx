@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const MultiRangeSlider = ({
   min,
@@ -10,7 +10,8 @@ const MultiRangeSlider = ({
 }) => {
   const minValRef = useRef(null);
   const maxValRef = useRef(null);
-  const range = useRef(null);
+  const rangeRef = useRef(null);
+
   const [formData, setFormData] = useState({
     minInput: data[selectedMin].fecha,
     minInputError: false,
@@ -19,36 +20,33 @@ const MultiRangeSlider = ({
   });
 
   // Convert to percentage
-  const getPercent = useCallback(
-    (value) => Math.round(((value - min) / (max - min)) * 100),
-    [min, max]
-  );
+  const getPercent = (value) => Math.round(((value - min) / (max - min)) * 100);
 
   const handleChangeInputDate = (event, isMax) => {
-    let valueIndex;
-    valueIndex = data.findIndex((item) => {
-      return item.fecha == event.target.value;
-    });
+    const valueIndex = data.findIndex(
+      (item) => item.fecha === event.target.value
+    );
+
     if (isMax) {
-      setFormData({
-        ...formData,
+      setFormData((prevFormData) => ({
+        ...prevFormData,
         maxInput: event.target.value,
         maxInputError: true,
-      });
+      }));
     } else {
-      setFormData({
-        ...formData,
+      setFormData((prevFormData) => ({
+        ...prevFormData,
         minInput: event.target.value,
         minInputError: true,
-      });
+      }));
     }
+
     if (valueIndex > 0) {
       if (
         (isMax && valueIndex < selectedMin) ||
         (!isMax && valueIndex < selectedMax)
       ) {
         setFormData({
-          ...formData,
           minInput: data[valueIndex].fecha,
           maxInput: data[selectedMax].fecha,
           minInputError: false,
@@ -60,7 +58,6 @@ const MultiRangeSlider = ({
         (!isMax && valueIndex > selectedMax)
       ) {
         setFormData({
-          ...formData,
           minInput: data[selectedMin].fecha,
           maxInput: data[valueIndex].fecha,
           minInputError: false,
@@ -75,42 +72,39 @@ const MultiRangeSlider = ({
   useEffect(() => {
     if (maxValRef.current) {
       const minPercent = getPercent(selectedMin);
-      const maxPercent = getPercent(+maxValRef.current.value); // Preceding with '+' converts the value from type string to type number
+      const maxPercent = getPercent(+maxValRef.current.value);
 
-      setFormData({
-        ...formData,
+      setFormData((prevFormData) => ({
+        ...prevFormData,
         minInput: data[selectedMin].fecha,
         maxInput: data[+maxValRef.current.value].fecha,
-      });
+      }));
 
-      if (range.current) {
-        range.current.style.left = `${minPercent}%`;
-        range.current.style.width = `${maxPercent - minPercent}%`;
+      if (rangeRef.current) {
+        rangeRef.current.style.left = `${minPercent}%`;
+        rangeRef.current.style.width = `${maxPercent - minPercent}%`;
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMin, getPercent]);
+  }, [selectedMin, getPercent, data]);
 
-  // Set width of the range to decrease from the right side
   useEffect(() => {
     if (minValRef.current) {
       const minPercent = getPercent(+minValRef.current.value);
       const maxPercent = getPercent(selectedMax);
 
-      setFormData({
-        ...formData,
+      setFormData((prevFormData) => ({
+        ...prevFormData,
         minInput: data[+minValRef.current.value].fecha,
         maxInput: data[selectedMax].fecha,
         maxInputError: false,
         minInputError: false,
-      });
+      }));
 
-      if (range.current) {
-        range.current.style.width = `${maxPercent - minPercent}%`;
+      if (rangeRef.current) {
+        rangeRef.current.style.width = `${maxPercent - minPercent}%`;
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMax, getPercent]);
+  }, [selectedMax, getPercent, data]);
 
   return (
     <div className="container">
@@ -145,10 +139,10 @@ const MultiRangeSlider = ({
 
       <div className="slider">
         <div className="slider__track bg-gray-300" />
-        <div ref={range} className="slider__range bg-indigo-600" />
+        <div ref={rangeRef} className="slider__range bg-indigo-600" />
         <input
           className={`slider__left-value w-[94px] ${
-            formData.minInputError && "errorDate"
+            formData.minInputError ? "errorDate" : ""
           }`}
           type="date"
           value={formData.minInput}
@@ -158,7 +152,7 @@ const MultiRangeSlider = ({
         />
         <input
           className={`slider__right-value w-[94px] ${
-            formData.maxInputError && "errorDate"
+            formData.maxInputError ? "errorDate" : ""
           }`}
           type="date"
           value={formData.maxInput}

@@ -19,6 +19,7 @@ const GraphInfoTooltip = ({
   const content = d3.select(contentRef.current);
   const contentDots = d3.select(contentDotsRef.current);
   const { t } = useTranslation("common");
+
   const drawLine = useCallback(
     (x) => {
       d3.select(ref.current)
@@ -135,7 +136,6 @@ const GraphInfoTooltip = ({
       drawContent(baseXPos, e.layerY);
       drawBackground();
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       xScale,
       data,
@@ -146,11 +146,12 @@ const GraphInfoTooltip = ({
       drawContent,
       drawBackground,
       placeDots,
+      t,
     ]
   );
 
   useEffect(() => {
-    const fixedPosition = false;
+    let fixedPosition = false;
     cuadro
       .on("mouseout.tooltip", () => {
         !fixedPosition && d3.select(ref.current).attr("opacity", 0);

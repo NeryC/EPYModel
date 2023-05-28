@@ -1,21 +1,6 @@
 import { useMemo } from "react";
 import * as d3 from "d3";
 
-export const createZoom = (left, right, width, height, zoomed) => {
-  return d3
-    .zoom()
-    .scaleExtent([1, 10])
-    .extent([
-      [left, 0],
-      [width - right, height],
-    ])
-    .translateExtent([
-      [left, -Infinity],
-      [width - right, Infinity],
-    ])
-    .on("zoom", zoomed);
-};
-
 export const basicDeclareLineD3 = (
   baseLineData,
   dataYField,
