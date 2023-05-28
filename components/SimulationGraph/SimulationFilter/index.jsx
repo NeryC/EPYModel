@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { default_filters } from "./constants.js";
 import { requestFilteredData } from "./ultis.js";
 import { useDispatch } from "react-redux";
@@ -9,9 +9,9 @@ function SimulationFilter() {
   const dispatch = useDispatch();
   const { t } = useTranslation("common");
   const [RtList, setRtList] = useState(default_filters.Rt);
-  const UCIRef = useRef(default_filters.UCI_threshold);
-  const vFilteredRef = useRef(default_filters.V_filtered);
-  const lambdaItoHRef = useRef(default_filters.lambda_I_to_H);
+  const [UCI, setUCI] = useState(default_filters.UCI_threshold);
+  const [vFiltered, setVFiltered] = useState(default_filters.V_filtered);
+  const [lambdaItoH, setLambdaItoH] = useState(default_filters.lambda_I_to_H);
 
   const handleRTChange = (index, action) => {
     const newListadoRT = [...RtList];
@@ -29,24 +29,33 @@ function SimulationFilter() {
   };
 
   const handleUCIChange = (e) => {
-    UCIRef.current = parseInt(e.target.value);
+    const value = parseInt(e.target.value);
+    if (!isNaN(value) && value >= 0 && value <= 5000) {
+      setUCI(value);
+    }
   };
 
   const handleVFilteredChange = (e) => {
-    vFilteredRef.current = parseInt(e.target.value);
+    const value = parseInt(e.target.value);
+    if (!isNaN(value) && value >= 0 && value <= 5000) {
+      setVFiltered(value);
+    }
   };
 
   const handleLambdaItoHChange = (e) => {
-    lambdaItoHRef.current = parseFloat(e.target.value);
+    const value = parseFloat(e.target.value);
+    if (!isNaN(value) && value >= 0 && value <= 1) {
+      setLambdaItoH(value);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formValues = {
       Rt: JSON.stringify(RtList),
-      UCI_threshold: UCIRef.current,
-      V_filtered: vFilteredRef.current,
-      lambda_I_to_H: lambdaItoHRef.current,
+      UCI_threshold: UCI,
+      V_filtered: vFiltered,
+      lambda_I_to_H: lambdaItoH,
     };
     try {
       const response = await requestFilteredData(formValues);
@@ -131,7 +140,7 @@ function SimulationFilter() {
               id="uci_input"
               min="0"
               max="5000"
-              value={UCIRef.current}
+              value={UCI}
               onChange={handleUCIChange}
               className="flex h-10 w-full justify-center rounded-xl border p-3 md:text-sm outline-none border-gray-200 mt-2 md:mt-0 md:ml-3"
             />
@@ -148,7 +157,7 @@ function SimulationFilter() {
               id="filtered"
               min="0"
               max="5000"
-              value={vFilteredRef.current}
+              value={vFiltered}
               onChange={handleVFilteredChange}
               className="flex h-10 justify-center rounded-xl border p-3 md:text-sm outline-none border-gray-200 mt-2 md:mt-0 md:ml-3"
             />
@@ -169,7 +178,7 @@ function SimulationFilter() {
               max="1"
               step="0.1"
               className="w-full h-4 appearance-none overflow-hidden rounded-lg bg-gray-400 styledRange"
-              defaultValue={lambdaItoHRef.current}
+              value={lambdaItoH}
               onChange={handleLambdaItoHChange}
             />
           </div>
