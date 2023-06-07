@@ -73,7 +73,7 @@ const Graph = ({ type, data, dimensions }) => {
   const zoom = createZoom(left, right, width, height, zoomed);
 
   function zoomed(e) {
-    const newLines = getNewLines(selectedLines, uncertainty, hasDots, dotField);
+    const newLines = getNewLines(selectedLines, uncertainty, dotField);
     const xz = e.transform.rescaleX(xScale);
     const yz = getYDomain(data, newLines, xz, yScale);
     xScale.domain(xz.domain());
@@ -95,8 +95,8 @@ const Graph = ({ type, data, dimensions }) => {
   }
 
   const newLines = useMemo(
-    () => getNewLines(selectedLines, uncertainty, hasDots, dotField),
-    [selectedLines, uncertainty, hasDots, dotField]
+    () => getNewLines(selectedLines, uncertainty, dotField),
+    [selectedLines, uncertainty, dotField]
   );
 
   const maxField = getMaxField(data, newLines);

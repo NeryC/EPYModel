@@ -1,10 +1,9 @@
 import * as d3 from "d3";
 import { dateField } from "../../../utils/constants";
 
-export const getNewLines = (selectedLines, uncertainty, hasDots, dotField) => {
-  const newLines = [...selectedLines];
+export const getNewLines = (selectedLines, uncertainty, dotField) => {
+  const newLines = [...selectedLines, dotField];
   if (uncertainty) newLines.push("peor");
-  if (hasDots) newLines.push(dotField);
 
   return newLines;
 };

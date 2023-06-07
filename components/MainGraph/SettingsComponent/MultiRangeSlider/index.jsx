@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const MultiRangeSlider = ({
   min,
@@ -20,7 +20,10 @@ const MultiRangeSlider = ({
   });
 
   // Convert to percentage
-  const getPercent = (value) => Math.round(((value - min) / (max - min)) * 100);
+  const getPercent = useCallback(
+    (value) => Math.round(((value - min) / (max - min)) * 100),
+    [min, max]
+  );
 
   const handleChangeInputDate = (event, isMax) => {
     const valueIndex = data.findIndex(
@@ -68,11 +71,11 @@ const MultiRangeSlider = ({
     }
   };
 
-  // Set width of the range to decrease from the left side
+  // Establecer la anchura de la gama para disminuir desde el lado izquierdo
   useEffect(() => {
     if (maxValRef.current) {
       const minPercent = getPercent(selectedMin);
-      const maxPercent = getPercent(+maxValRef.current.value);
+      const maxPercent = getPercent(+maxValRef.current.value); // Precedido de "+" convierte el valor de tipo cadena a tipo número
 
       setFormData((prevFormData) => ({
         ...prevFormData,
@@ -87,6 +90,7 @@ const MultiRangeSlider = ({
     }
   }, [selectedMin, getPercent, data]);
 
+  // Establecer la anchura de la gama para disminuir desde el lado derecho
   useEffect(() => {
     if (minValRef.current) {
       const minPercent = getPercent(+minValRef.current.value);
