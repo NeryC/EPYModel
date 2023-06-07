@@ -13,11 +13,11 @@ export const TitleSection = ({ tab = MAIN_GRAPH }) => {
 
   const title = isMainGraph
     ? t("home-title")
-    : "Simulaciones Covid-19 en Paraguay";
+    : "Simulaciones del modelo SEIR-H para COVID-19";
   const description = isMainGraph
     ? t("home-description")
-    : "Estas son simulaciones realizadas con los algoritmos de generacion";
-
+    : "Puedes simular escenarios segun el modelo SEIR-H";
+  // agregar un link al articulo
   return (
     <div className={containerClass}>
       <span className="font-bold text-black text-2xl mb-2">{title}</span>

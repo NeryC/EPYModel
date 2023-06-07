@@ -4,15 +4,22 @@ import { requestFilteredData } from "./ultis.js";
 import { useDispatch } from "react-redux";
 import { setSimulation } from "../../../store/reducers/graphInfoSlice.js";
 import { useTranslation } from "next-i18next";
+import LambdaItoHInput from "./LambdaItoHInput";
+import RtInput from "./RtInput";
+import UCIInput from "./UCIInput";
+import VFilteredInput from "./VFilteredInput";
 
 function SimulationFilter() {
   const dispatch = useDispatch();
   const { t } = useTranslation("common");
+
+  // State variables
   const [RtList, setRtList] = useState(default_filters.Rt);
   const [UCI, setUCI] = useState(default_filters.UCI_threshold);
   const [vFiltered, setVFiltered] = useState(default_filters.V_filtered);
   const [lambdaItoH, setLambdaItoH] = useState(default_filters.lambda_I_to_H);
 
+  // Event handlers
   const handleRTChange = (index, action) => {
     const newListadoRT = [...RtList];
     const matrix = {
@@ -89,100 +96,26 @@ function SimulationFilter() {
           <label className="md:text-sm font-bold">{t("rt-list")}</label>
           <div className="grid grid-cols-2 gap-4 md:flex justify-between w-full">
             {RtList.map((rt, index) => (
-              <div
+              <RtInput
                 key={index}
-                className="flex h-14 md:h-10 rounded-lg relative bg-transparent mx-auto"
-              >
-                <button
-                  data-action="decrement"
-                  className={`disabled:hover:bg-gray-200 disabled:bg-gray-200 px-2 ssm:px-5 md:px-1 bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full rounded-l cursor-pointer ${
-                    RtList[index] === 0 ? "cursor-not-allowed" : ""
-                  }`}
-                  disabled={RtList[index] === 0}
-                  onClick={() => handleRTChange(index, "decrement")}
-                >
-                  <span className="m-auto text-2xl font-thin">−</span>
-                </button>
-                <input
-                  type="number"
-                  className="simulatorNumber md:w-6 text-center bg-gray-300 font-semibold text-md text-gray-700"
-                  name="custom-input-number"
-                  min="0"
-                  max="2"
-                  step="0.1"
-                  readOnly={true}
-                  value={RtList[index]}
-                />
-                <button
-                  data-action="increment"
-                  className={`disabled:hover:bg-gray-200 disabled:bg-gray-200 px-2 ssm:px-5 md:px-1 bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full rounded-r ${
-                    RtList[index] === 2 ? "cursor-not-allowed" : ""
-                  }`}
-                  disabled={RtList[index] === 2}
-                  onClick={() => handleRTChange(index, "increment")}
-                >
-                  <span className="m-auto text-2xl font-thin">+</span>
-                </button>
-              </div>
+                value={rt}
+                index={index}
+                handleRTChange={handleRTChange}
+              />
             ))}
           </div>
         </div>
         <div className="flex gap-4 md:gap-16">
-          <div className="flex flex-col md:flex-row items-center w-auto mx-auto">
-            <label
-              htmlFor="uci_input"
-              className="md:text-sm dark:text-white font-bold"
-            >
-              {t("uci")}
-            </label>
-            <input
-              type="number"
-              id="uci_input"
-              min="0"
-              max="5000"
-              value={UCI}
-              onChange={handleUCIChange}
-              className="flex h-10 w-full justify-center rounded-xl border p-3 md:text-sm outline-none border-gray-200 mt-2 md:mt-0 md:ml-3"
-            />
-          </div>
-          <div className="flex flex-col md:flex-row items-center w-auto mx-auto">
-            <label
-              htmlFor="filtered"
-              className="md:text-sm dark:text-white font-bold"
-            >
-              v filtered:
-            </label>
-            <input
-              type="number"
-              id="filtered"
-              min="0"
-              max="5000"
-              value={vFiltered}
-              onChange={handleVFilteredChange}
-              className="flex h-10 justify-center rounded-xl border p-3 md:text-sm outline-none border-gray-200 mt-2 md:mt-0 md:ml-3"
-            />
-          </div>
+          <UCIInput UCI={UCI} handleUCIChange={handleUCIChange} />
+          <VFilteredInput
+            vFiltered={vFiltered}
+            handleVFilteredChange={handleVFilteredChange}
+          />
         </div>
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <label
-            htmlFor="lambda"
-            className="md:text-sm dark:text-white font-bold"
-          >
-            lambda_I_to_H:
-          </label>
-          <div className="h-8 w-full flex items-center mt-2 md:mt-0 md:ml-3">
-            <input
-              id="lambda"
-              type="range"
-              min="0"
-              max="1"
-              step="0.1"
-              className="w-full h-4 appearance-none overflow-hidden rounded-lg bg-gray-400 styledRange"
-              value={lambdaItoH}
-              onChange={handleLambdaItoHChange}
-            />
-          </div>
-        </div>
+        <LambdaItoHInput
+          lambdaItoH={lambdaItoH}
+          handleLambdaItoHChange={handleLambdaItoHChange}
+        />
         <button
           className="items-center px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-md"
           onClick={handleSubmit}

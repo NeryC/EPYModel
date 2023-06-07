@@ -9,11 +9,11 @@ import { SIM_GRAPH } from "../../utils/constants";
 const SimulationGraph = ({ type }) => {
   const rawData = useSelector(selectRawDataSimulation(type));
   const { t } = useTranslation("common");
-
+  const title_key = `${type}-simulation`;
   return (
     <div className="rounded-lg overflow-hidden shadow-lg bg-white p-3 md:p-6 flex flex-col border border-gray-theme text-black h-fit">
       <div className="border-b-2 text-2xl md:mb-2 font-bold flex justify-between items-center pb-4">
-        <span>{t(type)}</span>
+        <span>{t(title_key)}</span>
         <DownloadButton page={SIM_GRAPH} type={type} data={rawData} />
       </div>
       <Subtitle page={SIM_GRAPH} type={type} />
