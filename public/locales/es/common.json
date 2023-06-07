@@ -47,7 +47,7 @@
   "immune-subtitle":"Número de personas inmunizadas",
   "infectious-simulation": "Infectados",
   "infectious-subtitle": "Número de infectados activos",
-  "susceptible":"Susceptibles",
+  "susceptible-simulation":"Susceptibles",
   "susceptible-subtitle":"Población sin inmunidad",
   "uci-simulation":"Camas UCI ocupadas",
   "uci-subtitle":"Número de camas de unidad de cuidados intensivos utilizadas",
