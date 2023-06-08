@@ -30,6 +30,8 @@
   "download-graph":"Download Graph",
   "home-title": "Covid-19 projections in Paraguay",
   "home-description": "The publication was made within the PINV20-40 project co-financed by the National Council of Science, and Technology (CONACYT) with resources from the FEEI",
+  "simulation-title": "SEIR-H model simulations for COVID-19",
+  "simulation-description": "You can simulate scenarios according to the SEIR-H model.",
   "more-information": "For more information about this work, ",
   "go-here" : "go here",
   "dateSeparator": "%b %e, %Y",

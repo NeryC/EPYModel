@@ -11,12 +11,10 @@ export const TitleSection = ({ tab = MAIN_GRAPH }) => {
     !isMainGraph ? "grow justify-center" : ""
   }`;
 
-  const title = isMainGraph
-    ? t("home-title")
-    : "Simulaciones del modelo SEIR-H para COVID-19";
+  const title = isMainGraph ? t("home-title") : t("simulation-title");
   const description = isMainGraph
     ? t("home-description")
-    : "Puedes simular escenarios segun el modelo SEIR-H";
+    : t("simulation-description");
   // agregar un link al articulo
   return (
     <div className={containerClass}>
