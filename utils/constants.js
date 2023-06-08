@@ -16,8 +16,8 @@ export const dateField = "fechaFormateada";
 export const SIM_GRAPH = "simulation";
 export const MAIN_GRAPH = "main";
 
-// export const baseURL = "http://epymodel.uaa.edu.py:3001"; //production
-export const baseURL = "http://localhost:3001"; //local-dev
+export const baseURL = "http://epymodel.uaa.edu.py:3001"; //production
+// export const baseURL = "http://localhost:3001"; //local-dev
 
 export const getDownloadPath = {
   reported: "/get-projection-r",
