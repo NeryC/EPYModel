@@ -72,6 +72,6 @@
   "deceases-title":"Número de muertes",
   "deceases-subtitle":"Número informado de muertes diarias según los datos proporcionados por los MSPYBS.",
 
-  "lambda_I_to_H":"Proportion of infected to hospitalized:",
+  "lambda_I_to_H":"Proporción de infectados hospitalizados:",
   "v_filtered":"Nuevos vacunados:"
 }
