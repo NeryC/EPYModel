@@ -43,6 +43,7 @@ const Simulador = () => {
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 mb-6 w-full">
             {graphsStatus.map(({ type, isReady }) => {
+              console.log(isReady);
               return isReady ? (
                 <SimulationGraph type={type} key={type} />
               ) : null;
