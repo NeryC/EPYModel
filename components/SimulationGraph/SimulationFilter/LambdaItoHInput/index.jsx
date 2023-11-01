@@ -19,6 +19,7 @@ function LambdaItoHInput({ lambdaItoH, handleLambdaItoHChange }) {
           onChange={handleLambdaItoHChange}
         />
       </div>
+      <span className="w-20 text-center">{lambdaItoH * 100}%</span>
     </div>
   );
 }

@@ -37,15 +37,17 @@ function SimulationFilter() {
 
   const handleUCIChange = (e) => {
     const value = parseInt(e.target.value);
-    if (!isNaN(value) && value >= 0 && value <= 5000) {
-      setUCI(value);
+    if (isNaN(value)) value = 0;
+    if (value >= 0 && value <= 5000) {
+      setUCI(Number(value).toString());
     }
   };
 
   const handleVFilteredChange = (e) => {
     const value = parseInt(e.target.value);
-    if (!isNaN(value) && value >= 0 && value <= 5000) {
-      setVFiltered(value);
+    if (isNaN(value)) value = 0;
+    if (value >= 0 && value <= 5000) {
+      setVFiltered(Number(value).toString());
     }
   };
 
