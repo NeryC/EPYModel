@@ -4,7 +4,7 @@ function LambdaItoHInput({ lambdaItoH, handleLambdaItoHChange }) {
   const { t } = useTranslation("common");
   return (
     <div className="flex flex-col md:flex-row justify-between items-center">
-      <label htmlFor="lambda" className="md:text-sm dark:text-white font-bold">
+      <label htmlFor="lambda" className="md:text-sm font-bold">
         {t("lambda_I_to_H")}
       </label>
       <div className="h-8 w-full flex items-center mt-2 md:mt-0 md:ml-3">

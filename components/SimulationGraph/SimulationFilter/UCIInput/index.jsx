@@ -4,10 +4,7 @@ function UCIInput({ UCI, handleUCIChange }) {
   const { t } = useTranslation("common");
   return (
     <div className="flex flex-col md:flex-row items-center w-auto mx-auto">
-      <label
-        htmlFor="uci_input"
-        className="md:text-sm dark:text-white font-bold"
-      >
+      <label htmlFor="uci_input" className="md:text-sm font-bold">
         {t("uci-setting")}
       </label>
       <input

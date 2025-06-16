@@ -35,6 +35,18 @@ function SimulationFilter() {
     }
   };
 
+  const handleAddRt = () => {
+    setRtList([...RtList, 1.0]); // Default new Rt value
+  };
+
+  const handleRemoveRt = (index) => {
+    if (RtList.length > 1) {
+      // Keep at least one Rt value
+      const newListadoRT = RtList.filter((_, i) => i !== index);
+      setRtList(newListadoRT);
+    }
+  };
+
   const handleUCIChange = (e) => {
     const value = parseInt(e.target.value);
     if (isNaN(value)) value = 0;
@@ -88,6 +100,13 @@ function SimulationFilter() {
     // Aquí puedes agregar la lógica para enviar los datos del SimulationFilter
   };
 
+  const handleReset = () => {
+    setRtList(default_filters.Rt);
+    setUCI(default_filters.UCI_threshold);
+    setVFiltered(default_filters.V_filtered);
+    setLambdaItoH(default_filters.lambda_I_to_H);
+  };
+
   return (
     <div className="flex justify-end grow text-base">
       <div className="rounded-lg shadow-lg bg-white p-3 md:p-6 flex flex-col gap-3 border border-gray-theme text-black mb-4 grow md:min-w-[500px] md:max-w-[650px]">
@@ -96,15 +115,34 @@ function SimulationFilter() {
         </span>
         <div className="flex flex-col md:flex-row gap-3 md:gap-1 items-center">
           <label className="md:text-sm font-bold">{t("rt-list")}</label>
-          <div className="grid grid-cols-2 gap-4 md:flex justify-between w-full">
+          <div className="flex flex-wrap gap-4 w-full">
             {RtList.map((rt, index) => (
-              <RtInput
-                key={index}
-                value={rt}
-                index={index}
-                handleRTChange={handleRTChange}
-              />
+              <div key={index} className="flex items-center">
+                <RtInput
+                  value={rt}
+                  index={index}
+                  handleRTChange={handleRTChange}
+                />
+              </div>
             ))}
+            <div className="flex flex-row gap-2">
+              {RtList.length > 1 && (
+                <button
+                  onClick={() => handleRemoveRt(RtList.length - 1)}
+                  className="text-white bg-red-500 hover:bg-red-600 text-xl rounded-md p-2"
+                  aria-label="Remove Rt value"
+                >
+                  ×
+                </button>
+              )}
+              <button
+                onClick={handleAddRt}
+                className="text-white bg-indigo-500 hover:bg-indigo-600 font-bold text-xl rounded-md p-2"
+                aria-label="Add Rt value"
+              >
+                +
+              </button>
+            </div>
           </div>
         </div>
         <div className="flex gap-4 md:gap-16">
@@ -118,12 +156,20 @@ function SimulationFilter() {
           lambdaItoH={lambdaItoH}
           handleLambdaItoHChange={handleLambdaItoHChange}
         />
-        <button
-          className="items-center px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-md"
-          onClick={handleSubmit}
-        >
-          {t(`simulate`)}
-        </button>
+        <div className="flex gap-2">
+          <button
+            className="items-center px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-md"
+            onClick={handleSubmit}
+          >
+            {t(`simulate`)}
+          </button>
+          <button
+            className="items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-md"
+            onClick={handleReset}
+          >
+            {t(`reset`)}
+          </button>
+        </div>
       </div>
     </div>
   );

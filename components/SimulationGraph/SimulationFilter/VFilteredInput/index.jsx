@@ -4,10 +4,7 @@ function VFilteredInput({ vFiltered, handleVFilteredChange }) {
   const { t } = useTranslation("common");
   return (
     <div className="flex flex-col md:flex-row items-center w-auto mx-auto">
-      <label
-        htmlFor="filtered"
-        className="md:text-sm dark:text-white font-bold"
-      >
+      <label htmlFor="filtered" className="md:text-sm font-bold">
         {t("v_filtered")}
       </label>
       <input
