@@ -1,8 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSliders } from "@fortawesome/free-solid-svg-icons";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import MultiRangeSlider from "./MultiRangeSlider";
-import ToggleButton from "./ToggleButton";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectSettings,
@@ -11,6 +10,8 @@ import {
   setRange,
 } from "../../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
+import Tooltip from "../../utils/Tooltip";
+import ToggleButton from "./ToggleButton";
 
 const SettingsComponent = ({ type, data }) => {
   const { t } = useTranslation("common");
@@ -80,7 +81,7 @@ const SettingsComponent = ({ type, data }) => {
       </div>
 
       <div
-        className={`${isExpanded()} shadow border bg-white z-40 rounded flex flex-col p-2 items-center text-sm`}
+        className={`${isExpanded()} shadow border bg-white z-40 rounded flex flex-col p-2 items-center text-sm w-72`}
       >
         <div className="border-b mb-3 pb-1 w-full flex justify-between font-bold text-base">
           {t("chart-setting")}
@@ -88,13 +89,17 @@ const SettingsComponent = ({ type, data }) => {
 
         <ToggleButton
           label={t("smoothed-data")}
+          tooltipText={t("smoothed-data-description")}
           name="isSmooth"
           handleChange={() => handleChangeChecks("isSmooth")}
           checkedState={settings.isSmooth}
         />
 
-        <div className="flex justify-between mb-8">
-          <span className="mr-3 flex-none">{t("date-range")}</span>
+        <div className="flex flex-col mb-11 w-full">
+          <div className="flex items-center gap-1 mb-2">
+            <span className="mr-3 flex-none">{t("date-range")}</span>
+            <Tooltip text={t("date-range-description")} />
+          </div>
           <MultiRangeSlider
             min={0}
             max={settings.dataLength}
@@ -107,6 +112,7 @@ const SettingsComponent = ({ type, data }) => {
 
         <ToggleButton
           label={t("uncertainty")}
+          tooltipText={t("uncertainty-description")}
           name="uncertainty"
           handleChange={() => handleChangeChecks("uncertainty")}
           checkedState={settings.uncertainty}
@@ -114,6 +120,7 @@ const SettingsComponent = ({ type, data }) => {
 
         <ToggleButton
           label={t("show-dots")}
+          tooltipText={t("show-dots-description")}
           name="dotsOption"
           handleChange={() => handleChangeChecks("dotsOption")}
           checkedState={settings.dotsOption}

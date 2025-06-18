@@ -8,6 +8,7 @@ import LambdaItoHInput from "./LambdaItoHInput";
 import RtInput from "./RtInput";
 import UCIInput from "./UCIInput";
 import VFilteredInput from "./VFilteredInput";
+import Tooltip from "../../utils/Tooltip.tsx";
 
 function SimulationFilter() {
   const dispatch = useDispatch();
@@ -114,7 +115,10 @@ function SimulationFilter() {
           {t("chart-setting")}
         </span>
         <div className="flex flex-col md:flex-row gap-3 md:gap-1 items-center">
-          <label className="md:text-sm font-bold">{t("rt-list")}</label>
+          <label className="md:text-sm font-bold max-w-[85px] flex items-center pr-2">
+            {t("rt-list")}
+            <Tooltip text={t("rt-list-description")} />
+          </label>
           <div className="flex flex-wrap gap-4 w-full">
             {RtList.map((rt, index) => (
               <div key={index} className="flex items-center">
@@ -145,7 +149,7 @@ function SimulationFilter() {
             </div>
           </div>
         </div>
-        <div className="flex gap-4 md:gap-16">
+        <div className="flex gap-4">
           <UCIInput UCI={UCI} handleUCIChange={handleUCIChange} />
           <VFilteredInput
             vFiltered={vFiltered}

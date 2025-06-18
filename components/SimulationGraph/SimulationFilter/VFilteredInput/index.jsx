@@ -1,23 +1,30 @@
+import React from "react";
 import { useTranslation } from "next-i18next";
+import Tooltip from "../../../utils/Tooltip";
 
-function VFilteredInput({ vFiltered, handleVFilteredChange }) {
+const VFilteredInput = ({ vFiltered, handleVFilteredChange }) => {
   const { t } = useTranslation("common");
+
   return (
-    <div className="flex flex-col md:flex-row items-center w-auto mx-auto">
-      <label htmlFor="filtered" className="md:text-sm font-bold">
+    <div className="flex flex-col gap-1 w-full">
+      <label
+        htmlFor="filtered"
+        className="md:text-sm font-bold flex items-center gap-1 pr-2"
+      >
         {t("v_filtered")}
+        <Tooltip text={t("v_filtered-description")} />
       </label>
       <input
-        type="number"
         id="filtered"
+        type="number"
         min="0"
         max="5000"
         value={vFiltered}
         onChange={handleVFilteredChange}
-        className="flex h-10 justify-center rounded-xl border p-3 md:text-sm outline-none border-gray-200 mt-2 md:mt-0 md:ml-3"
+        className="border border-gray-theme rounded-md p-1"
       />
     </div>
   );
-}
+};
 
 export default VFilteredInput;
