@@ -3,7 +3,7 @@ import Head from "next/head";
 import { useSelector } from "react-redux";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import {
-  selectGraphData,
+  selectSimulationGraphData,
   setSimulation,
 } from "../store/reducers/graphInfoSlice";
 import { wrapper } from "../store/store";
@@ -15,7 +15,7 @@ import SimulationFilter from "../components/SimulationGraph/SimulationFilter";
 import { SIM_GRAPH } from "../utils/constants";
 
 const Simulador = () => {
-  const graphsStatus = useSelector(selectGraphData(SIM_GRAPH));
+  const graphsStatus = useSelector(selectSimulationGraphData);
   return (
     <>
       <Head>

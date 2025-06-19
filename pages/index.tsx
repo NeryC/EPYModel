@@ -4,7 +4,10 @@ import MainGraph from "../components/MainGraph";
 import useDimensions from "../hooks/useDimensions";
 import { axiosInstance } from "../utils";
 import { GetStaticProps } from "next";
-import { initMain, selectGraphData } from "../store/reducers/graphInfoSlice";
+import {
+  initMain,
+  selectMainGraphData,
+} from "../store/reducers/graphInfoSlice";
 import { MAIN_GRAPH } from "../utils/constants";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { TitleSection } from "../components";
@@ -43,7 +46,7 @@ interface ProjectionResponse {
 // --- Component Definition ---
 function Graphs(): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
-  const graphsStatus: GraphStatus[] = useSelector(selectGraphData(MAIN_GRAPH));
+  const graphsStatus: GraphStatus[] = useSelector(selectMainGraphData);
   const dimensions: Dimensions = useDimensions(containerRef, 534);
 
   // Memoize the filtered graphs to prevent unnecessary re-renders
