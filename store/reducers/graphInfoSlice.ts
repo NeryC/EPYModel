@@ -363,13 +363,20 @@ export const graphInfoSlice = createSlice({
 
 // Selector types
 export const selectGraphData =
-  (graphsType: "main" | "simulation") => (state: { [key: string]: any }) =>
-    Object.values(state[graphsType]).map(
-      ({ type, isReady }: { type: string; isReady?: boolean }) => ({
+  (graphsType: "main" | "simulation") => (state: { [key: string]: any }) => {
+    const graphState = state[graphsType];
+    if (!graphState) return [];
+
+    return Object.values(graphState)
+      .filter(
+        (item): item is { type: string; isReady?: boolean } =>
+          item !== null && typeof item === "object" && "type" in item
+      )
+      .map(({ type, isReady }) => ({
         type,
         isReady,
-      })
-    );
+      }));
+  };
 
 export const selectScenarios =
   (type: "reported" | "hospitalized" | "ICU" | "deceases") =>
