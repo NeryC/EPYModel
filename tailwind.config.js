@@ -5,8 +5,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        nunito: ["Nunito", "sans-serif"],
+      },
       screens: {
-        "ssm": "300px"
+        ssm: "300px",
       },
       fontSize: {
         xsm: ["0.8rem", "1rem"],

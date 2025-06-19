@@ -21,7 +21,7 @@
   "all-rights-reserved": "All Rights Reserved.",
   "chart-setting": "Chart Settings",
   "rt-list": "Rt per month",
-  "rt-list-description": "RT (reproduction rate): indicates how many people, on average, are infected by one contagious person. If it’s above 1, the infection spreads; if below 1, it slows down. (0 - 2,0)",
+  "rt-list-description": "RT (reproduction rate): indicates how many people, on average, are infected by one contagious person. If it's above 1, the infection spreads; if below 1, it slows down. (0 - 2,0)",
   "smoothed-data": "Smoothed data",
   "smoothed-data-description": "Apply interpolation to the graph data, generating smoother curves instead of straight lines between points.",
   "date-range": "Date range",
@@ -83,5 +83,6 @@
   "lambda_I_to_H": "Proportion of infected to hospitalized:",
   "lambda_I_to_H-description": "Proportion of infected that are hospitalized. (0 - 100)",
   "v_filtered": "New vaccinees:",
-  "v_filtered-description": "New vaccinees per month. (0 - 5000)"
+  "v_filtered-description": "New vaccinees per month. (0 - 5000)",
+  "updated-until": "Updated until"
 }

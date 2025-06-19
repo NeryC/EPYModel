@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { concat } from "lodash";
 import { HYDRATE } from "next-redux-wrapper";
 import {
@@ -9,7 +9,116 @@ import {
 } from "../../utils/index";
 import { dotFields } from "../../utils/descriptions";
 
-const initialElements = (type) => {
+// Type definitions
+interface DataPoint {
+  fecha: string;
+  [key: string]: any;
+}
+
+interface Range {
+  start: number;
+  finish: number;
+}
+
+interface Settings {
+  isSmooth: boolean;
+  uncertainty: boolean;
+  dotsOption: boolean;
+  range: Range;
+  dataLength: number;
+}
+
+interface SimulationSettings {
+  range: Range;
+}
+
+interface Elements {
+  scenario: string[];
+  options: string[];
+  selectedLines: string[];
+  showedElements: string[];
+  dotField: string;
+}
+
+interface MainGraphData {
+  type: string;
+  settings: Settings;
+  data: DataPoint[];
+  elements: Elements;
+  isReady: boolean;
+}
+
+interface SimulationGraphData {
+  type: string;
+  data: DataPoint[];
+  settings: SimulationSettings;
+  isReady?: boolean;
+}
+
+interface MainState {
+  lastUpdateDate: string | null;
+  reported: MainGraphData;
+  hospitalized: MainGraphData;
+  ICU: MainGraphData;
+  deceases: MainGraphData;
+}
+
+interface SimulationState {
+  cumulative: SimulationGraphData;
+  cumulative_deaths: SimulationGraphData;
+  exposed: SimulationGraphData;
+  hospitalized: SimulationGraphData;
+  immune: SimulationGraphData;
+  infectious: SimulationGraphData;
+  susceptible: SimulationGraphData;
+  uci: SimulationGraphData;
+}
+
+interface GraphInfoState {
+  main: MainState;
+  simulation: SimulationState;
+}
+
+// Action payload types
+interface InitMainPayload {
+  reported: DataPoint[];
+  hospitalized: DataPoint[];
+  ICU: DataPoint[];
+  deceases: DataPoint[];
+}
+
+interface SetSimulationPayload {
+  cumulative: DataPoint[];
+  cumulative_deaths: DataPoint[];
+  exposed: DataPoint[];
+  hospitalized: DataPoint[];
+  immune: DataPoint[];
+  infectious: DataPoint[];
+  susceptible: DataPoint[];
+  uci: DataPoint[];
+}
+
+interface SetSelectedLinePayload {
+  type: "reported" | "hospitalized" | "ICU" | "deceases";
+  selectedLine: string;
+}
+
+interface SetChecksPayload {
+  type: "reported" | "hospitalized" | "ICU" | "deceases";
+  checkName: keyof Settings;
+}
+
+interface ResetChecksPayload {
+  type: "reported" | "hospitalized" | "ICU" | "deceases";
+}
+
+interface SetRangePayload {
+  type: "reported" | "hospitalized" | "ICU" | "deceases";
+  start: number;
+  finish: number;
+}
+
+const initialElements = (type: string): Elements => {
   const defaultSelectedLines = defaultVisibleLines(type);
   return {
     scenario: filterLines(type, ["proy", dotFields[type]]),
@@ -20,7 +129,7 @@ const initialElements = (type) => {
   };
 };
 
-const initialSettings = (amountOfData = 0) => {
+const initialSettings = (amountOfData: number = 0): Settings => {
   return {
     isSmooth: true,
     uncertainty: false,
@@ -33,7 +142,9 @@ const initialSettings = (amountOfData = 0) => {
   };
 };
 
-const initialSettingsSimulation = (amountOfData = 0) => {
+const initialSettingsSimulation = (
+  amountOfData: number = 0
+): SimulationSettings => {
   return {
     range: {
       start: 0,
@@ -42,8 +153,9 @@ const initialSettingsSimulation = (amountOfData = 0) => {
   };
 };
 
-const initialState = {
+const initialState: GraphInfoState = {
   main: {
+    lastUpdateDate: null,
     reported: {
       type: "reported",
       settings: initialSettings(),
@@ -94,7 +206,11 @@ const initialState = {
       data: [],
       settings: initialSettingsSimulation(),
     },
-    immune: { type: "immune", data: [], settings: initialSettingsSimulation() },
+    immune: {
+      type: "immune",
+      data: [],
+      settings: initialSettingsSimulation(),
+    },
     infectious: {
       type: "infectious",
       data: [],
@@ -105,7 +221,11 @@ const initialState = {
       data: [],
       settings: initialSettingsSimulation(),
     },
-    uci: { type: "uci", data: [], settings: initialSettingsSimulation() },
+    uci: {
+      type: "uci",
+      data: [],
+      settings: initialSettingsSimulation(),
+    },
   },
 };
 
@@ -113,10 +233,11 @@ export const graphInfoSlice = createSlice({
   name: "graphInfo",
   initialState,
   reducers: {
-    initMain(state, action) {
+    initMain(state, action: PayloadAction<InitMainPayload>) {
       const { main } = state;
 
-      const sortDataByFecha = (a, b) => new Date(a.fecha) - new Date(b.fecha);
+      const sortDataByFecha = (a: DataPoint, b: DataPoint) =>
+        new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
 
       action.payload.reported.sort(sortDataByFecha);
       const amountReported = action.payload.reported.length - 1;
@@ -141,8 +262,14 @@ export const graphInfoSlice = createSlice({
       main.deceases.data = action.payload.deceases;
       main.deceases.settings = initialSettings(amountDeceases);
       main.deceases.isReady = true;
+
+      // Calcular la última fecha usando solo reported (todos los datos tienen las mismas fechas)
+      const lastDate = new Date(
+        action.payload.reported[action.payload.reported.length - 1].fecha
+      );
+      main.lastUpdateDate = lastDate.toISOString();
     },
-    setSimulation(state, action) {
+    setSimulation(state, action: PayloadAction<SetSimulationPayload>) {
       const { simulation } = state;
       const amount = action.payload.cumulative.length - 1;
 
@@ -178,7 +305,7 @@ export const graphInfoSlice = createSlice({
       simulation.uci.isReady = true;
       simulation.uci.settings = initialSettingsSimulation(amount);
     },
-    setSelectedLine(state, action) {
+    setSelectedLine(state, action: PayloadAction<SetSelectedLinePayload>) {
       const { main } = state;
       const type = action.payload.type;
       const newSelectedLines = setNewSelectedLines(
@@ -191,92 +318,111 @@ export const graphInfoSlice = createSlice({
         newSelectedLines
       );
     },
-    setChecks(state, action) {
+    setChecks(state, action: PayloadAction<SetChecksPayload>) {
       const { main } = state;
       const { type, checkName } = action.payload;
-      main[type].settings[checkName] = !main[type].settings[checkName];
+      const currentValue = main[type].settings[checkName];
+      if (typeof currentValue === "boolean") {
+        (main[type].settings as any)[checkName] = !currentValue;
+      }
     },
-    resetChecks(state, action) {
+    resetChecks(state, action: PayloadAction<ResetChecksPayload>) {
       const { main } = state;
       const { type } = action.payload;
       const amountOfData = main[type].settings.dataLength;
       main[type].settings = initialSettings(amountOfData);
     },
-    setRange(state, action) {
+    setRange(state, action: PayloadAction<SetRangePayload>) {
       const { type, start, finish } = action.payload;
       state.main[type].settings.range = { start, finish };
     },
   },
   extraReducers(builder) {
-    builder.addCase(HYDRATE, (state, action) => {
+    builder.addCase(HYDRATE, (state, action: any) => {
       return { ...state, ...action.payload };
     });
   },
 });
 
-export const selectGraphData = (graphsType) => (state) =>
-  Object.values(state[graphsType]).map(({ type, isReady }) => ({
-    type,
-    isReady,
-  }));
+// Selector types
+export const selectGraphData =
+  (graphsType: "main" | "simulation") => (state: { [key: string]: any }) =>
+    Object.values(state[graphsType]).map(
+      ({ type, isReady }: { type: string; isReady?: boolean }) => ({
+        type,
+        isReady,
+      })
+    );
 
 export const selectScenarios =
-  (type) =>
-  ({ main }) =>
+  (type: "reported" | "hospitalized" | "ICU" | "deceases") =>
+  ({ main }: GraphInfoState) =>
     main[type].elements.scenario;
 
 export const selectRawData =
-  (type) =>
-  ({ main }) =>
+  (type: "reported" | "hospitalized" | "ICU" | "deceases") =>
+  ({ main }: GraphInfoState) =>
     main[type].data;
 
 export const selectRawDataSimulation =
-  (type) =>
-  ({ simulation }) =>
+  (type: keyof SimulationState) =>
+  ({ simulation }: GraphInfoState) =>
     simulation[type].data;
 
 export const selectShowedElements =
-  (type) =>
-  ({ main }) =>
+  (type: "reported" | "hospitalized" | "ICU" | "deceases") =>
+  ({ main }: GraphInfoState) =>
     main[type].elements.showedElements;
 
 export const selectDropdownInfo =
-  (type) =>
-  ({ main }) =>
+  (type: "reported" | "hospitalized" | "ICU" | "deceases") =>
+  ({ main }: GraphInfoState) =>
     [main[type].elements.options, main[type].elements.selectedLines];
 
 export const selectSettings =
-  (type) =>
-  ({ main }) =>
+  (type: "reported" | "hospitalized" | "ICU" | "deceases") =>
+  ({ main }: GraphInfoState) =>
     main[type].settings;
 
 export const selectSelectedLines =
-  (type) =>
-  ({ main }) =>
+  (type: "reported" | "hospitalized" | "ICU" | "deceases") =>
+  ({ main }: GraphInfoState) =>
     main[type].elements.selectedLines;
 
 export const selectIsSmooth =
-  (type) =>
-  ({ main }) =>
+  (type: "reported" | "hospitalized" | "ICU" | "deceases") =>
+  ({ main }: GraphInfoState) =>
     main[type].settings.isSmooth;
 
 export const selectUncertainty =
-  (type) =>
-  ({ main }) =>
+  (type: "reported" | "hospitalized" | "ICU" | "deceases") =>
+  ({ main }: GraphInfoState) =>
     main[type].settings.uncertainty;
 
 export const selectDotsOption =
-  (type) =>
-  ({ main }) =>
+  (type: "reported" | "hospitalized" | "ICU" | "deceases") =>
+  ({ main }: GraphInfoState) =>
     main[type].settings.dotsOption;
 
-export const selectRange = (graphsType, type) => (state) =>
-  state[graphsType][type].settings.range;
+export const selectRange =
+  (graphsType: "main" | "simulation", type: string) =>
+  (state: GraphInfoState) => {
+    if (graphsType === "main") {
+      return state.main[
+        type as "reported" | "hospitalized" | "ICU" | "deceases"
+      ].settings.range;
+    } else {
+      return state.simulation[type as keyof SimulationState].settings.range;
+    }
+  };
 
 export const selectDotField =
-  (type) =>
-  ({ main }) =>
+  (type: "reported" | "hospitalized" | "ICU" | "deceases") =>
+  ({ main }: GraphInfoState) =>
     main[type].elements.dotField;
+
+export const selectLastUpdateDate = ({ main }: GraphInfoState) =>
+  main.lastUpdateDate;
 
 export const {
   initMain,
