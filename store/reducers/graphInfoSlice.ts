@@ -112,6 +112,10 @@ interface ResetChecksPayload {
   type: "reported" | "hospitalized" | "ICU" | "deceases";
 }
 
+interface ResetSelectedLinesPayload {
+  type: "reported" | "hospitalized" | "ICU" | "deceases";
+}
+
 interface SetRangePayload {
   type: "reported" | "hospitalized" | "ICU" | "deceases";
   start: number;
@@ -332,6 +336,19 @@ export const graphInfoSlice = createSlice({
       const amountOfData = main[type].settings.dataLength;
       main[type].settings = initialSettings(amountOfData);
     },
+    resetSelectedLines(
+      state,
+      action: PayloadAction<ResetSelectedLinesPayload>
+    ) {
+      const { main } = state;
+      const { type } = action.payload;
+      const defaultSelectedLines = defaultVisibleLines(type);
+      main[type].elements.selectedLines = defaultSelectedLines;
+      main[type].elements.showedElements = concat(
+        hiddableLines(type, false),
+        defaultSelectedLines
+      );
+    },
     setRange(state, action: PayloadAction<SetRangePayload>) {
       const { type, start, finish } = action.payload;
       state.main[type].settings.range = { start, finish };
@@ -430,6 +447,7 @@ export const {
   setSelectedLine,
   setChecks,
   resetChecks,
+  resetSelectedLines,
   setRange,
 } = graphInfoSlice.actions;
 

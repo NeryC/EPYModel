@@ -1,11 +1,12 @@
-import { dinamicColorStyle } from "../../../utils/index";
+import { dinamicColorStyle } from "../../utils/index";
 import { useSelector, useDispatch } from "react-redux";
-import ScenarioTooltip from "../Tooltips/ScenarioTooltip";
+import ScenarioTooltip from "./Tooltips/ScenarioTooltip";
 import {
   selectDotField,
   selectDropdownInfo,
   setSelectedLine,
-} from "../../../store/reducers/graphInfoSlice";
+  resetSelectedLines,
+} from "../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
 
 const SelectedLines = ({ type }) => {
@@ -31,12 +32,16 @@ const SelectedLines = ({ type }) => {
     dispatch(setSelectedLine({ type, selectedLine }));
   };
 
+  const handleReset = () => {
+    dispatch(resetSelectedLines({ type }));
+  };
+
   const renderSelected = () =>
     options.map((item) => (
       <ScenarioTooltip item={[item]} key={item.label} type={type}>
         <button
           key={item.label}
-          className={`flex items-center gap-2 border rounded-3xl py-1 px-3 w-full md:w-auto ${isSelected(
+          className={`flex items-center gap-2 border rounded-3xl py-1 px-3 w-full lg:w-auto ${isSelected(
             item
           )}`}
           onClick={() => selectOption(item)}
@@ -51,8 +56,14 @@ const SelectedLines = ({ type }) => {
     ));
 
   return (
-    <div className="grid md:flex grid-cols-2 gap-2 md:gap-4 text-sm pt-3 md:pt-1 justify-center">
+    <div className="grid lg:flex grid-cols-4 gap-2 lg:gap-4 text-sm pt-3 lg:pt-1 justify-center">
       {renderSelected()}
+      <button
+        className="flex items-center gap-2 border border-gray-300 rounded-3xl py-1 px-3 w-full lg:w-auto"
+        onClick={handleReset}
+      >
+        <div className="text-sm font-bold ">{t("reset")}</div>
+      </button>
     </div>
   );
 };

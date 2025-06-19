@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { default_filters } from "./constants.js";
 import { requestFilteredData } from "./ultis.js";
 import { useDispatch } from "react-redux";
-import { setSimulation } from "../../../store/reducers/graphInfoSlice.js";
+import { setSimulation } from "../../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
 import LambdaItoHInput from "./LambdaItoHInput";
 import RtInput from "./RtInput";
