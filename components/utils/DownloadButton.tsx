@@ -1,41 +1,76 @@
-import Image from "next/image";
-import { useTranslation } from "next-i18next";
-import { useState } from "react";
 import * as d3 from "d3";
-import { saveAs } from "file-saver";
+import Image from "next/image";
+import React, { memo, MouseEvent, useCallback, useRef, useState } from "react";
+import { baseURL } from "../../utils/constants";
 import { CSVLink } from "react-csv";
-import { MAIN_GRAPH, baseURL, getDownloadPath } from "../../utils/constants.js";
+import { saveAs } from "file-saver";
+import { useTranslation } from "next-i18next";
 
-export const DownloadButton = ({ page, type, data }) => {
+const getDownloadPath = {
+  reported: "/get-projection-r",
+  hospitalized: "/get-projection-h",
+  ICU: "/get-projection-u",
+  deceases: "/get-projection-f",
+};
+
+interface DownloadButtonProps {
+  page: string;
+  type: keyof typeof getDownloadPath;
+  data?: Array<{ day: string; value: number }>;
+}
+
+interface DownloadOptionProps {
+  text: string;
+  onClick: (e: MouseEvent<HTMLSpanElement>) => void;
+}
+
+const csvHeaders = (type: string) => [
+  { label: "day", key: "day" },
+  { label: type, key: "value" },
+];
+
+function DownloadButtonComponent({ page, type, data }: DownloadButtonProps) {
   const { t } = useTranslation("common");
   const [showDropdown, setShowDropdown] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  let timeoutControler;
+  const openMenu = useCallback(() => {
+    setShowDropdown((prev) => !prev);
+  }, []);
 
-  const openMenu = () => {
-    setShowDropdown(!showDropdown);
-  };
-
-  const downloadGraph = () => {
+  const downloadGraph = useCallback(() => {
     const serializer = new XMLSerializer();
-    const xmlString = serializer.serializeToString(
-      d3.select(`#${type}`).node()
-    );
+    const node = d3.select(`#${type}`).node();
+    if (!node) return;
+    const xmlString = serializer.serializeToString(node as Node);
     const baseImage = "data:image/svg+xml;base64,";
     const imgData = baseImage + Buffer.from(xmlString).toString("base64");
     saveAs(imgData, `${type}.svg`);
-  };
+  }, [type]);
 
-  const DownloadOption = ({ text, onClick }) => (
-    <li className="dropdown-item hover:bg-blue-100 px-5 md:px-4 py-3 md:py-1">
-      <span className="block cursor-pointer" onClick={onClick}>
-        {text}
-      </span>
-    </li>
+  const handleMouseLeave = useCallback(() => {
+    timeoutRef.current = setTimeout(() => {
+      setShowDropdown(false);
+    }, 1000);
+  }, []);
+
+  const handleMouseEnter = useCallback(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  }, []);
+
+  const DownloadOption = useCallback(
+    ({ text, onClick }: DownloadOptionProps) => (
+      <li className="dropdown-item hover:bg-blue-100 px-5 md:px-4 py-3 md:py-1">
+        <span className="block cursor-pointer" onClick={onClick}>
+          {text}
+        </span>
+      </li>
+    ),
+    []
   );
 
-  const DownloadCSVOption = () => {
-    if (page === MAIN_GRAPH) {
+  const DownloadCSVOption = useCallback(() => {
+    if (page === "main") {
       return (
         <DownloadOption
           text="csv"
@@ -47,15 +82,10 @@ export const DownloadButton = ({ page, type, data }) => {
           }}
         />
       );
-    } else {
-      const headers = [
-        { label: "day", key: "day" },
-        { label: type, key: "value" },
-      ];
-
+    } else if (data) {
       return (
         <CSVLink
-          headers={headers}
+          headers={csvHeaders(type)}
           data={data}
           filename={`${type}.csv`}
           className="block dropdown-item hover:bg-blue-100 px-4 py-1"
@@ -65,16 +95,8 @@ export const DownloadButton = ({ page, type, data }) => {
         </CSVLink>
       );
     }
-  };
-
-  const handleMouseLeave = () => {
-    timeoutControler = setTimeout(() => {
-      setShowDropdown(false);
-    }, 1000);
-  };
-  const handleMouseEnter = () => {
-    timeoutControler && clearTimeout(timeoutControler);
-  };
+    return null;
+  }, [page, type, data, DownloadOption]);
 
   return (
     <div
@@ -127,10 +149,12 @@ export const DownloadButton = ({ page, type, data }) => {
             border-none
           `}
         >
-          <DownloadOption text="svg" onClick={downloadGraph} />
+          <DownloadOption text="svg" onClick={() => downloadGraph()} />
           <DownloadCSVOption />
         </ul>
       </div>
     </div>
   );
-};
+}
+
+export const DownloadButton = memo(DownloadButtonComponent);
