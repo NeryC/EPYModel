@@ -1,5 +1,5 @@
 export const descriptions = {
-  main: { ICU: true, deceases: true },
+  main: { reported: true, hospitalized: true, ICU: true, deceases: true },
   simulation: {
     uci: true,
     susceptible: true,

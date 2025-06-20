@@ -63,22 +63,23 @@
 
   "reported": "Reportado",
   "reported-title": "Proyección de posibles nuevos infectados diarios",
+  "reported-subtitle": "Estimación del número de nuevos casos diarios que podrían registrarse en el futuro, basada en datos actuales y tendencias epidemiológicas. Esta proyección permite anticipar la evolución del brote y planificar respuestas sanitarias adecuadas.",
   "reported-description": "Número informado de diario infectado según los datos proporcionados por los MSPYBS.",
   "estimated": "Estimado",
   "estimated-description": "Esta curva muestra las infecciones estimadas diarias después de corregir el sesgo debido a la tasa de prueba.",
 
   "hospitalized-simulation": "Hospitalizados",
-  "hospitalized-subtitle": "Número de personas hospitalizadas",
   "hospitalized-title": "Proyección diaria de hospitalizados",
+  "hospitalized-subtitle": "Estimación del número de personas que podrían requerir hospitalización cada día en el futuro, basada en datos actuales y modelos predictivos. Esta proyección ayuda a anticipar la demanda sobre el sistema de salud.",
 
   "ICU": "UCI",
-  "ICU-title": "Total de casos en UCI",
-  "ICU-subtitle": "El gráfico muestra la evolución del número de casos positivos que pasan a ser hospitalizados en unidad de cuidados intensivos",
+  "ICU-title": "Proyección de casos en UCI",
+  "ICU-subtitle": "Estimación del número de personas que podrían requerir ingreso a unidades de cuidados intensivos (UCI) en el futuro, basada en datos actuales y modelos epidemiológicos. Esta proyección es clave para prever la presión sobre recursos críticos del sistema de salud.",
   "ICU-description": "Número informado de la ICU diaria hospitalizada de acuerdo con los datos proporcionados por los MSPYBS.",
 
   "deceases": "Fallecidos",
-  "deceases-title": "Número de muertes",
-  "deceases-subtitle": "Número informado de muertes diarias según los datos proporcionados por los MSPYBS.",
+  "deceases-title": "Proyección del número de fallecidos",
+  "deceases-subtitle": "Estimación del número de muertes que podrían ocurrir en el futuro debido a la infección, basada en datos actuales y modelos epidemiológicos. Esta proyección ayuda a entender el impacto potencial de la enfermedad y a planificar medidas de salud pública.",
 
   "lambda_I_to_H": "Proporción de infectados hospitalizados:",
   "lambda_I_to_H-description": "Proporción de infectados que pasan a ser hospitalizados. (0 - 100)",

@@ -63,22 +63,23 @@
 
   "reported": "Reported",
   "reported-title": "Projection of possible new Infected/Daily reported",
+  "reported-subtitle": "Estimated number of new daily cases that could occur in the future, based on current data and epidemiological trends. This projection helps anticipate the outbreak's evolution and supports effective public health planning.",
   "reported-description": "Reported number of daily infected according to data provided by the MSPyBS.",
   "estimated": "Estimated",
   "estimated-description": "This curve shows the daily estimated infections after correcting for bias due to the testing rate.",
 
   "hospitalized-simulation": "Hospitalized",
-  "hospitalized-subtitle": "Number of people hospitalized",
-  "hospitalized-title": "Daily death projection",
+  "hospitalized-title": "Daily projection of hospitalized patients",
+  "hospitalized-subtitle": "Estimated number of people who may require hospitalization each day in the future, based on current data and predictive models. This helps anticipate healthcare system demand.",
 
   "ICU": "ICU",
-  "ICU-title": "Total ICU cases",
-  "ICU-subtitle": "The graph shows the evolution of the number of positive cases that are hospitalized in the intensive care unit.",
+  "ICU-title": "Projection of ICU cases",
+  "ICU-subtitle": "Estimated number of people who may require admission to intensive care units (ICUs) in the future, based on current data and epidemiological models. This projection is crucial for anticipating the demand on critical healthcare resources.",
   "ICU-description": "Reported number of daily UTI hospitalized according to data provided by the MSPyBS.",
 
   "deceases": "Deceases",
-  "deceases-title": "Number of deaths",
-  "deceases-subtitle": "Reported number of deaths per day based on data provided by MSPYBS.",
+  "deceases-title": "Projection of the number of deaths",
+  "deceases-subtitle": "Estimated number of deaths that may occur in the future due to the infection, based on current data and epidemiological models. This projection helps understand the potential impact of the disease and supports public health planning.",
 
   "lambda_I_to_H": "Proportion of infected to hospitalized:",
   "lambda_I_to_H-description": "Proportion of infected that are hospitalized. (0 - 100)",
