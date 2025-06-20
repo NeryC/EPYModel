@@ -6,7 +6,6 @@ import SimulationGraph from "../components/SimulationGraph";
 import { axiosInstance } from "../utils";
 import { GetStaticProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { SIM_GRAPH } from "../utils/constants";
 import { TitleSection } from "../components/TitleSection";
 import { useSelector } from "react-redux";
 import { wrapper } from "../store/store";
@@ -64,7 +63,7 @@ function Simulador() {
       <Layout>
         <div className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back">
           <div className="flex flex-col md:flex-row justify-between gap-3 border-b border-gray-theme pb-5 mb-6">
-            <TitleSection tab={SIM_GRAPH} />
+            <TitleSection tab={"simulation"} />
             <SimulationFilter />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 mb-6 w-full">

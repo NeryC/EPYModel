@@ -6,7 +6,6 @@ import { selectRawData } from "../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
 import { DownloadButton } from "../utils/DownloadButton";
 import Subtitle from "../utils/Subtitle";
-import { MAIN_GRAPH } from "../../utils/constants";
 
 const MainGraph = ({ type, dimensions }) => {
   const { t } = useTranslation("common");
@@ -20,9 +19,9 @@ const MainGraph = ({ type, dimensions }) => {
         <div className="border-b-2 text-2xl md:mb-2 font-bold flex flex-col w-full pb-2 md:pb-4">
           <div className="flex justify-between">
             {t(`${type}-title`)}
-            <DownloadButton page={MAIN_GRAPH} type={type} />
+            <DownloadButton page={"main"} type={type} />
           </div>
-          <Subtitle page={MAIN_GRAPH} type={type} />
+          <Subtitle page={"main"} type={type} />
         </div>
         <SelectedLines type={type} />
       </div>

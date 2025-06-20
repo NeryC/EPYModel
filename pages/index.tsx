@@ -8,7 +8,6 @@ import {
   initMain,
   selectMainGraphData,
 } from "../store/reducers/graphInfoSlice";
-import { MAIN_GRAPH } from "../utils/constants";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { TitleSection } from "../components";
 import { useMemo, useRef } from "react";

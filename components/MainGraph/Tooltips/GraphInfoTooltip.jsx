@@ -1,5 +1,5 @@
 import { useRef, useEffect, useCallback } from "react";
-import { dateField } from "../../../utils/constants.js";
+import { dateField } from "../../../utils/constants";
 import { useTranslation } from "next-i18next";
 import * as d3 from "d3";
 

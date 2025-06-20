@@ -7,24 +7,23 @@ interface LineDescription {
   style: "line" | "dashed" | "dot";
 }
 
-interface DescriptionsConfig {
-  main: {
-    reported: boolean;
-    hospitalized: boolean;
-    ICU: boolean;
-    deceases: boolean;
-  };
-  simulation: {
-    uci: boolean;
-    susceptible: boolean;
-    cumulative: boolean;
-    cumulative_deaths: boolean;
-    exposed: boolean;
-    immune: boolean;
-    infectious: boolean;
-    hospitalized: boolean;
-  };
-}
+export const mainSubtitleTypes = [
+  "reported",
+  "hospitalized",
+  "ICU",
+  "deceases",
+] as const;
+
+export const simulationSubtitleTypes = [
+  "uci",
+  "susceptible",
+  "cumulative",
+  "cumulative_deaths",
+  "exposed",
+  "immune",
+  "infectious",
+  "hospitalized",
+] as const;
 
 interface DotFields {
   reported: string;
@@ -32,20 +31,6 @@ interface DotFields {
   ICU: string;
   deceases: string;
 }
-
-export const descriptions: DescriptionsConfig = {
-  main: { reported: true, hospitalized: true, ICU: true, deceases: true },
-  simulation: {
-    uci: true,
-    susceptible: true,
-    cumulative: true,
-    cumulative_deaths: true,
-    exposed: true,
-    immune: true,
-    infectious: true,
-    hospitalized: true,
-  },
-};
 
 export const dotFields: DotFields = {
   reported: "Reportados",

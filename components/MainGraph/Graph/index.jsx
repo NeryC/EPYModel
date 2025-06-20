@@ -1,8 +1,7 @@
 import * as d3 from "d3";
 import { useRef, useId, useEffect, useMemo, useCallback } from "react";
 import SettingsComponent from "../SettingsComponent";
-import { MAIN_GRAPH } from "../../../utils/constants";
-import { dateField } from "../../../utils/constants.js";
+import { dateField } from "../../../utils/constants";
 import GraphInfoTooltip from "../Tooltips/GraphInfoTooltip";
 import { useSelector } from "react-redux";
 import {
@@ -37,7 +36,7 @@ const Graph = ({ type, data, dimensions }) => {
   const isSmooth = useSelector(selectIsSmooth(type));
   const uncertainty = useSelector(selectUncertainty(type));
   const hasDots = useSelector(selectDotsOption(type));
-  const range = useSelector(selectRange(MAIN_GRAPH, type));
+  const range = useSelector(selectRange("main", type));
   const dotField = useSelector(selectDotField(type));
 
   const graphElements = useMemo(() => {

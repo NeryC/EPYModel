@@ -1,6 +1,6 @@
 import axios from "axios";
 import { linesDescriptions } from "./descriptions";
-import { baseURL } from "./constants.js";
+import { baseURL } from "./constants";
 
 export const dinamicColorStyle = (type, atribute, name) =>
   findLine(type, name).color ? { [atribute]: findLine(type, name).color } : {};
