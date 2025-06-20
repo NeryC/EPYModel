@@ -1,4 +1,5 @@
 {
+  "language": "es",
   "es": "ESPAÑOL",
   "en": "INGLÉS",
   "scenario": "Escenario",
@@ -85,5 +86,6 @@
   "lambda_I_to_H-description": "Proporción de infectados que pasan a ser hospitalizados. (0 - 100)",
   "v_filtered": "Nuevos vacunados:",
   "v_filtered-description": "Nuevos vacunados por mes. (0 - 5000)",
-  "updated-until": "Actualizado hasta el"
+  "updated-until": "Actualizado hasta el",
+  "date-format": "{{day}} de {{month}} de {{year}}"
 }

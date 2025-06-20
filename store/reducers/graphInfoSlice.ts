@@ -231,19 +231,32 @@ export const graphInfoSlice = createSlice({
         main[type].settings = createInitialSettings(amount);
         main[type].isReady = true;
 
-        return amount;
+        return sortedData;
       };
 
-      // Process all graph types
-      processData(reported, "reported");
-      processData(hospitalized, "hospitalized");
-      processData(ICU, "ICU");
-      processData(deceases, "deceases");
+      // Process all graph types and collect all data for date calculation
+      const reportedData = processData(reported, "reported");
+      const hospitalizedData = processData(hospitalized, "hospitalized");
+      const ICUData = processData(ICU, "ICU");
+      const deceasesData = processData(deceases, "deceases");
 
-      // Calculate last update date from reported data (all data have same dates)
-      if (reported.length > 0) {
-        const lastDate = new Date(reported[reported.length - 1].fecha);
-        main.lastUpdateDate = lastDate.toISOString();
+      // Calculate last update date from the latest date across all data sources
+      const allData = [
+        ...reportedData,
+        ...hospitalizedData,
+        ...ICUData,
+        ...deceasesData,
+      ];
+
+      if (allData.length > 0) {
+        // Find the latest date across all data sources
+        const latestDate = allData.reduce((latest, current) => {
+          const currentDate = new Date(current.fecha);
+          const latestDate = new Date(latest.fecha);
+          return currentDate > latestDate ? current : latest;
+        });
+
+        main.lastUpdateDate = latestDate.fecha;
       }
     },
 

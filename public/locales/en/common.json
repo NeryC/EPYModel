@@ -1,4 +1,5 @@
 {
+  "language": "en",
   "es": "SPANISH",
   "en": "ENGLISH",
   "scenario": "Scenario",
@@ -85,5 +86,6 @@
   "lambda_I_to_H-description": "Proportion of infected that are hospitalized. (0 - 100)",
   "v_filtered": "New vaccinees:",
   "v_filtered-description": "New vaccinees per month. (0 - 5000)",
-  "updated-until": "Updated until"
+  "updated-until": "Updated until",
+  "date-format": "{{month}} {{day}}, {{year}}"
 }

@@ -1,4 +1,39 @@
-export const descriptions = {
+interface LineDescription {
+  name: string;
+  label: string;
+  color: string;
+  default: boolean;
+  hiddable: boolean;
+  style: "line" | "dashed" | "dot";
+}
+
+interface DescriptionsConfig {
+  main: {
+    reported: boolean;
+    hospitalized: boolean;
+    ICU: boolean;
+    deceases: boolean;
+  };
+  simulation: {
+    uci: boolean;
+    susceptible: boolean;
+    cumulative: boolean;
+    cumulative_deaths: boolean;
+    exposed: boolean;
+    immune: boolean;
+    infectious: boolean;
+    hospitalized: boolean;
+  };
+}
+
+interface DotFields {
+  reported: string;
+  hospitalized: string;
+  ICU: string;
+  deceases: string;
+}
+
+export const descriptions: DescriptionsConfig = {
   main: { reported: true, hospitalized: true, ICU: true, deceases: true },
   simulation: {
     uci: true,
@@ -12,15 +47,15 @@ export const descriptions = {
   },
 };
 
-export const dotFields = {
+export const dotFields: DotFields = {
   reported: "Reportados",
   hospitalized: "Hospitalizados",
   ICU: "UTI",
   deceases: "Fallecidos",
 };
 
-export const linesDescriptions = (type) => {
-  const descriptionMap = {
+export const linesDescriptions = (type: keyof DotFields): LineDescription[] => {
+  const descriptionMap: Record<keyof DotFields, LineDescription[]> = {
     reported: linesDescriptionReported,
     hospitalized: linesDescriptionHospitalized,
     ICU: linesDescriptionICU,
@@ -30,7 +65,7 @@ export const linesDescriptions = (type) => {
   return descriptionMap[type] || [];
 };
 
-const linesDescriptionReported = [
+const linesDescriptionReported: LineDescription[] = [
   {
     name: "dailyR_sin_subRegistro",
     label: "simulated",
@@ -113,7 +148,7 @@ const linesDescriptionReported = [
   },
 ];
 
-const linesDescriptionHospitalized = [
+const linesDescriptionHospitalized: LineDescription[] = [
   {
     name: "H",
     label: "simulated",
@@ -188,7 +223,7 @@ const linesDescriptionHospitalized = [
   },
 ];
 
-const linesDescriptionICU = [
+const linesDescriptionICU: LineDescription[] = [
   {
     name: "U",
     label: "simulated",
@@ -262,7 +297,8 @@ const linesDescriptionICU = [
     style: "dot",
   },
 ];
-const linesDescriptionDeceases = [
+
+const linesDescriptionDeceases: LineDescription[] = [
   {
     name: "dailyF",
     label: "simulated",
