@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { default_filters } from "./constants.js";
-import { requestFilteredData } from "./ultis.js";
+import { default_filters } from "./constants.ts";
 import { useDispatch } from "react-redux";
-import { setSimulation } from "../../../store/reducers/graphInfoSlice";
+import { setSimulation } from "../../../store/reducers/graphInfoSlice.ts";
 import { useTranslation } from "next-i18next";
-import LambdaItoHInput from "./LambdaItoHInput";
-import RtInput from "./RtInput";
-import UCIInput from "./UCIInput";
-import VFilteredInput from "./VFilteredInput";
+import LambdaItoHInput from "./LambdaItoHInput/index.jsx";
+import RtInput from "./RtInput/index.jsx";
+import UCIInput from "./UCIInput/index.jsx";
+import VFilteredInput from "./VFilteredInput/index.jsx";
 import Tooltip from "../../utils/Tooltip.tsx";
+import { requestFilteredData } from "./utils.ts";
 
 function SimulationFilter() {
   const dispatch = useDispatch();

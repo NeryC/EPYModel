@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Layout from "../components/Layout";
 import React, { useMemo } from "react";
-import SimulationFilter from "../components/SimulationGraph/SimulationFilter";
+import SimulationFilter from "../components/SimulationGraph/SimulationFilter/SimulationFilter";
 import SimulationGraph from "../components/SimulationGraph/SimulationGraph";
 import { axiosInstance } from "../utils";
 import { GetStaticProps } from "next";
