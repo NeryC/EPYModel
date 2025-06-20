@@ -3,7 +3,7 @@ import { useRef, useEffect, useId } from "react";
 import { drawLines } from "./utils";
 import { basicDeclareLineD3, useCreateScale, useGetDomain } from "../../utils";
 import useDimensions from "../../../hooks/useDimensions";
-import SimulationTooltip from "../Tooltip/index.jsx";
+import SimulationTooltip from "../SimulationTooltip";
 
 const Graph = ({ type, data }) => {
   const svgChartRef = useRef(null);

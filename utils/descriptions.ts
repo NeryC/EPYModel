@@ -7,6 +7,9 @@ interface LineDescription {
   style: "line" | "dashed" | "dot";
 }
 
+export type MainSubtitleType = (typeof mainSubtitleTypes)[number];
+export type SimulationSubtitleType = (typeof simulationSubtitleTypes)[number];
+
 export const mainSubtitleTypes = [
   "reported",
   "hospitalized",

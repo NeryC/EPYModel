@@ -2,7 +2,7 @@ import Head from "next/head";
 import Layout from "../components/Layout";
 import React, { useMemo } from "react";
 import SimulationFilter from "../components/SimulationGraph/SimulationFilter";
-import SimulationGraph from "../components/SimulationGraph";
+import SimulationGraph from "../components/SimulationGraph/SimulationGraph";
 import { axiosInstance } from "../utils";
 import { GetStaticProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";

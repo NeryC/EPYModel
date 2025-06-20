@@ -1,12 +1,9 @@
 import { memo } from "react";
 import { useTranslation } from "next-i18next";
 import {
-  mainSubtitleTypes,
-  simulationSubtitleTypes,
+  MainSubtitleType,
+  SimulationSubtitleType,
 } from "../../utils/descriptions";
-
-type MainSubtitleType = (typeof mainSubtitleTypes)[number];
-type SimulationSubtitleType = (typeof simulationSubtitleTypes)[number];
 
 type SubtitleProps =
   | {

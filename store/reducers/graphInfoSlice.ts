@@ -10,7 +10,7 @@ import {
 import { dotFields } from "../../utils/descriptions";
 
 // Type definitions
-interface DataPoint {
+export interface DataPoint {
   fecha: string;
   [key: string]: any;
 }

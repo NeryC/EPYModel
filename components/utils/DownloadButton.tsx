@@ -3,8 +3,13 @@ import Image from "next/image";
 import React, { memo, MouseEvent, useCallback, useRef, useState } from "react";
 import { baseURL } from "../../utils/constants";
 import { CSVLink } from "react-csv";
+import { DataPoint } from "../../store/reducers/graphInfoSlice";
 import { saveAs } from "file-saver";
 import { useTranslation } from "next-i18next";
+import {
+  MainSubtitleType,
+  SimulationSubtitleType,
+} from "../../utils/descriptions";
 
 const getDownloadPath = {
   reported: "/get-projection-r",
@@ -14,9 +19,9 @@ const getDownloadPath = {
 };
 
 interface DownloadButtonProps {
-  page: string;
-  type: keyof typeof getDownloadPath;
-  data?: Array<{ day: string; value: number }>;
+  page: "main" | "simulation";
+  type: MainSubtitleType | SimulationSubtitleType;
+  data?: DataPoint[];
 }
 
 interface DownloadOptionProps {

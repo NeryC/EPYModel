@@ -2,17 +2,37 @@ import { useRef, useEffect, useCallback } from "react";
 import { useTranslation } from "next-i18next";
 import * as d3 from "d3";
 
-const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
-  const ref = useRef(null);
-  const cuadroRef = useRef(null);
-  const contentRef = useRef(null);
-  const contentDotsRef = useRef(null);
+interface SimulationData {
+  day: number;
+  value: number | null;
+}
+
+interface SimulationTooltipProps {
+  xScale: d3.ScaleTime<number, number>;
+  yScale: d3.ScaleLinear<number, number>;
+  width: number;
+  height: number;
+  data: SimulationData[];
+}
+
+const SimulationTooltip = ({
+  xScale,
+  yScale,
+  width,
+  height,
+  data,
+}: SimulationTooltipProps) => {
+  const ref = useRef<SVGGElement>(null);
+  const cuadroRef = useRef<SVGRectElement>(null);
+  const contentRef = useRef<SVGGElement>(null);
+  const contentDotsRef = useRef<SVGGElement>(null);
+  const fixedPositionRef = useRef<boolean>(false);
   const { t } = useTranslation("common");
-  const dateField = "day";
-  const valueField = "value";
+  const dateField: keyof SimulationData = "day";
+  const valueField: keyof SimulationData = "value";
 
   const drawLine = useCallback(
-    (x) => {
+    (x: number) => {
       d3.select(ref.current)
         .select(".tooltipLine")
         .attr("x1", x)
@@ -24,7 +44,7 @@ const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
   );
 
   const drawContent = useCallback(
-    (x, y) => {
+    (x: number, y: number) => {
       const tooltipContent = d3.select(ref.current).select(".tooltipContent");
       tooltipContent.attr("transform", (_cur, i, nodes) => {
         const nodeWidth = nodes[i]?.getBoundingClientRect()?.width || 0;
@@ -36,7 +56,7 @@ const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
       });
       tooltipContent
         .select(".contentDate")
-        .text(`${t("day")} ${parseInt(xScale.invert(x))}`);
+        .text(`${t("day")} ${parseInt(xScale.invert(x).toString())}`);
     },
     [xScale, width, height, t]
   );
@@ -60,22 +80,22 @@ const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
   }, []);
 
   const placeDots = useCallback(
-    (actualData, color, baseXPos) => {
+    (actualData: SimulationData, color: string, baseXPos: number) => {
       const contentDots = d3.select(contentDotsRef.current);
       contentDots
         .append("circle")
         .attr("r", 5)
         .attr("fill", color)
         .attr("cx", (_d) => baseXPos)
-        .attr("cy", (_d) => yScale(actualData[valueField]));
+        .attr("cy", (_d) => yScale(actualData[valueField] as number));
     },
     [contentDotsRef, yScale, valueField]
   );
 
   const followPoints = useCallback(
-    (e) => {
-      const x = xScale.invert(d3.pointer(e, this)[0]);
-      const bisectDate = d3.bisector((d) => d[dateField]).left;
+    (e: MouseEvent) => {
+      const x = xScale.invert(d3.pointer(e)[0]);
+      const bisectDate = d3.bisector((d: SimulationData) => d[dateField]).left;
       let baseXPos = 0;
 
       const index = bisectDate(data, x, 1);
@@ -99,7 +119,7 @@ const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
         .attr("class", "performanceItemMarketValue")
         .attr("fill", "white")
         .attr("font-family", "Nunito, sans-serif")
-        .text(Math.round(actualData[valueField]).toLocaleString());
+        .text(Math.round(actualData[valueField] as number).toLocaleString());
 
       baseXPos = xScale(actualData[dateField]);
       placeDots(actualData, "red", baseXPos);
@@ -127,27 +147,26 @@ const SimulationTooltip = ({ xScale, yScale, width, height, data }) => {
   );
 
   useEffect(() => {
-    const fixedPosition = false;
     const cuadro = d3.select(cuadroRef.current);
     cuadro
       .on("mouseout.tooltip", () => {
-        !fixedPosition && d3.select(ref.current).attr("opacity", 0);
+        !fixedPositionRef.current && d3.select(ref.current).attr("opacity", 0);
       })
       .on("mouseover.tooltip", () => {
-        !fixedPosition && d3.select(ref.current).attr("opacity", 1);
+        !fixedPositionRef.current && d3.select(ref.current).attr("opacity", 1);
       })
-      .on("mousemove.tooltip", (e) => {
-        !fixedPosition && d3.select(ref.current).attr("opacity", 1);
-        !fixedPosition && followPoints(e);
+      .on("mousemove.tooltip", (e: MouseEvent) => {
+        !fixedPositionRef.current && d3.select(ref.current).attr("opacity", 1);
+        !fixedPositionRef.current && followPoints(e);
       })
-      .on("click.tooltip", (e) => {
-        if (fixedPosition) {
+      .on("click.tooltip", (e: MouseEvent) => {
+        if (fixedPositionRef.current) {
           d3.select(ref.current).attr("opacity", 0);
         } else {
-          !fixedPosition && followPoints(e);
+          !fixedPositionRef.current && followPoints(e);
           d3.select(ref.current).attr("opacity", 1);
         }
-        fixedPosition = !fixedPosition;
+        fixedPositionRef.current = !fixedPositionRef.current;
       });
   }, [cuadroRef, ref, followPoints]);
 
