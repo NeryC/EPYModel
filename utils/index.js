@@ -31,6 +31,8 @@ export const setNewSelectedLines = (selectedLines, item) => {
   }
 };
 
+// Legacy axios instance for backward compatibility
+// Note: Consider migrating to the new ApiService for better error handling
 export const axiosInstance = axios.create({
   baseURL: baseURL,
 });

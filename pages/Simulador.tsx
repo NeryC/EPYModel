@@ -3,12 +3,13 @@ import Layout from "../components/Layout";
 import React, { useMemo } from "react";
 import SimulationFilter from "../components/SimulationGraph/SimulationFilter/SimulationFilter";
 import SimulationGraph from "../components/SimulationGraph/SimulationGraph";
-import { axiosInstance } from "../utils";
 import { GetStaticProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { TitleSection } from "../components/TitleSection";
 import { useSelector } from "react-redux";
 import { wrapper } from "../store/store";
+import { apiService } from "../services/api";
+import { SimulationData as ApiSimulationData } from "../types/api";
 
 import {
   selectSimulationGraphData,
@@ -81,8 +82,8 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   (store) =>
     async ({ locale }) => {
       try {
-        const response = await axiosInstance("/get-first-simulation");
-        const chartData: SimulationData = response.data;
+        // Use the new API service to fetch first simulation data
+        const chartData: ApiSimulationData = await apiService.getFirstSimulationData();
 
         store.dispatch(
           setSimulation({

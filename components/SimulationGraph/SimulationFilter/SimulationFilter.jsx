@@ -80,8 +80,7 @@ function SimulationFilter() {
       lambda_I_to_H: lambdaItoH,
     };
     try {
-      const response = await requestFilteredData(formValues);
-      const chartData = JSON.parse(response.data);
+      const chartData = await requestFilteredData(formValues);
       dispatch(
         setSimulation({
           cumulative: chartData.cumulative,

@@ -2,7 +2,6 @@ import Head from "next/head";
 import Layout from "../components/Layout";
 import MainGraph from "../components/MainGraph";
 import useDimensions from "../hooks/useDimensions";
-import { axiosInstance } from "../utils";
 import { GetStaticProps } from "next";
 import {
   initMain,
@@ -13,6 +12,8 @@ import { TitleSection } from "../components";
 import { useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 import { wrapper } from "../store/store";
+import { apiService } from "../services/api";
+import { ProjectionData } from "../types/api";
 /* eslint-disable @next/next/no-page-custom-font */
 
 // --- Type Definitions ---
@@ -31,10 +32,7 @@ interface DataPoint {
   [key: string]: any;
 }
 
-interface AxiosResponse<T> {
-  data: T;
-}
-
+// Legacy interface - keeping for backward compatibility
 interface ProjectionResponse {
   reported: DataPoint[];
   hospitalized: DataPoint[];
@@ -108,23 +106,20 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   (store) =>
     async ({ locale }) => {
       try {
-        const [reported, hospitalized, icu, deceases]: AxiosResponse<
-          DataPoint[]
-        >[] = await Promise.all([
-          axiosInstance.get("/projection-r"),
-          axiosInstance.get("/projection-h"),
-          axiosInstance.get("/projection-u"),
-          axiosInstance.get("/projection-f"),
-        ]);
+        // Use the new API service to fetch projections data
+        const projectionData: ProjectionData = await apiService.getProjections({
+          format: 'json'
+        });
 
-        const projectionData: ProjectionResponse = {
-          reported: reported.data,
-          hospitalized: hospitalized.data,
-          ICU: icu.data,
-          deceases: deceases.data,
+        // Transform the data to match the expected format
+        const formattedData: ProjectionResponse = {
+          reported: projectionData.reported,
+          hospitalized: projectionData.hospitalized,
+          ICU: projectionData.ICU,
+          deceases: projectionData.deceases,
         };
 
-        store.dispatch(initMain(projectionData));
+        store.dispatch(initMain(formattedData));
 
         return {
           props: {
