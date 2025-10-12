@@ -1,8 +1,8 @@
 import * as d3 from "d3";
 import Image from "next/image";
 import React, { memo, MouseEvent, useCallback, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { baseURL } from "../../utils/constants";
-import { CSVLink } from "react-csv";
 import { DataPoint } from "../../store/reducers/graphInfoSlice";
 import { saveAs } from "file-saver";
 import { useTranslation } from "next-i18next";
@@ -10,6 +10,12 @@ import {
   MainSubtitleType,
   SimulationSubtitleType,
 } from "../../utils/descriptions";
+
+// Dynamic import for client-side only component
+const CSVDownloadButton = dynamic(
+  () => import("./CSVDownloadButton"),
+  { ssr: false }
+);
 
 const getDownloadPath = {
   reported: "/get-projection-r",
@@ -29,10 +35,6 @@ interface DownloadOptionProps {
   onClick: (e: MouseEvent<HTMLSpanElement>) => void;
 }
 
-const csvHeaders = (type: string) => [
-  { label: "day", key: "day" },
-  { label: type, key: "value" },
-];
 
 function DownloadButtonComponent({ page, type, data }: DownloadButtonProps) {
   const { t } = useTranslation("common");
@@ -88,17 +90,7 @@ function DownloadButtonComponent({ page, type, data }: DownloadButtonProps) {
         />
       );
     } else if (data) {
-      return (
-        <CSVLink
-          headers={csvHeaders(type)}
-          data={data}
-          filename={`${type}.csv`}
-          className="block dropdown-item hover:bg-blue-100 px-4 py-1"
-          target="_blank"
-        >
-          csv
-        </CSVLink>
-      );
+      return <CSVDownloadButton type={type} data={data} />;
     }
     return null;
   }, [page, type, data, DownloadOption]);

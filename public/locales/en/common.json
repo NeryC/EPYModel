@@ -5,6 +5,8 @@
   "scenario": "Scenario",
   "simulated": "Simulated",
   "simulate": "Simulate",
+  "simulating": "Simulating...",
+  "simulation-error": "An error occurred while running the simulation. Please try again.",
   "proyected": "Proyected",
   "proyected-description": "Projection using the last value of the transmissibility.",
   "percentile75": "Percentile 75",

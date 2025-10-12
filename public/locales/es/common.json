@@ -5,6 +5,8 @@
   "scenario": "Escenario",
   "simulated": "Simulado",
   "simulate": "Simular",
+  "simulating": "Simulando...",
+  "simulation-error": "Ocurrió un error al ejecutar la simulación. Por favor, inténtelo de nuevo.",
   "proyected": "Proyectado",
   "proyected-description": "Proyección utilizando el último valor de la transmisibilidad",
   "percentile75": "Percentil 75",
