@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { default_filters } from './constants.ts';
-import { RT_CONSTRAINTS, NUMERIC_CONSTRAINTS } from './constants';
+import { default_filters } from './constants';
+import { RT_CONSTRAINTS } from './constants';
 import { RtListHook, NumericConstraints, NumericInputHook, SimulationStateHook } from './types';
 
 /**

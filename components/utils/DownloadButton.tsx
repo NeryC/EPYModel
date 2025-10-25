@@ -18,10 +18,10 @@ const CSVDownloadButton = dynamic(
 );
 
 const getDownloadPath = {
-  reported: "/get-projection-r",
-  hospitalized: "/get-projection-h",
-  ICU: "/get-projection-u",
-  deceases: "/get-projection-f",
+  reported: "/api/v1/get-projection-r",
+  hospitalized: "/api/v1/get-projection-h",
+  ICU: "/api/v1/get-projection-u",
+  deceases: "/api/v1/get-projection-f",
 };
 
 interface DownloadButtonProps {

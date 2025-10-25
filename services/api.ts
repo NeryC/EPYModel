@@ -158,8 +158,8 @@ export class ApiService {
         format: params.format || 'json',
       };
 
-      // Backend returns data with keys R, H, U, F
-      const backendResponse = await this.get<Record<string, DataPoint[]>>('/projections', {
+      // Use the new API v1 endpoint
+      const backendResponse = await this.get<Record<string, DataPoint[]>>('/api/v1/projections', {
         params: queryParams,
       });
 
@@ -187,7 +187,8 @@ export class ApiService {
    */
   async getSimulation(params: SimulationQueryParams): Promise<SimulationData> {
     try {
-      const response = await this.get<SimulationData>('/simulations', {
+      // Use the new API v1 endpoint
+      const response = await this.get<SimulationData>('/api/v1/simulations', {
         params,
       });
 
@@ -209,9 +210,8 @@ export class ApiService {
    */
   async getFirstSimulation(): Promise<SimulationData> {
     try {
-      // This endpoint returns a file, so we need to handle it differently
-      // For now, we'll try to get the data from the simulation.json file
-      const response = await this.get<SimulationData>('/get-first-simulation');
+      // Use the new API v1 endpoint
+      const response = await this.get<SimulationData>('/api/v1/get-first-simulation');
       return response;
     } catch (error) {
       throw new ApiServiceError(
@@ -228,7 +228,8 @@ export class ApiService {
    */
   async getFirstSimulationData(): Promise<SimulationData> {
     try {
-      const response = await this.get<SimulationData>('/get-first-simulation-data');
+      // Use the new API v1 endpoint
+      const response = await this.get<SimulationData>('/api/v1/get-first-simulation-data');
       
       // Transform data from backend format (day) to frontend format (fecha)
       const transformDataPoint = (item: any): DataPoint => ({
@@ -263,7 +264,8 @@ export class ApiService {
    */
   async getFirstSimulationWithExecution(): Promise<SimulationData> {
     try {
-      const response = await this.get<SimulationData>('/get-first-simulation-2');
+      // Use the new API v1 endpoint
+      const response = await this.get<SimulationData>('/api/v1/get-first-simulation-2');
       return response;
     } catch (error) {
       throw new ApiServiceError(
