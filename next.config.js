@@ -3,14 +3,13 @@ const { i18n } = require("./next-i18next.config");
 
 const nextConfig = {
   // Enable React strict mode for better development experience
-  // Note: Disabled temporarily if causing issues with third-party libraries
   reactStrictMode: true,
   
   // Internationalization configuration
   i18n,
   
-  // Performance optimizations
-  swcMinify: true,
+  // Typed routes for better type safety
+  typedRoutes: true,
   
   // Compiler options
   compiler: {
@@ -18,6 +17,14 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === "production" ? {
       exclude: ["error", "warn"],
     } : false,
+  },
+  
+  // Performance optimizations
+  poweredByHeader: false,
+  
+  // Image optimization
+  images: {
+    formats: ["image/avif", "image/webp"],
   },
 };
 

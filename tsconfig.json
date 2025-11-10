@@ -1,19 +1,21 @@
 {
   "compilerOptions": {
     // Language and Environment
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "jsx": "preserve",
-    
+    "target": "ES2020",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "jsx": "react-jsx",
     // Modules
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "allowJs": true,
     "isolatedModules": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    
     // Type Checking
     // Strict mode enabled with practical exceptions for D3.js and legacy code
     "strict": true,
@@ -29,28 +31,57 @@
     "noImplicitReturns": false, // Disabled for flexibility
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": false,
-    
     // Emit
     "noEmit": true,
     "incremental": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    
     // Path Aliases
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@/components/*": ["./components/*"],
-      "@/pages/*": ["./pages/*"],
-      "@/store/*": ["./store/*"],
-      "@/services/*": ["./services/*"],
-      "@/hooks/*": ["./hooks/*"],
-      "@/types/*": ["./types/*"],
-      "@/utils/*": ["./utils/*"],
-      "@/config/*": ["./config/*"],
-      "@/styles/*": ["./styles/*"]
+      "@/*": [
+        "./*"
+      ],
+      "@/components/*": [
+        "./components/*"
+      ],
+      "@/pages/*": [
+        "./pages/*"
+      ],
+      "@/store/*": [
+        "./store/*"
+      ],
+      "@/services/*": [
+        "./services/*"
+      ],
+      "@/hooks/*": [
+        "./hooks/*"
+      ],
+      "@/types/*": [
+        "./types/*"
+      ],
+      "@/utils/*": [
+        "./utils/*"
+      ],
+      "@/config/*": [
+        "./config/*"
+      ],
+      "@/styles/*": [
+        "./styles/*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
-  "exclude": ["node_modules", ".next", "out", "dist"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out",
+    "dist"
+  ]
 }

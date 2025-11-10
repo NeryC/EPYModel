@@ -10,8 +10,10 @@ interface LineItem {
   description?: string;
 }
 
-export const dinamicColorStyle = (type: string, atribute: string, name: string): Record<string, string> =>
-  findLine(type, name).color ? { [atribute]: findLine(type, name).color } : {};
+export const dinamicColorStyle = (type: string, atribute: string, name: string): Record<string, string> => {
+  const line = findLine(type, name);
+  return line?.color ? { [atribute]: line.color } : {};
+};
 
 export const hiddableLines = (type: string, value: boolean = true): LineItem[] =>
   linesDescriptions(type as any).filter((line: LineItem) =>
@@ -24,7 +26,7 @@ export const defaultVisibleLines = (type: string): LineItem[] =>
 export const filterLines = (type: string, names: string[]): LineItem[] =>
   linesDescriptions(type as any).filter((line: LineItem) => names.includes(line.name));
 
-const findLine = (type: string, name: string): LineItem =>
+const findLine = (type: string, name: string): LineItem | undefined =>
   linesDescriptions(type as any).find((line: LineItem) => line.name === name);
 
 export const checkLine = (lines: LineItem[], name: string): boolean =>

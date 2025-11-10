@@ -301,12 +301,11 @@ export const graphInfoSlice = createSlice({
     },
 
     setChecks(state, action: PayloadAction<SetChecksPayload>) {
-      const { main } = state;
       const { type, checkName } = action.payload;
 
-      const currentValue = main[type].settings[checkName];
+      const currentValue = state.main[type].settings[checkName];
       if (typeof currentValue === "boolean") {
-        (main[type].settings as any)[checkName] = !currentValue;
+        (state.main[type].settings as any)[checkName] = !currentValue;
       }
     },
 

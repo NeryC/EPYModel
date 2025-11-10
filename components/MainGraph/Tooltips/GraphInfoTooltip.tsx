@@ -20,18 +20,18 @@ const GraphInfoTooltip = ({
   data,
   showedElements,
 }: GraphInfoTooltipProps) => {
-  const ref = useRef(null);
-  const cuadroRef = useRef(null);
-  const contentDotsRef = useRef(null);
-  const contentRef = useRef(null);
-  const cuadro = d3.select(cuadroRef.current);
-  const content = d3.select(contentRef.current);
-  const contentDots = d3.select(contentDotsRef.current);
+  const ref = useRef<SVGGElement | null>(null);
+  const cuadroRef = useRef<SVGRectElement | null>(null);
+  const contentDotsRef = useRef<SVGGElement | null>(null);
+  const contentRef = useRef<SVGGElement | null>(null);
+  const cuadro = d3.select<SVGRectElement, unknown>(cuadroRef.current!);
+  const content = d3.select<SVGGElement, unknown>(contentRef.current!);
+  const contentDots = d3.select<SVGGElement, unknown>(contentDotsRef.current!);
   const { t } = useTranslation("common");
 
   const drawLine = useCallback(
     (x) => {
-      d3.select(ref.current)
+      d3.select<SVGGElement, unknown>(ref.current!)
         .select(".tooltipLine")
         .attr("x1", x)
         .attr("x2", x)
@@ -43,7 +43,9 @@ const GraphInfoTooltip = ({
 
   const drawContent = useCallback(
     (x, y) => {
-      const tooltipContent = d3.select(ref.current).select(".tooltipContent");
+      const tooltipContent = d3
+        .select<SVGGElement, unknown>(ref.current!)
+        .select(".tooltipContent");
       tooltipContent.attr("transform", (_cur, i, nodes) => {
         const nodeWidth = (nodes[i] as any)?.getBoundingClientRect()?.width || 0;
         const nodeHeight = (nodes[i] as any)?.getBoundingClientRect()?.height || 0;
@@ -94,9 +96,9 @@ const GraphInfoTooltip = ({
   );
 
   const followPoints = useCallback(
-    (e) => {
+    (e: any) => {
       const x = xScale.invert(d3.pointer(e, this)[0]);
-      const bisectDate = d3.bisector((d) => d[dateField]).left;
+      const bisectDate = d3.bisector((d: any) => d[dateField]).left;
       let baseXPos = 0;
 
       const index = bisectDate(data, x, 1),

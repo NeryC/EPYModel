@@ -17,9 +17,9 @@ const MultiRangeSlider = ({
   data,
   onChange,
 }: MultiRangeSliderProps) => {
-  const minValRef = useRef(null);
-  const maxValRef = useRef(null);
-  const rangeRef = useRef(null);
+  const minValRef = useRef<HTMLInputElement | null>(null);
+  const maxValRef = useRef<HTMLInputElement | null>(null);
+  const rangeRef = useRef<HTMLDivElement | null>(null);
 
   const [formData, setFormData] = useState({
     minInput: data[selectedMin].fecha,
@@ -34,7 +34,7 @@ const MultiRangeSlider = ({
     [min, max]
   );
 
-  const handleChangeInputDate = (event, isMax) => {
+  const handleChangeInputDate = (event: React.ChangeEvent<HTMLInputElement>, isMax: boolean) => {
     const valueIndex = data.findIndex(
       (item) => item.fecha === event.target.value
     );
@@ -84,12 +84,12 @@ const MultiRangeSlider = ({
   useEffect(() => {
     if (maxValRef.current) {
       const minPercent = getPercent(selectedMin);
-      const maxPercent = getPercent(+maxValRef.current.value); // Precedido de "+" convierte el valor de tipo cadena a tipo número
+      const maxPercent = getPercent(+maxValRef.current!.value); // Precedido de "+" convierte el valor de tipo cadena a tipo número
 
       setFormData((prevFormData) => ({
         ...prevFormData,
         minInput: data[selectedMin].fecha,
-        maxInput: data[+maxValRef.current.value].fecha,
+        maxInput: data[+maxValRef.current!.value].fecha,
       }));
 
       if (rangeRef.current) {
@@ -102,12 +102,12 @@ const MultiRangeSlider = ({
   // Establecer la anchura de la gama para disminuir desde el lado derecho
   useEffect(() => {
     if (minValRef.current) {
-      const minPercent = getPercent(+minValRef.current.value);
+      const minPercent = getPercent(+minValRef.current!.value);
       const maxPercent = getPercent(selectedMax);
 
       setFormData((prevFormData) => ({
         ...prevFormData,
-        minInput: data[+minValRef.current.value].fecha,
+        minInput: data[+minValRef.current!.value].fecha,
         maxInput: data[selectedMax].fecha,
         maxInputError: false,
         minInputError: false,

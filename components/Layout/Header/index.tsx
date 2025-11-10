@@ -23,22 +23,22 @@ const Header: React.FC = () => {
       <div className="mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center py-2">
           <div className="relative flex justify-start md:flex-0">
-            <div className="h-9 w-16">
+            <div className="relative h-9 w-16">
               <Image
                 src="/logo.png"
                 alt="Picture of something nice"
-                layout="fill"
-                objectFit="contain"
+                fill
+                style={{ objectFit: 'contain' }}
               />
             </div>
           </div>
           <div className="flex w-auto items-center justify-between gap-8 font-bold">
-            <span className={getClass('/')}>
-              <Link href="/">{t('home')}</Link>
-            </span>
-            <span className={getClass('/Simulador')}>
-              <Link href="/Simulador">{t('simulator')}</Link>
-            </span>
+            <Link href="/" className={getClass('/')}>
+              {t('home')}
+            </Link>
+            <Link href="/Simulador" className={getClass('/Simulador')}>
+              {t('simulator')}
+            </Link>
           </div>
           <div className="flex items-center">
             <LanguajeDropdown />

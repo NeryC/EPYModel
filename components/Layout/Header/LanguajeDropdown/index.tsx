@@ -117,21 +117,18 @@ const LanguageDropdown: React.FC = () => {
                   <Link
                     href={router.asPath}
                     locale={locale}
+                    className="py-2 px-4 block w-full flex items-center"
+                    onClick={() => setLocale(locale)}
                   >
-                    <a
-                      className="py-2 px-4 block w-full flex items-center"
-                      onClick={() => setLocale(locale)}
-                    >
-                      <div className="mr-2 flex">
-                        <Image
-                          src={`/assets/icons/${locale}.svg`}
-                          height={20}
-                          width={20}
-                          alt="Language"
-                        />
-                      </div>
-                      {t(locale)}
-                    </a>
+                    <div className="mr-2 flex">
+                      <Image
+                        src={`/assets/icons/${locale}.svg`}
+                        height={20}
+                        width={20}
+                        alt="Language"
+                      />
+                    </div>
+                    {t(locale)}
                   </Link>
                 </li>
               );

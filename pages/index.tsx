@@ -47,7 +47,7 @@ interface ProjectionResponse {
 }
 
 // --- Component Definition ---
-function Graphs(): JSX.Element {
+function Graphs(): React.ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
   const graphsStatus: GraphStatus[] = useSelector(selectMainGraphData);
   const dimensions: Dimensions = useDimensions(containerRef, 534);
@@ -129,7 +129,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
 
         return {
           props: {
-            ...(await serverSideTranslations(locale, ["common"])),
+            ...(await serverSideTranslations(locale ?? "es", ["common"])),
           },
         };
       } catch (error) {
@@ -138,7 +138,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         // Return fallback props even if data fetching fails
         return {
           props: {
-            ...(await serverSideTranslations(locale, ["common"])),
+            ...(await serverSideTranslations(locale ?? "es", ["common"])),
           },
         };
       }

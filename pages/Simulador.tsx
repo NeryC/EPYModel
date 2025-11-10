@@ -100,7 +100,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
 
         return {
           props: {
-            ...(await serverSideTranslations(locale, ["common"])),
+            ...(await serverSideTranslations(locale ?? "es", ["common"])),
           },
         };
       } catch (error) {
@@ -108,7 +108,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
 
         return {
           props: {
-            ...(await serverSideTranslations(locale, ["common"])),
+            ...(await serverSideTranslations(locale ?? "es", ["common"])),
           },
         };
       }

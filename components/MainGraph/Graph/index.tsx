@@ -40,11 +40,11 @@ interface GraphProps {
 }
 
 const Graph = ({ type, data, dimensions }: GraphProps) => {
-  const svgChartRef = useRef(null);
-  const yAxisRef = useRef(null);
-  const xAxisRef = useRef(null);
-  const dotsRef = useRef(null);
-  const timeoutControllerRef = useRef(null);
+  const svgChartRef = useRef<SVGSVGElement | null>(null);
+  const yAxisRef = useRef<SVGGElement | null>(null);
+  const xAxisRef = useRef<SVGGElement | null>(null);
+  const dotsRef = useRef<SVGGElement | null>(null);
+  const timeoutControllerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const selectedLines = useSelector(selectSelectedLines(type));
   const showedElements = useSelector(selectShowedElements(type));
@@ -79,10 +79,10 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
   const { svgWidth, svgHeight, width, height, left, top, right, bottom } =
     dimensions;
 
-  const svgChart = d3.select(svgChartRef.current);
-  const yAxisGroup = d3.select(yAxisRef.current);
-  const xAxisGroup = d3.select(xAxisRef.current);
-  const dotsGroup = d3.select(dotsRef.current);
+  const svgChart = d3.select<SVGSVGElement, unknown>(svgChartRef.current!);
+  const yAxisGroup = d3.select<SVGGElement, unknown>(yAxisRef.current!);
+  const xAxisGroup = d3.select<SVGGElement, unknown>(xAxisRef.current!);
+  const dotsGroup = d3.select<SVGGElement, unknown>(dotsRef.current!);
 
   const zoom = createZoom(left, right, width, height, zoomed);
 
@@ -169,7 +169,7 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
             .ticks(4)
             .tickSize(-(height - bottom))
             .tickFormat(
-              timeFormat([
+              (timeFormat([
                 [
                   d3.timeFormat("%Y"),
                   function () {
@@ -179,7 +179,7 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
                 [
                   d3.timeFormat("%b %Y"),
                   function (d) {
-                    return d.getMonth();
+                    return !!d.getMonth();
                   },
                 ],
                 [
@@ -188,7 +188,7 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
                     return d.getDate() != 1;
                   },
                 ],
-              ])
+              ]) as unknown) as (d: any, i: number) => string
             )
             .tickPadding(10)
         ),
@@ -198,8 +198,8 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
   useEffect(() => {
     svgChart
       .selectAll(`#${dotField}-${type}`)
-      .attr("cx", (d) => xScale(d[dateField]))
-      .attr("cy", (d) => yScale(d[dotField]));
+      .attr("cx", (d: any) => xScale(d[dateField]))
+      .attr("cy", (d: any) => yScale(d[dotField]));
   }, [data, dotField, svgChart, type, xScale, yScale]);
 
   useEffect(() => {
@@ -213,8 +213,8 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
         .selectAll("dot")
         .data(data)
         .join("circle")
-        .attr("cx", (d) => xScale(d[dateField]))
-        .attr("cy", (d) => yScale(d[dotField]))
+        .attr("cx", (d: any) => xScale(d[dateField]))
+        .attr("cy", (d: any) => yScale(d[dotField]))
         .attr("clip-path", `url(#${clip})`)
         .attr("fill", "#FFFFFF")
         .attr("stroke", "black")
@@ -222,7 +222,9 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
         .attr("r", 2.7)
         .attr("id", `${dotField}-${type}`);
 
-      clearTimeout(timeoutControllerRef.current);
+      if (timeoutControllerRef.current) {
+        clearTimeout(timeoutControllerRef.current);
+      }
       timeoutControllerRef.current = setTimeout(() => {
         dotsGroup
           .selectAll(`#${dotField}-${type}`)
@@ -232,7 +234,7 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
 
       dotsGroup
         .selectAll(`#${dotField}-${type}`)
-        .filter((d) => d[dotField] == null)
+        .filter((d: any) => d[dotField] == null)
         .remove();
     }
   }, [data, dotField, dotsGroup, hasDots, type, xScale, yScale, clip]);

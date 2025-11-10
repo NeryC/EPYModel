@@ -43,7 +43,13 @@ export const useCreateScale = ({ range, domain, scaleType }: ScaleConfig) => {
 };
 
 export const useGetDomain = ({ data, field, shouldReduce = false }: DomainConfig) => {
-  return useMemo(() => {
-    return d3.extent(data, (d: any) => (shouldReduce ? d[field] / 1000 : d[field]));
+  return useMemo<[number, number]>(() => {
+    const extent = d3.extent(
+      data,
+      (d: any) => (shouldReduce ? d[field] / 1000 : d[field])
+    );
+    const min = typeof extent[0] === "number" ? extent[0] : 0;
+    const max = typeof extent[1] === "number" ? extent[1] : min + 1;
+    return [min, max];
   }, [data, field, shouldReduce]);
 };

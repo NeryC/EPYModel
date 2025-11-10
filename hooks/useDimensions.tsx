@@ -32,7 +32,7 @@ export interface UseDimensionsReturn {
 }
 
 const useDimensions = (
-  containerRef: RefObject<HTMLElement>,
+  containerRef: RefObject<HTMLElement | null>,
   height: number
 ): UseDimensionsReturn => {
   const { width } = useResize(containerRef);

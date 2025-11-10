@@ -9,7 +9,7 @@ interface LoadingProps {
 /**
  * Loading component with customizable size and text
  */
-function Loading({ size = 'md', text, className = '' }: LoadingProps): JSX.Element {
+function Loading({ size = 'md', text, className = '' }: LoadingProps): React.ReactElement {
   const sizeClasses = {
     sm: 'h-4 w-4',
     md: 'h-8 w-8',

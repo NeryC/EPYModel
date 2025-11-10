@@ -6,10 +6,10 @@ import useDimensions from "../../../hooks/useDimensions";
 import SimulationTooltip from "../SimulationTooltip";
 
 const Graph = ({ type, data }) => {
-  const svgChartRef = useRef(null);
-  const yAxisRef = useRef(null);
-  const xAxisRef = useRef(null);
-  const containerRef = useRef(null);
+  const svgChartRef = useRef<SVGSVGElement | null>(null);
+  const yAxisRef = useRef<SVGGElement | null>(null);
+  const xAxisRef = useRef<SVGGElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const dayField = "day";
   const valueField = "value";
 
@@ -18,9 +18,9 @@ const Graph = ({ type, data }) => {
   const { svgWidth, svgHeight, width, height, left, top, right, bottom } =
     useDimensions(containerRef, 300);
 
-  const svgChart = d3.select(svgChartRef.current);
-  const yAxisGroup = d3.select(yAxisRef.current);
-  const xAxisGroup = d3.select(xAxisRef.current);
+  const svgChart = d3.select<SVGSVGElement, unknown>(svgChartRef.current!);
+  const yAxisGroup = d3.select<SVGGElement, unknown>(yAxisRef.current!);
+  const xAxisGroup = d3.select<SVGGElement, unknown>(xAxisRef.current!);
 
   //y Right
   //x bottom

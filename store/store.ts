@@ -16,4 +16,7 @@ export const makeStore = () =>
     reducer: graphInfoSlice,
   });
 
-export const wrapper = createWrapper<AppStore>(makeStore, { debug: true });
+// Create wrapper with modern pattern (Next.js 16 compatible)
+export const wrapper = createWrapper<AppStore>(makeStore, { 
+  debug: process.env.NODE_ENV === "development",
+});

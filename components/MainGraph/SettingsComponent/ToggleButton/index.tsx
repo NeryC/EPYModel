@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, memo } from "react";
 import Tooltip from "../../../utils/Tooltip";
 
 interface ToggleButtonProps {
@@ -9,14 +9,18 @@ interface ToggleButtonProps {
   tooltipText: string;
 }
 
-function ToggleButton({
+const ToggleButton = memo(function ToggleButton({
   label,
   name,
   handleChange,
   checkedState,
   tooltipText,
 }: ToggleButtonProps) {
-  const handleToggle = useCallback(() => {
+  const handleToggle = useCallback((e?: React.MouseEvent | React.ChangeEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     handleChange(name);
   }, [handleChange, name]);
 
@@ -46,18 +50,18 @@ function ToggleButton({
           name={name}
           id={name}
           className="sr-only peer"
-          onChange={handleToggle}
+          onChange={(e) => handleToggle(e)}
           aria-checked={checkedState}
           role="switch"
         />
         <div
           className={toggleClasses}
-          onClick={handleToggle}
+          onClick={(e) => handleToggle(e)}
           role="presentation"
         />
       </label>
     </div>
   );
-}
+});
 
 export default ToggleButton;

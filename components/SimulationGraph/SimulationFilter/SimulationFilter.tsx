@@ -88,9 +88,10 @@ function SimulationFilter() {
         susceptible: chartData.susceptible,
         uci: chartData.uci,
       }));
-    } catch (error) {
-      console.error('Simulation error:', error);
-      setSimulationError(error.message || t('simulation-error'));
+    } catch (err: unknown) {
+      console.error('Simulation error:', err);
+      const message = err instanceof Error ? err.message : String(err);
+      setSimulationError(message || t('simulation-error'));
     } finally {
       stopLoading();
     }

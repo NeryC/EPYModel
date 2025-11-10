@@ -15,7 +15,7 @@ const initialSize: Size = {
   left: 0,
 };
 
-export default function useResize(targetRef: RefObject<HTMLElement>): Size {
+export default function useResize(targetRef: RefObject<HTMLElement | null>): Size {
   const [size, setSize] = useState<Size>(initialSize);
 
   // Optimize the resize observer callback with useCallback
@@ -33,7 +33,7 @@ export default function useResize(targetRef: RefObject<HTMLElement>): Size {
   }, [targetRef]);
 
   // Use the optimized resize observer
-  useResizeObserver(targetRef, handleResize);
+  useResizeObserver(targetRef as RefObject<HTMLElement>, handleResize);
 
   return size;
 }
