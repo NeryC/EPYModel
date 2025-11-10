@@ -1,10 +1,10 @@
-# 📊 EPIModel Next - Sistema de Visualización de Modelos Epidemiológicos
+# 📊 EPIModel Next - Epidemiological Model Visualization System
 
 <div align="center">
 
 ![EPIModel Logo](public/logo.png)
 
-**Sistema web para visualización y simulación de modelos epidemiológicos del COVID-19 en Paraguay**
+**Web system for visualization and simulation of COVID-19 epidemiological models in Paraguay**
 
 [![Next.js](https://img.shields.io/badge/Next.js-12.1.5-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
@@ -12,250 +12,250 @@
 [![D3.js](https://img.shields.io/badge/D3.js-7.4.4-orange?style=for-the-badge&logo=d3.js)](https://d3js.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0.24-38bdf8?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 
-[Características](#-características) • [Instalación](#-instalación) • [Uso](#-uso) • [Arquitectura](#-arquitectura) • [Contribuir](#-contribuir)
+[Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Architecture](#-architecture) • [Contributing](#-contributing)
 
 </div>
 
 ---
 
-## 📑 Tabla de Contenidos
+## 📑 Table of Contents
 
-- [Descripción](#-descripción)
-- [Características](#-características)
-- [Tecnologías](#-tecnologías)
-- [Requisitos Previos](#-requisitos-previos)
-- [Instalación](#-instalación)
-- [Configuración para Producción](#-configuración-para-producción)
-- [Configuración](#-configuración)
-- [Uso](#-uso)
-- [Arquitectura](#-arquitectura)
-- [Estructura del Proyecto](#-estructura-del-proyecto)
-- [Scripts Disponibles](#-scripts-disponibles)
-- [Despliegue](#-despliegue)
-- [Contribuir](#-contribuir)
-- [Licencia](#-licencia)
-- [Documentación Adicional](#-documentación-adicional)
-
----
-
-## 🎯 Descripción
-
-**EPIModel Next** es una aplicación web moderna desarrollada para visualizar y simular modelos epidemiológicos del COVID-19 en Paraguay. La aplicación permite a los usuarios:
-
-- **Visualizar proyecciones** de casos reportados, hospitalizaciones, cuidados intensivos y fallecimientos
-- **Simular escenarios** con diferentes parámetros epidemiológicos (Rt, UCI threshold, V filtered, lambda I to H)
-- **Analizar datos** mediante gráficos interactivos construidos con D3.js
-- **Exportar datos** en formatos CSV para análisis externos
-
-La aplicación está construida con Next.js 12, TypeScript, Redux Toolkit para gestión de estado, y D3.js para visualización de datos. Incluye soporte multiidioma (Español e Inglés) y está optimizada para rendimiento y accesibilidad.
+- [Description](#-description)
+- [Features](#-features)
+- [Technologies](#-technologies)
+- [Prerequisites](#-prerequisites)
+- [Installation](#-installation)
+- [Production Configuration](#-production-configuration)
+- [Configuration](#-configuration)
+- [Usage](#-usage)
+- [Architecture](#-architecture)
+- [Project Structure](#-project-structure)
+- [Available Scripts](#-available-scripts)
+- [Deployment](#-deployment)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Additional Documentation](#-additional-documentation)
 
 ---
 
-## ✨ Características
+## 🎯 Description
 
-### 📈 Visualización de Datos
+**EPIModel Next** is a modern web application developed to visualize and simulate COVID-19 epidemiological models in Paraguay. The application allows users to:
 
-- **Gráficos Interactivos**: Visualización de datos epidemiológicos con D3.js
-- **Múltiples Escenarios**: Comparación de diferentes escenarios epidemiológicos
-- **Filtros y Configuración**: Personalización de visualizaciones con múltiples opciones
-- **Rangos de Fechas**: Selección de rangos temporales para análisis
-- **Incertidumbre**: Visualización de intervalos de incertidumbre en proyecciones
+- **Visualize projections** of reported cases, hospitalizations, intensive care, and deaths
+- **Simulate scenarios** with different epidemiological parameters (Rt, UCI threshold, V filtered, lambda I to H)
+- **Analyze data** through interactive charts built with D3.js
+- **Export data** in CSV format for external analysis
 
-### 🧪 Simulación de Modelos
+The application is built with Next.js 12, TypeScript, Redux Toolkit for state management, and D3.js for data visualization. It includes multi-language support (Spanish and English) and is optimized for performance and accessibility.
 
-- **Parámetros Personalizables**: 
-  - **Rt (Número Reproductivo)**: Valor único o serie temporal
-  - **UCI Threshold**: Umbral de capacidad de cuidados intensivos
-  - **V Filtered**: Parámetro de filtración
-  - **Lambda I to H**: Tasa de transición de infectados a hospitalizados
-- **Ejecución en Tiempo Real**: Simulaciones ejecutadas en el backend
-- **Visualización de Resultados**: Múltiples gráficos de simulación simultáneos
+---
 
-### 🌐 Internacionalización
+## ✨ Features
 
-- **Soporte Multiidioma**: Español e Inglés
-- **Cambio Dinámico**: Cambio de idioma sin recargar la página
-- **Formateo Localizado**: Fechas y números formateados según el idioma
+### 📈 Data Visualization
 
-### 🎨 Interfaz de Usuario
+- **Interactive Charts**: Visualization of epidemiological data with D3.js
+- **Multiple Scenarios**: Comparison of different epidemiological scenarios
+- **Filters and Configuration**: Customization of visualizations with multiple options
+- **Date Ranges**: Selection of time ranges for analysis
+- **Uncertainty**: Visualization of uncertainty intervals in projections
 
-- **Diseño Responsive**: Optimizado para desktop, tablet y móvil
-- **Tema Consistente**: Diseño coherente con Tailwind CSS
-- **Accesibilidad**: Cumplimiento de estándares WCAG
-- **Error Handling**: Manejo robusto de errores con mensajes user-friendly
+### 🧪 Model Simulation
+
+- **Customizable Parameters**: 
+  - **Rt (Reproductive Number)**: Single value or time series
+  - **UCI Threshold**: Intensive care capacity threshold
+  - **V Filtered**: Filtration parameter
+  - **Lambda I to H**: Transition rate from infected to hospitalized
+- **Real-Time Execution**: Simulations executed on the backend
+- **Result Visualization**: Multiple simultaneous simulation charts
+
+### 🌐 Internationalization
+
+- **Multi-Language Support**: Spanish and English
+- **Dynamic Change**: Language change without page reload
+- **Localized Formatting**: Dates and numbers formatted according to language
+
+### 🎨 User Interface
+
+- **Responsive Design**: Optimized for desktop, tablet, and mobile
+- **Consistent Theme**: Coherent design with Tailwind CSS
+- **Accessibility**: WCAG standards compliance
+- **Error Handling**: Robust error handling with user-friendly messages
 
 ### ⚡ Performance
 
-- **Server-Side Rendering**: Renderizado en el servidor para mejor SEO
-- **Code Splitting**: Carga bajo demanda de componentes
-- **Optimización de Imágenes**: Optimización automática de imágenes
-- **Caching**: Cache inteligente de requests API
+- **Server-Side Rendering**: Server-side rendering for better SEO
+- **Code Splitting**: On-demand component loading
+- **Image Optimization**: Automatic image optimization
+- **Caching**: Intelligent API request caching
 
 ---
 
-## 🛠️ Tecnologías
+## 🛠️ Technologies
 
 ### Core
 
-- **[Next.js 12.1.5](https://nextjs.org/)** - Framework React para producción
-- **[React 18.1.0](https://reactjs.org/)** - Biblioteca de UI
-- **[TypeScript 5.0.0](https://www.typescriptlang.org/)** - Lenguaje de programación tipado
+- **[Next.js 12.1.5](https://nextjs.org/)** - React framework for production
+- **[React 18.1.0](https://reactjs.org/)** - UI library
+- **[TypeScript 5.0.0](https://www.typescriptlang.org/)** - Typed programming language
 
-### Estado y Datos
+### State and Data
 
-- **[Redux Toolkit 1.8.3](https://redux-toolkit.js.org/)** - Gestión de estado
-- **[Axios 0.27.2](https://axios-http.com/)** - Cliente HTTP
-- **[D3.js 7.4.4](https://d3js.org/)** - Visualización de datos
+- **[Redux Toolkit 1.8.3](https://redux-toolkit.js.org/)** - State management
+- **[Axios 0.27.2](https://axios-http.com/)** - HTTP client
+- **[D3.js 7.4.4](https://d3js.org/)** - Data visualization
 
-### Estilos y UI
+### Styles and UI
 
-- **[Tailwind CSS 3.0.24](https://tailwindcss.com/)** - Framework CSS utility-first
-- **[Headless UI 1.6.0](https://headlessui.com/)** - Componentes UI sin estilos
-- **[Heroicons 1.0.6](https://heroicons.com/)** - Iconos SVG
-- **[Font Awesome 6.1.1](https://fontawesome.com/)** - Iconos adicionales
+- **[Tailwind CSS 3.0.24](https://tailwindcss.com/)** - Utility-first CSS framework
+- **[Headless UI 1.6.0](https://headlessui.com/)** - Unstyled UI components
+- **[Heroicons 1.0.6](https://heroicons.com/)** - SVG icons
+- **[Font Awesome 6.1.1](https://fontawesome.com/)** - Additional icons
 
-### Internacionalización
+### Internationalization
 
-- **[next-i18next 12.0.1](https://github.com/isaachinman/next-i18next)** - Internacionalización para Next.js
+- **[next-i18next 12.0.1](https://github.com/isaachinman/next-i18next)** - Internationalization for Next.js
 
-### Utilidades
+### Utilities
 
-- **[Lodash 4.17.21](https://lodash.com/)** - Utilidades de JavaScript
-- **[file-saver 2.0.5](https://github.com/eligrey/FileSaver.js/)** - Guardado de archivos
-- **[react-csv 2.2.2](https://github.com/react-csv/react-csv)** - Exportación a CSV
-- **[js-cookie 3.0.1](https://github.com/js-cookie/js-cookie)** - Manejo de cookies
+- **[Lodash 4.17.21](https://lodash.com/)** - JavaScript utilities
+- **[file-saver 2.0.5](https://github.com/eligrey/FileSaver.js/)** - File saving
+- **[react-csv 2.2.2](https://github.com/react-csv/react-csv)** - CSV export
+- **[js-cookie 3.0.1](https://github.com/js-cookie/js-cookie)** - Cookie handling
 
 ---
 
-## 📋 Requisitos Previos
+## 📋 Prerequisites
 
-Antes de comenzar, asegúrate de tener instalado:
+Before starting, make sure you have installed:
 
-- **Node.js** 16.x o superior
-- **Yarn** 1.x o superior (gestor de paquetes)
-- **Git** para control de versiones
+- **Node.js** 16.x or higher
+- **Yarn** 1.x or higher (package manager)
+- **Git** for version control
 
-### Verificar Instalación
+### Verify Installation
 
 ```bash
-node --version  # Debe ser v16.x o superior
-yarn --version  # Debe ser 1.x o superior
-git --version   # Cualquier versión reciente
+node --version  # Should be v16.x or higher
+yarn --version  # Should be 1.x or higher
+git --version   # Any recent version
 ```
 
 ---
 
-## 🚀 Instalación
+## 🚀 Installation
 
-### 1. Clonar el Repositorio
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/tu-usuario/epimodel-next.git
 cd epimodel-next
 ```
 
-### 2. Instalar Dependencias
+### 2. Install Dependencies
 
 ```bash
 yarn install
 ```
 
-### 3. Configurar Variables de Entorno (Opcional)
+### 3. Configure Environment Variables (Optional)
 
-> **Nota**: La `API_URL` se configura automáticamente según el `NODE_ENV`:
+> **Note**: The `API_URL` is automatically configured based on `NODE_ENV`:
 > - **Development** (`yarn dev`): `http://localhost:3001`
 > - **Production** (`yarn build && yarn start`): `http://epymodel.uaa.edu.py:3001`
 > 
-> Solo necesitas crear `.env.local` si deseas personalizar la configuración.
+> You only need to create `.env.local` if you want to customize the configuration.
 
-Crea un archivo `.env.local` en la raíz del proyecto (opcional):
+Create a `.env.local` file in the project root (optional):
 
 ```bash
 cp .env.example .env.local
 ```
 
-Edita `.env.local` solo si necesitas personalizar valores:
+Edit `.env.local` only if you need to customize values:
 
 ```env
-# API Configuration (Opcional - se determina automáticamente por NODE_ENV)
-# NEXT_PUBLIC_API_URL=http://localhost:3001  # Solo si necesitas override
+# API Configuration (Optional - automatically determined by NODE_ENV)
+# NEXT_PUBLIC_API_URL=http://localhost:3001  # Only if you need to override
 NEXT_PUBLIC_API_TIMEOUT=30000
 NEXT_PUBLIC_API_RETRY_ATTEMPTS=3
 
-# Environment (automático - no es necesario configurar)
-# NODE_ENV=development  # Next.js lo configura automáticamente
+# Environment (automatic - no need to configure)
+# NODE_ENV=development  # Next.js configures this automatically
 
 # Feature Flags
 NEXT_PUBLIC_DEBUG_LOGS=false
 NEXT_PUBLIC_ERROR_REPORTING=false
 ```
 
-### 4. Iniciar el Servidor de Desarrollo
+### 4. Start Development Server
 
 ```bash
 yarn dev
 ```
 
-La aplicación estará disponible en [http://localhost:3000](http://localhost:3000)
+The application will be available at [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## 🚀 Configuración para Producción
+## 🚀 Production Configuration
 
-### Crear Archivo de Entorno para Producción
+### Create Production Environment File
 
-Para producción, puedes crear un archivo `.env.production` o configurar las variables de entorno en tu plataforma de despliegue.
+For production, you can create a `.env.production` file or configure environment variables on your deployment platform.
 
-#### Opción 1: Archivo `.env.production` (Local)
+#### Option 1: `.env.production` File (Local)
 
-Crea un archivo `.env.production` en la raíz del proyecto:
+Create a `.env.production` file in the project root:
 
 ```bash
 cp .env.example .env.production
 ```
 
-Edita `.env.production` con los valores para producción:
+Edit `.env.production` with production values:
 
 ```env
 # API Configuration
-# La API_URL se configura automáticamente como http://epymodel.uaa.edu.py:3001
-# cuando NODE_ENV=production, pero puedes override si es necesario
+# API_URL is automatically configured as http://epymodel.uaa.edu.py:3001
+# when NODE_ENV=production, but you can override if necessary
 # NEXT_PUBLIC_API_URL=http://epymodel.uaa.edu.py:3001
 
-# Timeout de requests API (ms)
+# API request timeout (ms)
 NEXT_PUBLIC_API_TIMEOUT=30000
 
-# Intentos de retry
+# Retry attempts
 NEXT_PUBLIC_API_RETRY_ATTEMPTS=3
 
-# Feature Flags para Producción
+# Production Feature Flags
 NEXT_PUBLIC_DEBUG_LOGS=false
 NEXT_PUBLIC_ERROR_REPORTING=true
 
-# NODE_ENV se configura automáticamente al hacer yarn build
-# No es necesario definirla manualmente
+# NODE_ENV is automatically set when running yarn build
+# No need to define it manually
 ```
 
-#### Opción 2: Variables de Entorno en Plataforma de Despliegue
+#### Option 2: Environment Variables on Deployment Platform
 
 **Vercel:**
-1. Ve a tu proyecto en Vercel
+1. Go to your project in Vercel
 2. Settings → Environment Variables
-3. Agrega las variables:
-   - `NEXT_PUBLIC_API_URL` (opcional, se configura automáticamente)
-   - `NEXT_PUBLIC_API_TIMEOUT` (opcional)
-   - `NEXT_PUBLIC_API_RETRY_ATTEMPTS` (opcional)
+3. Add the variables:
+   - `NEXT_PUBLIC_API_URL` (optional, automatically configured)
+   - `NEXT_PUBLIC_API_TIMEOUT` (optional)
+   - `NEXT_PUBLIC_API_RETRY_ATTEMPTS` (optional)
    - `NEXT_PUBLIC_DEBUG_LOGS=false`
    - `NEXT_PUBLIC_ERROR_REPORTING=true`
-   - `NODE_ENV=production` (automático)
+   - `NODE_ENV=production` (automatic)
 
 **Netlify:**
-1. Ve a Site settings → Build & deploy → Environment
-2. Agrega las variables de entorno (igual que Vercel)
+1. Go to Site settings → Build & deploy → Environment
+2. Add environment variables (same as Vercel)
 
 **Docker:**
 ```bash
-# Usar variables de entorno al ejecutar el contenedor
+# Use environment variables when running the container
 docker run -p 3000:3000 \
   -e NODE_ENV=production \
   -e NEXT_PUBLIC_DEBUG_LOGS=false \
@@ -263,77 +263,77 @@ docker run -p 3000:3000 \
   epimodel-next
 ```
 
-**Servidor VPS/Cloud:**
+**VPS/Cloud Server:**
 ```bash
-# Crear archivo .env.production
+# Create .env.production file
 nano .env.production
 
-# O exportar variables antes de ejecutar
+# Or export variables before running
 export NODE_ENV=production
 export NEXT_PUBLIC_DEBUG_LOGS=false
 export NEXT_PUBLIC_ERROR_REPORTING=true
 
-# Luego ejecutar
+# Then run
 yarn build
 yarn start
 ```
 
-### Build y Deploy para Producción
+### Build and Deploy for Production
 
 ```bash
-# 1. Construir la aplicación (NODE_ENV se establece automáticamente como 'production')
+# 1. Build the application (NODE_ENV is automatically set to 'production')
 yarn build
 
-# 2. Iniciar el servidor de producción
+# 2. Start production server
 yarn start
 
-# La aplicación usará automáticamente:
+# The application will automatically use:
 # - API_URL: http://epymodel.uaa.edu.py:3001
 # - NODE_ENV: production
 ```
 
-### Verificar Configuración de Producción
+### Verify Production Configuration
 
-Para verificar que la configuración es correcta:
+To verify that the configuration is correct:
 
 ```bash
-# En desarrollo, verás en los logs:
+# In development, you will see in the logs:
 # API_URL: http://localhost:3001
 
-# En producción, verás en los logs:
+# In production, you will see in the logs:
 # Production mode: Using API URL: http://epymodel.uaa.edu.py:3001
 ```
 
-### Resumen de Configuración por Entorno
+### Configuration Summary by Environment
 
-| Entorno | NODE_ENV | API_URL | Debug Logs | Error Reporting |
-|---------|----------|---------|------------|-----------------|
-| **Development** | `development` | `http://localhost:3001` | `false` (opcional) | `false` (opcional) |
-| **Production** | `production` | `http://epymodel.uaa.edu.py:3001` | `false` | `true` (recomendado) |
+| Environment | NODE_ENV | API_URL | Debug Logs | Error Reporting |
+|-------------|----------|---------|------------|-----------------|
+| **Development** | `development` | `http://localhost:3001` | `false` (optional) | `false` (optional) |
+| **Production** | `production` | `http://epymodel.uaa.edu.py:3001` | `false` | `true` (recommended) |
 | **Test** | `test` | `http://localhost:3001` | `false` | `false` |
 
-> **Nota importante**: La `API_URL` se configura automáticamente según `NODE_ENV`. No necesitas definirla manualmente a menos que necesites usar una URL diferente.
+> **Important note**: The `API_URL` is automatically configured based on `NODE_ENV`. You don't need to define it manually unless you need to use a different URL.
 
 ---
 
-## ⚙️ Configuración
+## ⚙️ Configuration
 
-### Variables de Entorno
+### Environment Variables
 
-| Variable | Descripción | Valor por Defecto | Requerido |
-|----------|-------------|-------------------|-----------|
-| `NEXT_PUBLIC_API_URL` | URL del backend API | **Automático según NODE_ENV**<br>- Development: `http://localhost:3001`<br>- Production: `http://epymodel.uaa.edu.py:3001` | No |
-| `NEXT_PUBLIC_API_TIMEOUT` | Timeout de requests API (ms) | `30000` | No |
-| `NEXT_PUBLIC_API_RETRY_ATTEMPTS` | Intentos de retry para requests fallidos | `3` | No |
-| `NEXT_PUBLIC_DEBUG_LOGS` | Habilitar logs de debug | `false` | No |
-| `NEXT_PUBLIC_ERROR_REPORTING` | Habilitar reporte de errores | `false` | No |
-| `NODE_ENV` | Modo de ejecución | Automático (Next.js lo configura)<br>- `development` (yarn dev)<br>- `production` (yarn build) | No |
+| Variable | Description | Default Value | Required |
+|----------|-------------|---------------|----------|
+| `NEXT_PUBLIC_API_URL` | Backend API URL | **Automatic based on NODE_ENV**<br>- Development: `http://localhost:3001`<br>- Production: `http://epymodel.uaa.edu.py:3001` | No |
+| `NEXT_PUBLIC_API_TIMEOUT` | API request timeout (ms) | `30000` | No |
+| `NEXT_PUBLIC_API_RETRY_ATTEMPTS` | Retry attempts for failed requests | `3` | No |
+| `NEXT_PUBLIC_DEBUG_LOGS` | Enable debug logs | `false` | No |
+| `NEXT_PUBLIC_ERROR_REPORTING` | Enable error reporting | `false` | No |
+| `NODE_ENV` | Execution mode | Automatic (Next.js configures it)<br>- `development` (yarn dev)<br>- `production` (yarn build) | No |
 
-**Nota importante**: La `API_URL` se configura automáticamente según el entorno. Solo necesitas definir `NEXT_PUBLIC_API_URL` si deseas usar una URL diferente a la predeterminada.
+**Important note**: The `API_URL` is automatically configured based on the environment. You only need to define `NEXT_PUBLIC_API_URL` if you want to use a different URL than the default.
 
-### Configuración de Next.js
+### Next.js Configuration
 
-El archivo `next.config.js` contiene la configuración de Next.js:
+The `next.config.js` file contains the Next.js configuration:
 
 ```javascript
 const { i18n } = require("./next-i18next.config");
@@ -344,210 +344,210 @@ module.exports = {
 };
 ```
 
-### Configuración de TypeScript
+### TypeScript Configuration
 
-El archivo `tsconfig.json` contiene la configuración de TypeScript. Se recomienda habilitar el modo estricto para mejor type safety.
+The `tsconfig.json` file contains the TypeScript configuration. It is recommended to enable strict mode for better type safety.
 
-### Configuración de Tailwind CSS
+### Tailwind CSS Configuration
 
-El archivo `tailwind.config.js` contiene la configuración de Tailwind CSS con temas personalizados.
+The `tailwind.config.js` file contains the Tailwind CSS configuration with custom themes.
 
 ---
 
-## 💻 Uso
+## 💻 Usage
 
-### Página Principal (Gráficos)
+### Main Page (Charts)
 
-La página principal muestra gráficos de proyecciones epidemiológicas:
+The main page displays epidemiological projection charts:
 
-- **Casos Reportados**: Proyección de casos reportados de COVID-19
-- **Hospitalizados**: Proyección de casos hospitalizados
-- **Cuidados Intensivos (UCI)**: Proyección de casos en UCI
-- **Fallecimientos**: Proyección de fallecimientos
+- **Reported Cases**: Projection of reported COVID-19 cases
+- **Hospitalized**: Projection of hospitalized cases
+- **Intensive Care (UCI)**: Projection of UCI cases
+- **Deaths**: Projection of deaths
 
-#### Características de los Gráficos
+#### Chart Features
 
-- **Selección de Líneas**: Mostrar/ocultar diferentes líneas de datos
-- **Configuración de Visualización**:
-  - Suavizado de líneas
-  - Mostrar/ocultar incertidumbre
-  - Mostrar/ocultar puntos de datos
-- **Rango de Fechas**: Seleccionar rango de fechas para visualizar
-- **Exportación**: Descargar datos en formato CSV
+- **Line Selection**: Show/hide different data lines
+- **Visualization Configuration**:
+  - Line smoothing
+  - Show/hide uncertainty
+  - Show/hide data points
+- **Date Range**: Select date range to visualize
+- **Export**: Download data in CSV format
 
-### Página de Simulador
+### Simulator Page
 
-La página de simulador permite ejecutar simulaciones con parámetros personalizados:
+The simulator page allows executing simulations with custom parameters:
 
-#### Parámetros de Simulación
+#### Simulation Parameters
 
-1. **Rt (Número Reproductivo)**
-   - Valor único: Número decimal
-   - Serie temporal: Lista de valores separados por comas
+1. **Rt (Reproductive Number)**
+   - Single value: Decimal number
+   - Time series: Comma-separated list of values
 
 2. **UCI Threshold**
-   - Umbral de capacidad de cuidados intensivos
+   - Intensive care capacity threshold
 
 3. **V Filtered**
-   - Parámetro de filtración
+   - Filtration parameter
 
 4. **Lambda I to H**
-   - Tasa de transición de infectados a hospitalizados
+   - Transition rate from infected to hospitalized
 
-#### Ejecutar Simulación
+#### Execute Simulation
 
-1. Ingresa los parámetros en el formulario
-2. Haz clic en "Ejecutar Simulación"
-3. Espera a que se complete la simulación
-4. Visualiza los resultados en los gráficos
+1. Enter parameters in the form
+2. Click "Execute Simulation"
+3. Wait for the simulation to complete
+4. View results in the charts
 
-#### Gráficos de Simulación
+#### Simulation Charts
 
-Los siguientes gráficos se generan automáticamente:
+The following charts are automatically generated:
 
-- **Cumulative**: Casos acumulados
-- **Cumulative Deaths**: Fallecimientos acumulados
-- **Exposed**: Casos expuestos
-- **Hospitalized**: Casos hospitalizados
-- **Immune**: Casos inmunes
-- **Infectious**: Casos infecciosos
-- **Susceptible**: Casos susceptibles
-- **UCI**: Casos en cuidados intensivos
+- **Cumulative**: Cumulative cases
+- **Cumulative Deaths**: Cumulative deaths
+- **Exposed**: Exposed cases
+- **Hospitalized**: Hospitalized cases
+- **Immune**: Immune cases
+- **Infectious**: Infectious cases
+- **Susceptible**: Susceptible cases
+- **UCI**: Intensive care cases
 
 ---
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
-Para información detallada sobre la arquitectura del proyecto, consulta el documento [ARCHITECTURE.md](./docs/ARCHITECTURE.md).
+For detailed information about the project architecture, see the [ARCHITECTURE.md](./docs/ARCHITECTURE.md) document.
 
-### Resumen de Arquitectura
+### Architecture Summary
 
-El proyecto sigue una arquitectura en capas:
+The project follows a layered architecture:
 
-1. **Capa de Presentación**: Componentes React
-2. **Capa de Lógica de Negocio**: Hooks y Reducers
-3. **Capa de Servicios**: Cliente API
-4. **Capa de Datos**: Tipos y Estado
+1. **Presentation Layer**: React components
+2. **Business Logic Layer**: Hooks and Reducers
+3. **Service Layer**: API client
+4. **Data Layer**: Types and State
 
-### Flujo de Datos
+### Data Flow
 
 ```
 API Service → Redux Action → Reducer → Selector → Component
 ```
 
-### Patrones de Diseño
+### Design Patterns
 
-- **Container/Presentational Pattern**: Separación de lógica y presentación
-- **Custom Hooks Pattern**: Lógica reutilizable
-- **Service Layer Pattern**: Cliente API centralizado
-- **Redux Toolkit Slice Pattern**: Gestión de estado
+- **Container/Presentational Pattern**: Separation of logic and presentation
+- **Custom Hooks Pattern**: Reusable logic
+- **Service Layer Pattern**: Centralized API client
+- **Redux Toolkit Slice Pattern**: State management
 
 ---
 
-## 📂 Estructura del Proyecto
+## 📂 Project Structure
 
 ```
 epimodel-next/
-├── components/          # Componentes React
-│   ├── ErrorBoundary/  # Manejo de errores
+├── components/          # React components
+│   ├── ErrorBoundary/  # Error handling
 │   ├── Layout/         # Layout components
-│   ├── MainGraph/      # Gráficos principales
-│   ├── SimulationGraph/# Gráficos de simulación
-│   └── utils/          # Componentes utilitarios
+│   ├── MainGraph/      # Main charts
+│   ├── SimulationGraph/# Simulation charts
+│   └── utils/          # Utility components
 │
-├── pages/              # Páginas de Next.js
-│   ├── _app.tsx       # Configuración global
-│   ├── index.tsx      # Página principal
-│   └── Simulador.tsx  # Página de simulador
+├── pages/              # Next.js pages
+│   ├── _app.tsx       # Global configuration
+│   ├── index.tsx      # Main page
+│   └── Simulador.tsx  # Simulator page
 │
 ├── store/              # Redux store
-│   ├── store.ts       # Configuración del store
+│   ├── store.ts       # Store configuration
 │   └── reducers/      # Reducers
 │
-├── services/           # Servicios API
-│   └── api.ts         # Cliente HTTP
+├── services/           # API services
+│   └── api.ts         # HTTP client
 │
 ├── hooks/              # Custom hooks
-│   ├── useApi.ts      # Hook para API
-│   └── ...            # Otros hooks
+│   ├── useApi.ts      # API hook
+│   └── ...            # Other hooks
 │
-├── types/              # Tipos TypeScript
-│   └── api.ts         # Tipos de API
+├── types/              # TypeScript types
+│   └── api.ts         # API types
 │
-├── utils/              # Utilidades
-│   ├── constants.ts   # Constantes
-│   └── ...            # Otras utilidades
+├── utils/              # Utilities
+│   ├── constants.ts   # Constants
+│   └── ...            # Other utilities
 │
-├── config/             # Configuración
-│   └── environment.ts # Variables de entorno
+├── config/             # Configuration
+│   └── environment.ts # Environment variables
 │
-├── docs/               # Documentación
-│   ├── ARCHITECTURE.md            # Arquitectura del proyecto
-│   ├── CODE_QUALITY.md            # Reporte de calidad de código
-│   └── IMPLEMENTATION_SUMMARY.md  # Resumen de implementación
+├── docs/               # Documentation
+│   ├── ARCHITECTURE.md            # Project architecture
+│   ├── CODE_QUALITY.md            # Code quality report
+│   └── IMPLEMENTATION_SUMMARY.md  # Implementation summary
 │
-├── styles/             # Estilos
-│   └── globals.css    # Estilos globales
+├── styles/             # Styles
+│   └── globals.css    # Global styles
 │
-├── public/             # Archivos estáticos
-│   ├── assets/        # Imágenes e iconos
-│   └── locales/       # Traducciones
+├── public/             # Static files
+│   ├── assets/        # Images and icons
+│   └── locales/       # Translations
 │
-└── nginx/              # Configuración Nginx
+└── nginx/              # Nginx configuration
 ```
 
 ---
 
-## 📜 Scripts Disponibles
+## 📜 Available Scripts
 
-### Desarrollo
+### Development
 
 ```bash
-# Iniciar servidor de desarrollo
+# Start development server
 yarn dev
 
-# Construir para producción
+# Build for production
 yarn build
 
-# Iniciar servidor de producción
+# Start production server
 yarn start
 
-# Ejecutar linter
+# Run linter
 yarn lint
 ```
 
-### Producción
+### Production
 
 ```bash
-# Construir aplicación
+# Build application
 yarn build
 
-# Iniciar servidor de producción
+# Start production server
 yarn start
 ```
 
 ---
 
-## 🐳 Despliegue
+## 🐳 Deployment
 
 ### Docker
 
-El proyecto incluye configuración de Docker para despliegue en contenedores.
+The project includes Docker configuration for container deployment.
 
-#### Construir Imagen
+#### Build Image
 
 ```bash
 docker build -t epimodel-next .
 ```
 
-#### Ejecutar Contenedor
+#### Run Container
 
-**Sin variables de entorno (usa configuración automática):**
+**Without environment variables (uses automatic configuration):**
 ```bash
 docker run -p 3000:3000 epimodel-next
 ```
 
-**Con variables de entorno personalizadas:**
+**With custom environment variables:**
 ```bash
 docker run -p 3000:3000 \
   -e NODE_ENV=production \
@@ -557,7 +557,7 @@ docker run -p 3000:3000 \
   epimodel-next
 ```
 
-**Con archivo .env.production:**
+**With .env.production file:**
 ```bash
 docker run -p 3000:3000 --env-file .env.production epimodel-next
 ```
@@ -565,11 +565,11 @@ docker run -p 3000:3000 --env-file .env.production epimodel-next
 #### Docker Compose
 
 ```bash
-# Usa las variables de entorno definidas en docker-compose.yml
+# Uses environment variables defined in docker-compose.yml
 docker-compose up -d
 ```
 
-**docker-compose.yml ejemplo:**
+**docker-compose.yml example:**
 ```yaml
 version: '3.8'
 services:
@@ -581,100 +581,100 @@ services:
       - NODE_ENV=production
       - NEXT_PUBLIC_DEBUG_LOGS=false
       - NEXT_PUBLIC_ERROR_REPORTING=true
-    # La API_URL se configura automáticamente
+    # API_URL is automatically configured
 ```
 
 ### Vercel
 
-El proyecto está configurado para despliegue en Vercel:
+The project is configured for deployment on Vercel:
 
-1. Conecta tu repositorio a Vercel
-2. Configura las variables de entorno en **Settings → Environment Variables**:
+1. Connect your repository to Vercel
+2. Configure environment variables in **Settings → Environment Variables**:
    ```
    NEXT_PUBLIC_DEBUG_LOGS=false
    NEXT_PUBLIC_ERROR_REPORTING=true
    NEXT_PUBLIC_API_TIMEOUT=30000
    NEXT_PUBLIC_API_RETRY_ATTEMPTS=3
    ```
-   > **Nota**: `NODE_ENV` y `NEXT_PUBLIC_API_URL` se configuran automáticamente
-3. Despliega automáticamente
+   > **Note**: `NODE_ENV` and `NEXT_PUBLIC_API_URL` are automatically configured
+3. Deploy automatically
 
-**Configuración automática en Vercel:**
-- `NODE_ENV=production` se establece automáticamente durante el build
-- `NEXT_PUBLIC_API_URL` se configura automáticamente como `http://epymodel.uaa.edu.py:3001`
+**Automatic configuration on Vercel:**
+- `NODE_ENV=production` is automatically set during build
+- `NEXT_PUBLIC_API_URL` is automatically configured as `http://epymodel.uaa.edu.py:3001`
 
-### Otras Plataformas
+### Other Platforms
 
-El proyecto puede desplegarse en cualquier plataforma que soporte Next.js:
+The project can be deployed on any platform that supports Next.js:
 
 #### Netlify
 
-1. Conecta tu repositorio a Netlify
-2. Configura las variables de entorno en **Site settings → Build & deploy → Environment**:
+1. Connect your repository to Netlify
+2. Configure environment variables in **Site settings → Build & deploy → Environment**:
    ```
    NEXT_PUBLIC_DEBUG_LOGS=false
    NEXT_PUBLIC_ERROR_REPORTING=true
    ```
 3. Build command: `yarn build`
 4. Publish directory: `.next`
-5. `NODE_ENV` y `NEXT_PUBLIC_API_URL` se configuran automáticamente
+5. `NODE_ENV` and `NEXT_PUBLIC_API_URL` are automatically configured
 
 #### AWS Amplify
 
-1. Conecta tu repositorio a AWS Amplify
-2. Agrega variables de entorno en la consola de Amplify:
+1. Connect your repository to AWS Amplify
+2. Add environment variables in the Amplify console:
    ```
    NEXT_PUBLIC_DEBUG_LOGS=false
    NEXT_PUBLIC_ERROR_REPORTING=true
    ```
-3. Build settings (automático para Next.js)
-4. `NODE_ENV=production` se establece automáticamente
+3. Build settings (automatic for Next.js)
+4. `NODE_ENV=production` is automatically set
 
 #### Azure App Service
 
-1. Crea una App Service en Azure
-2. Configura las variables de entorno en **Configuration → Application settings**:
+1. Create an App Service in Azure
+2. Configure environment variables in **Configuration → Application settings**:
    ```
    NEXT_PUBLIC_DEBUG_LOGS=false
    NEXT_PUBLIC_ERROR_REPORTING=true
    ```
-3. `NODE_ENV=production` se establece automáticamente
+3. `NODE_ENV=production` is automatically set
 
 #### Heroku
 
-1. Crea una app en Heroku
-2. Configura variables de entorno:
+1. Create an app in Heroku
+2. Configure environment variables:
    ```bash
    heroku config:set NEXT_PUBLIC_DEBUG_LOGS=false
    heroku config:set NEXT_PUBLIC_ERROR_REPORTING=true
    heroku config:set NODE_ENV=production
    ```
-3. Despliega:
+3. Deploy:
    ```bash
    git push heroku main
    ```
 
-#### Servidor VPS (Linux)
+#### VPS Server (Linux)
 
-1. Clona el repositorio en el servidor
-2. Instala dependencias: `yarn install`
-3. Crea archivo `.env.production`:
+1. Clone the repository on the server
+2. Install dependencies: `yarn install`
+3. Create `.env.production` file:
    ```bash
    nano .env.production
    ```
-4. Agrega las variables de entorno:
+4. Add environment variables:
    ```env
    NEXT_PUBLIC_DEBUG_LOGS=false
    NEXT_PUBLIC_ERROR_REPORTING=true
    NEXT_PUBLIC_API_TIMEOUT=30000
    NEXT_PUBLIC_API_RETRY_ATTEMPTS=3
    ```
-5. Construye y ejecuta:
+5. Build and run:
    ```bash
    yarn build
    NODE_ENV=production yarn start
    ```
-6. Usa PM2 para proceso persistente:
+6. Use PM2 for persistent process:
    ```bash
    npm install -g pm2
    pm2 start npm --name "epimodel-next" -- start
@@ -686,101 +686,101 @@ El proyecto puede desplegarse en cualquier plataforma que soporte Next.js:
 
 ## 🧪 Testing
 
-### Ejecutar Tests
+### Run Tests
 
 ```bash
-# Ejecutar todos los tests
+# Run all tests
 yarn test
 
-# Ejecutar tests en modo watch
+# Run tests in watch mode
 yarn test:watch
 
-# Ejecutar tests con cobertura
+# Run tests with coverage
 yarn test:coverage
 ```
 
-### Estructura de Tests
+### Test Structure
 
 ```
 __tests__/
-├── components/    # Tests de componentes
-├── hooks/         # Tests de hooks
-├── services/      # Tests de servicios
-└── utils/         # Tests de utilidades
+├── components/    # Component tests
+├── hooks/         # Hook tests
+├── services/      # Service tests
+└── utils/         # Utility tests
 ```
 
 ---
 
-## 🤝 Contribuir
+## 🤝 Contributing
 
-Las contribuciones son bienvenidas. Por favor:
+Contributions are welcome. Please:
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Guía de Contribución
+### Contribution Guide
 
-- Sigue las convenciones de código del proyecto
-- Escribe tests para nuevas features
-- Actualiza la documentación
-- Mantén los commits descriptivos
-
----
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+- Follow the project's code conventions
+- Write tests for new features
+- Update documentation
+- Keep commits descriptive
 
 ---
 
-## 👥 Autores
+## 📄 License
+
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
+
+---
+
+## 👥 Authors
 
 - **Nery Cano** - [LinkedIn](https://www.linkedin.com/in/nery-cano-dev/)
 
 ---
 
-## 🙏 Agradecimientos
+## 🙏 Acknowledgments
 
 - Universidad Autónoma de Asunción (UAA)
-- Equipo de desarrollo del backend
-- Comunidad de Next.js
-- Contribuidores de las librerías utilizadas
+- Backend development team
+- Next.js community
+- Contributors of the libraries used
 
 ---
 
-## 📞 Contacto
+## 📞 Contact
 
-Para preguntas o sugerencias, por favor contacta a:
+For questions or suggestions, please contact:
 
 - **Email**: [tu-email@example.com](mailto:tu-email@example.com)
 - **Website**: [http://epymodel.uaa.edu.py](http://epymodel.uaa.edu.py)
 
 ---
 
-## 🔗 Enlaces Útiles
+## 🔗 Useful Links
 
-- [Documentación de Next.js](https://nextjs.org/docs)
-- [Documentación de TypeScript](https://www.typescriptlang.org/docs/)
-- [Documentación de Redux Toolkit](https://redux-toolkit.js.org/)
-- [Documentación de D3.js](https://d3js.org/)
-- [Documentación de Tailwind CSS](https://tailwindcss.com/docs)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
+- [Redux Toolkit Documentation](https://redux-toolkit.js.org/)
+- [D3.js Documentation](https://d3js.org/)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 
-## 📚 Documentación Adicional
+## 📚 Additional Documentation
 
-Para más información sobre el proyecto, consulta la documentación adicional en la carpeta `docs/`:
+For more information about the project, see the additional documentation in the `docs/` folder:
 
-- **[ARCHITECTURE.md](./docs/ARCHITECTURE.md)** - Documentación completa de la arquitectura del proyecto
-- **[CODE_QUALITY.md](./docs/CODE_QUALITY.md)** - Reporte de calidad de código y métricas
-- **[IMPLEMENTATION_SUMMARY.md](./docs/IMPLEMENTATION_SUMMARY.md)** - Resumen de implementación y mejoras
+- **[ARCHITECTURE.md](./docs/ARCHITECTURE.md)** - Complete project architecture documentation
+- **[CODE_QUALITY.md](./docs/CODE_QUALITY.md)** - Code quality report and metrics
+- **[IMPLEMENTATION_SUMMARY.md](./docs/IMPLEMENTATION_SUMMARY.md)** - Implementation summary and improvements
 
-> **Nota**: Para información sobre la API, consulta la sección de [Arquitectura](#-arquitectura) y el archivo `services/api.ts` que contiene la documentación completa del servicio API.
+> **Note**: For API information, see the [Architecture](#-architecture) section and the `services/api.ts` file which contains complete API service documentation.
 
 ---
 
-## 📊 Estadísticas del Proyecto
+## 📊 Project Statistics
 
 ![GitHub stars](https://img.shields.io/github/stars/tu-usuario/epimodel-next?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/tu-usuario/epimodel-next?style=social)
@@ -791,8 +791,8 @@ Para más información sobre el proyecto, consulta la documentación adicional e
 
 <div align="center">
 
-**Hecho con ❤️ para la comunidad**
+**Made with ❤️ for the community**
 
-⭐ Si te gusta este proyecto, dale una estrella ⭐
+⭐ If you like this project, give it a star ⭐
 
 </div>
