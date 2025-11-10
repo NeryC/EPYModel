@@ -779,20 +779,3 @@ For more information about the project, see the additional documentation in the 
 > **Note**: For API information, see the [Architecture](#-architecture) section and the `services/api.ts` file which contains complete API service documentation.
 
 ---
-
-## 📊 Project Statistics
-
-![GitHub stars](https://img.shields.io/github/stars/tu-usuario/epimodel-next?style=social)
-![GitHub forks](https://img.shields.io/github/forks/tu-usuario/epimodel-next?style=social)
-![GitHub issues](https://img.shields.io/github/issues/tu-usuario/epimodel-next)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/tu-usuario/epimodel-next)
-
----
-
-<div align="center">
-
-**Made with ❤️ for the community**
-
-⭐ If you like this project, give it a star ⭐
-
-</div>
