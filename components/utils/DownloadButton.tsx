@@ -2,8 +2,9 @@ import * as d3 from "d3";
 import Image from "next/image";
 import React, { memo, MouseEvent, useCallback, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { baseURL } from "../../utils/constants";
+import { useSelector } from "react-redux";
 import { DataPoint } from "../../store/reducers/graphInfoSlice";
+import { selectRawData } from "../../store/reducers/graphInfoSlice";
 import { saveAs } from "file-saver";
 import { useTranslation } from "next-i18next";
 import {
@@ -16,13 +17,6 @@ const CSVDownloadButton = dynamic(
   () => import("./CSVDownloadButton"),
   { ssr: false }
 );
-
-const getDownloadPath = {
-  reported: "/api/v1/get-projection-r",
-  hospitalized: "/api/v1/get-projection-h",
-  ICU: "/api/v1/get-projection-u",
-  deceases: "/api/v1/get-projection-f",
-};
 
 interface DownloadButtonProps {
   page: "main" | "simulation";
@@ -40,6 +34,11 @@ function DownloadButtonComponent({ page, type, data }: DownloadButtonProps) {
   const { t } = useTranslation("common");
   const [showDropdown, setShowDropdown] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Get data from Redux store for main page projections
+  const projectionData = useSelector(
+    selectRawData(type as 'reported' | 'hospitalized' | 'ICU' | 'deceases')
+  );
 
   const openMenu = useCallback(() => {
     setShowDropdown((prev) => !prev);
@@ -76,24 +75,76 @@ function DownloadButtonComponent({ page, type, data }: DownloadButtonProps) {
     []
   );
 
+  /**
+   * Generate and download CSV from projection data
+   * Uses data from Redux store to generate CSV client-side
+   */
+  const handleDownloadCSV = useCallback(() => {
+    if (page === "main") {
+      try {
+        // Validate that type is a valid projection type
+        const validProjectionTypes = ['reported', 'hospitalized', 'ICU', 'deceases'] as const;
+        if (!validProjectionTypes.includes(type as typeof validProjectionTypes[number])) {
+          console.error(`Invalid projection type: ${type}`);
+          return;
+        }
+
+        // Get data from Redux store
+        const dataToExport = projectionData || [];
+        
+        if (dataToExport.length === 0) {
+          console.error('No data available to export');
+          return;
+        }
+
+        // Generate CSV content
+        // Get all unique keys from data points for headers
+        const allKeys = new Set<string>();
+        dataToExport.forEach((point) => {
+          Object.keys(point).forEach((key) => allKeys.add(key));
+        });
+        
+        const headers = Array.from(allKeys);
+        const csvRows = [
+          headers.join(','),
+          ...dataToExport.map((point) =>
+            headers.map((header) => {
+              const value = point[header];
+              // Handle values that might contain commas or quotes
+              if (value === null || value === undefined) return '';
+              const stringValue = String(value);
+              // Escape quotes and wrap in quotes if contains comma or quote
+              if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+                return `"${stringValue.replace(/"/g, '""')}"`;
+              }
+              return stringValue;
+            }).join(',')
+          ),
+        ];
+
+        const csvContent = csvRows.join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        saveAs(blob, `${type}.csv`);
+      } catch (error) {
+        console.error('Failed to download CSV:', error);
+        // You could add a toast notification here for user feedback
+      }
+    }
+  }, [page, type, projectionData]);
+
   const DownloadCSVOption = useCallback(() => {
     if (page === "main") {
       return (
         <DownloadOption
           text="csv"
-          onClick={() => {
-            const link = document.createElement("a");
-            link.href = `${baseURL}${getDownloadPath[type]}`;
-            link.download = "renamed";
-            link.click();
-          }}
+          onClick={handleDownloadCSV}
         />
       );
     } else if (data) {
       return <CSVDownloadButton type={type} data={data} />;
     }
     return null;
-  }, [page, type, data, DownloadOption]);
+  }, [page, type, data, DownloadOption, handleDownloadCSV]);
 
   return (
     <div

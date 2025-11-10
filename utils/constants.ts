@@ -1,5 +1,10 @@
-// This file should be renamed to constants.ts to support TypeScript syntax.
+/**
+ * Application constants
+ * These constants are used throughout the application for configuration and data processing
+ */
+
+/**
+ * Date field name used in data points
+ */
 export const dateField: string = "fechaFormateada";
 
-export const baseURL: string = "http://epymodel.uaa.edu.py:3001"; // production
-// export const baseURL: string = "http://localhost:3001"; // local-dev

@@ -1,15 +1,21 @@
+import React from 'react';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import LanguajeDropdown from './LanguajeDropdown';
 
-const Header = () => {
+/**
+ * Header component that displays the application logo, navigation links, and language selector
+ */
+const Header: React.FC = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
 
-  const getClass = (actualRoute) => {
-    return actualRoute === router.route ? 'text-blue-700 hidden sm:block' : 'hover:text-blue-700';
+  const getClass = (actualRoute: string): string => {
+    return actualRoute === router.route
+      ? 'text-blue-700 hidden sm:block'
+      : 'hover:text-blue-700';
   };
 
   return (

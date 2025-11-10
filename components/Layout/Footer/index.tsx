@@ -1,6 +1,10 @@
+import React from 'react';
 import { useTranslation } from 'next-i18next';
 
-const Footer = () => {
+/**
+ * Footer component that displays additional information and links
+ */
+const Footer: React.FC = () => {
   const { t } = useTranslation('common');
 
   return (

@@ -1,6 +1,4 @@
-import axios from "axios";
 import { linesDescriptions } from "./descriptions";
-import { baseURL } from "./constants";
 
 interface LineItem {
   label: string;
@@ -40,9 +38,3 @@ export const setNewSelectedLines = (selectedLines: LineItem[], item: LineItem): 
     return [...selectedLines];
   }
 };
-
-// Legacy axios instance for backward compatibility
-// Note: Consider migrating to the new ApiService for better error handling
-export const axiosInstance = axios.create({
-  baseURL: baseURL,
-});
