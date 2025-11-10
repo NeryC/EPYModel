@@ -175,7 +175,7 @@ const SimulationTooltip = ({
         `translate(${TEXT_OFFSET.x},${TEXT_OFFSET.y})`
       );
       drawLine(baseXPos);
-      drawContent(baseXPos, e.layerY);
+      drawContent(baseXPos, (e as any).layerY || e.clientY);
       drawBackground();
     },
     [

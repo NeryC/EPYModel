@@ -1,8 +1,8 @@
 import { useTranslation } from 'next-i18next';
 import { RtListSectionProps } from '../types';
 import { CSS_CLASSES } from '../constants';
-import RtInput from '../RtInput/index.tsx';
-import Tooltip from '../../../utils/Tooltip.tsx';
+import RtInput from '../RtInput/index';
+import Tooltip from '../../../utils/Tooltip';
 import { RtActionButtons } from './RtActionButtons';
 
 /**

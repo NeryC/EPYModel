@@ -24,7 +24,22 @@ import {
 } from "./utils";
 import { basicDeclareLineD3, useCreateScale, useGetDomain } from "../../utils";
 
-const Graph = ({ type, data, dimensions }) => {
+interface GraphProps {
+  type: "reported" | "hospitalized" | "ICU" | "deceases";
+  data: any[];
+  dimensions: {
+    width: number;
+    height: number;
+    svgWidth: number;
+    svgHeight: number;
+    left: number;
+    top: number;
+    right: number;
+    bottom: number;
+  };
+}
+
+const Graph = ({ type, data, dimensions }: GraphProps) => {
   const svgChartRef = useRef(null);
   const yAxisRef = useRef(null);
   const xAxisRef = useRef(null);

@@ -5,6 +5,7 @@ interface LineDescription {
   default: boolean;
   hiddable: boolean;
   style: "line" | "dashed" | "dot";
+  description?: string;
 }
 
 export type MainSubtitleType = (typeof mainSubtitleTypes)[number];
@@ -61,6 +62,7 @@ const linesDescriptionReported: LineDescription[] = [
     default: false,
     hiddable: false,
     style: "line",
+    description: "Simulated daily reported cases",
   },
   {
     name: "dailyR",

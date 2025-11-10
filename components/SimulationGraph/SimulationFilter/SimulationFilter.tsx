@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
-import { default_filters } from "./constants.ts";
+import { default_filters } from "./constants";
 import { useDispatch } from "react-redux";
-import { setSimulation } from "../../../store/reducers/graphInfoSlice.ts";
+import { setSimulation } from "../../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
-import { requestFilteredData } from "./utils.ts";
+import { requestFilteredData } from "./utils";
 import { useRtList, useNumericInput, useSimulationState } from "./hooks";
 import { NUMERIC_CONSTRAINTS, CSS_CLASSES } from "./constants";
 import {

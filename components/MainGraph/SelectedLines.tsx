@@ -9,7 +9,11 @@ import {
 } from "../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
 
-const SelectedLines = ({ type }) => {
+interface SelectedLinesProps {
+  type: "reported" | "hospitalized" | "ICU" | "deceases";
+}
+
+const SelectedLines = ({ type }: SelectedLinesProps) => {
   const { t } = useTranslation("common");
   const dispatch = useDispatch();
   const [options, selected] = useSelector(selectDropdownInfo(type));
@@ -38,7 +42,7 @@ const SelectedLines = ({ type }) => {
 
   const renderSelected = () =>
     options.map((item) => (
-      <ScenarioTooltip item={[item]} key={item.label} type={type}>
+      <ScenarioTooltip item={[item]} key={item.label} type={type} top={false}>
         <button
           key={item.label}
           className={`flex items-center gap-2 border rounded-3xl py-1 px-3 w-full lg:w-auto ${isSelected(

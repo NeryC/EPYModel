@@ -13,7 +13,12 @@ import { useTranslation } from "next-i18next";
 import Tooltip from "../../utils/Tooltip";
 import ToggleButton from "./ToggleButton";
 
-const SettingsComponent = ({ type, data }) => {
+interface SettingsComponentProps {
+  type: "reported" | "hospitalized" | "ICU" | "deceases";
+  data: any[];
+}
+
+const SettingsComponent = ({ type, data }: SettingsComponentProps) => {
   const { t } = useTranslation("common");
   const dispatch = useDispatch();
   const settings = useSelector(selectSettings(type));

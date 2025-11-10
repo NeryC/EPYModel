@@ -17,11 +17,11 @@ export interface NumericConstraints {
   MAX: number;
 }
 
-export interface NumericInputHook<T> {
-  0: T;
-  1: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  2: () => void;
-}
+export type NumericInputHook<T> = [
+  T,
+  (event: React.ChangeEvent<HTMLInputElement>) => void,
+  () => void
+];
 
 // Simulation state types
 export interface SimulationStateHook {

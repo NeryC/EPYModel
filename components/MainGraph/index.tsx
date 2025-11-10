@@ -7,7 +7,21 @@ import { useTranslation } from "next-i18next";
 import { DownloadButton } from "../utils/DownloadButton";
 import Subtitle from "../utils/Subtitle";
 
-const MainGraph = ({ type, dimensions }) => {
+interface MainGraphProps {
+  type: "reported" | "hospitalized" | "ICU" | "deceases";
+  dimensions: {
+    width: number;
+    height: number;
+    svgWidth: number;
+    svgHeight: number;
+    left: number;
+    top: number;
+    right: number;
+    bottom: number;
+  };
+}
+
+const MainGraph = ({ type, dimensions }: MainGraphProps) => {
   const { t } = useTranslation("common");
   const rawData = useSelector(selectRawData(type));
   const data = JSON.parse(JSON.stringify(rawData));

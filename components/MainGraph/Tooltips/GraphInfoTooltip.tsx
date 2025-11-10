@@ -3,6 +3,15 @@ import { dateField } from "../../../utils/constants";
 import { useTranslation } from "next-i18next";
 import * as d3 from "d3";
 
+interface GraphInfoTooltipProps {
+  xScale: any;
+  yScale: any;
+  width: number;
+  height: number;
+  data: any[];
+  showedElements: any[];
+}
+
 const GraphInfoTooltip = ({
   xScale,
   yScale,
@@ -10,7 +19,7 @@ const GraphInfoTooltip = ({
   height,
   data,
   showedElements,
-}) => {
+}: GraphInfoTooltipProps) => {
   const ref = useRef(null);
   const cuadroRef = useRef(null);
   const contentDotsRef = useRef(null);
@@ -36,8 +45,8 @@ const GraphInfoTooltip = ({
     (x, y) => {
       const tooltipContent = d3.select(ref.current).select(".tooltipContent");
       tooltipContent.attr("transform", (_cur, i, nodes) => {
-        const nodeWidth = nodes[i]?.getBoundingClientRect()?.width || 0;
-        const nodeHeight = nodes[i]?.getBoundingClientRect()?.height || 0;
+        const nodeWidth = (nodes[i] as any)?.getBoundingClientRect()?.width || 0;
+        const nodeHeight = (nodes[i] as any)?.getBoundingClientRect()?.height || 0;
         const translateX = nodeWidth + x > width ? x - nodeWidth - 12 : x + 20;
         const translateY =
           nodeHeight + y > height ? y - nodeHeight - 12 : y - 20;
@@ -64,7 +73,7 @@ const GraphInfoTooltip = ({
       .node();
     if (!tooltipContentElement) return;
 
-    const contentSize = tooltipContentElement.getBoundingClientRect();
+    const contentSize = (tooltipContentElement as any).getBoundingClientRect();
     contentBackground
       .attr("width", contentSize.width + 8)
       .attr("height", contentSize.height + 4);
@@ -125,7 +134,7 @@ const GraphInfoTooltip = ({
 
       const maxNameWidth = d3.max(
         d3.selectAll(".performanceItemName").nodes(),
-        (node) => node.getBoundingClientRect().width
+        (node) => (node as any).getBoundingClientRect().width
       );
 
       d3.selectAll(".performanceItemMarketValue").attr(

@@ -18,13 +18,19 @@ import { ProjectionData } from "../types/api";
 
 // --- Type Definitions ---
 interface GraphStatus {
-  type: string;
+  type: "reported" | "hospitalized" | "ICU" | "deceases";
   isReady: boolean;
 }
 
 interface Dimensions {
   width: number;
   height: number;
+  svgWidth: number;
+  svgHeight: number;
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
 }
 
 interface DataPoint {

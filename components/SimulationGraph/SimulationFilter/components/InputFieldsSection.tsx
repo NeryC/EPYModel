@@ -1,8 +1,8 @@
 import { InputFieldsSectionProps } from '../types';
 import { CSS_CLASSES } from '../constants';
-import UCIInput from '../UCIInput/index.tsx';
-import VFilteredInput from '../VFilteredInput/index.tsx';
-import LambdaItoHInput from '../LambdaItoHInput/index.tsx';
+import UCIInput from '../UCIInput/index';
+import VFilteredInput from '../VFilteredInput/index';
+import LambdaItoHInput from '../LambdaItoHInput/index';
 
 /**
  * InputFieldsSection Component

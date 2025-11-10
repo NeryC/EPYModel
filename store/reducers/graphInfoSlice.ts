@@ -7,6 +7,16 @@ import {
   defaultVisibleLines,
   setNewSelectedLines,
 } from "../../utils/index";
+
+interface LineItem {
+  label: string;
+  name: string;
+  color?: string;
+  hiddable?: boolean;
+  default?: boolean;
+  style?: "line" | "dashed" | "dot";
+  description?: string;
+}
 import { dotFields } from "../../utils/descriptions";
 
 // Type definitions
@@ -33,10 +43,10 @@ interface SimulationSettings {
 }
 
 interface Elements {
-  scenario: string[];
-  options: string[];
-  selectedLines: string[];
-  showedElements: string[];
+  scenario: LineItem[];
+  options: LineItem[];
+  selectedLines: LineItem[];
+  showedElements: LineItem[];
   dotField: string;
 }
 
@@ -102,7 +112,7 @@ type MainGraphType = "reported" | "hospitalized" | "ICU" | "deceases";
 
 interface SetSelectedLinePayload {
   type: MainGraphType;
-  selectedLine: string;
+  selectedLine: LineItem;
 }
 
 interface SetChecksPayload {

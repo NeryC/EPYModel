@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next';
 
 interface ScenarioItem {
   label: string;
-  description: string;
+  description?: string;
   name: string;
 }
 

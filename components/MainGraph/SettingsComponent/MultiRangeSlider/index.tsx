@@ -1,5 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+interface MultiRangeSliderProps {
+  min: number;
+  max: number;
+  selectedMin: number;
+  selectedMax: number;
+  data: any[];
+  onChange: (values: { min: number; max: number }) => void;
+}
+
 const MultiRangeSlider = ({
   min,
   max,
@@ -7,7 +16,7 @@ const MultiRangeSlider = ({
   selectedMax,
   data,
   onChange,
-}) => {
+}: MultiRangeSliderProps) => {
   const minValRef = useRef(null);
   const maxValRef = useRef(null);
   const rangeRef = useRef(null);
