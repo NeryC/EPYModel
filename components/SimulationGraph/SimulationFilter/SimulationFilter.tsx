@@ -1,7 +1,7 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import { default_filters } from "./constants";
 import { useDispatch } from "react-redux";
-import { setSimulation } from "../../../store/reducers/graphInfoSlice";
+import { setSimulation, setSimulationLoading } from "../../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
 import { requestFilteredData } from "./utils";
 import { useRtList, useNumericInput, useSimulationState } from "./hooks";
@@ -63,21 +63,36 @@ function SimulationFilter() {
     clearError,
   } = useSimulationState();
 
+  // Track last submitted params to disable button when nothing changed
+  const [lastSubmitted, setLastSubmitted] = useState(() => JSON.stringify({
+    Rt: default_filters.Rt,
+    UCI_threshold: default_filters.UCI_threshold,
+    V_filtered: default_filters.V_filtered,
+    lambda_I_to_H: default_filters.lambda_I_to_H,
+  }));
+
+  const hasChanges = useMemo(() => {
+    const current = JSON.stringify({ Rt: rtList, UCI_threshold: uci, V_filtered: vFiltered, lambda_I_to_H: lambdaItoH });
+    return current !== lastSubmitted;
+  }, [rtList, uci, vFiltered, lambdaItoH, lastSubmitted]);
+
   // Event handlers
   const handleSimulation = useCallback(async (event) => {
     event.preventDefault();
-    
+
     startLoading();
-    
+    dispatch(setSimulationLoading(true));
+
     const formValues = {
       Rt: JSON.stringify(rtList),
       UCI_threshold: uci,
       V_filtered: vFiltered,
       lambda_I_to_H: lambdaItoH,
     };
-    
+
     try {
       const chartData = await requestFilteredData(formValues);
+      setLastSubmitted(JSON.stringify({ Rt: rtList, UCI_threshold: uci, V_filtered: vFiltered, lambda_I_to_H: lambdaItoH }));
       dispatch(setSimulation({
         cumulative: chartData.cumulative,
         cumulative_deaths: chartData.cumulative_deaths,
@@ -94,8 +109,9 @@ function SimulationFilter() {
       setSimulationError(message || t('simulation-error'));
     } finally {
       stopLoading();
+      dispatch(setSimulationLoading(false));
     }
-  }, [rtList, uci, vFiltered, lambdaItoH, dispatch, startLoading, stopLoading, setSimulationError, t]);
+  }, [rtList, uci, vFiltered, lambdaItoH, dispatch, startLoading, stopLoading, setSimulationError, setLastSubmitted, t]);
 
   const handleReset = useCallback(() => {
     resetRtList();
@@ -129,6 +145,7 @@ function SimulationFilter() {
         
         <ActionButtonsSection
           isLoading={isLoading}
+          hasChanges={hasChanges}
           error={error}
           onSimulate={handleSimulation}
           onReset={handleReset}

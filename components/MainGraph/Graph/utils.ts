@@ -134,8 +134,7 @@ export const getYDomain = (
     ymax_new = yScale.domain()[1];
   }
 
-  yScale.domain([0, ymax_new]);
-  return yScale;
+  return yScale.copy().domain([0, ymax_new]) as d3.ScaleLinear<number, number>;
 };
 
 /**

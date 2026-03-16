@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import "../styles/globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import type { AppProps } from "next/app";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 config.autoAddCss = false;
 
@@ -14,7 +15,9 @@ function MyApp({ Component, ...rest }: AppProps) {
   
   return (
     <Provider store={store}>
-      <Component {...props.pageProps} />
+      <ErrorBoundary>
+        <Component {...props.pageProps} />
+      </ErrorBoundary>
     </Provider>
   );
 }

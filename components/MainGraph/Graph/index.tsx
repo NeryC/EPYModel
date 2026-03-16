@@ -75,6 +75,7 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
   }, [showedElements, isSmooth]);
 
   const clip = useId();
+  const uid = useId();
 
   const { svgWidth, svgHeight, width, height, left, top, right, bottom } =
     dimensions;
@@ -251,14 +252,14 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
               height={height - (bottom - 5)}
             />
           </clipPath>
-          <g id="YAxis" ref={yAxisRef} />
+          <g id={`${uid}-YAxis`} ref={yAxisRef} />
           <g
-            id="XAxis"
+            id={`${uid}-XAxis`}
             ref={xAxisRef}
             transform={`translate(0,${height - bottom})`}
           />
-          <g id="Dots" ref={dotsRef}></g>
-          <g id="Lines" clipPath={`url(#${clip})`}>
+          <g id={`${uid}-Dots`} ref={dotsRef}></g>
+          <g id={`${uid}-Lines`} clipPath={`url(#${clip})`}>
             {showedElements.map(({ name, style, color }) => {
               if (style !== "dot") {
                 return (
@@ -281,7 +282,7 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
               id={`uncertainty-${type}`}
               clipPath={`url(#${clip})`}
               stroke="none"
-              fill="b5adff"
+              fill="#b5adff"
               opacity={0.1}
             />
           </g>

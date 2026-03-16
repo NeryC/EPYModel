@@ -17,15 +17,20 @@ export const LoadingButton = ({
 }: LoadingButtonProps) => {
   const { t } = useTranslation("common");
   
+  const isDisabled = disabled || isLoading;
+
   return (
     <button
       className={`${CSS_CLASSES.BUTTON.PRIMARY} ${
-        isLoading 
-          ? CSS_CLASSES.BUTTON.PRIMARY_LOADING 
-          : CSS_CLASSES.BUTTON.PRIMARY_NORMAL
+        isLoading
+          ? CSS_CLASSES.BUTTON.PRIMARY_LOADING
+          : isDisabled
+            ? CSS_CLASSES.BUTTON.PRIMARY_DISABLED
+            : CSS_CLASSES.BUTTON.PRIMARY_NORMAL
       } ${className || ''}`}
       onClick={onClick}
-      disabled={disabled || isLoading}
+      disabled={isDisabled}
+      title={isDisabled && !isLoading ? 'No hay cambios para simular' : undefined}
     >
       {isLoading ? (
         <>

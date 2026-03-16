@@ -18,12 +18,10 @@ interface LineItem {
   description?: string;
 }
 import { dotFields } from "../../utils/descriptions";
+import { DataPoint } from "../../types/api";
 
-// Type definitions
-export interface DataPoint {
-  fecha: string;
-  [key: string]: any;
-}
+// Re-export DataPoint for backward compatibility
+export type { DataPoint };
 
 interface Range {
   start: number;
@@ -87,6 +85,7 @@ interface SimulationState {
 interface GraphInfoState {
   main: MainState;
   simulation: SimulationState;
+  simulationLoading: boolean;
 }
 
 // Action payload types
@@ -205,6 +204,7 @@ const createInitialSimulationGraphData = (
 
 // Initial state
 const initialState: GraphInfoState = {
+  simulationLoading: false,
   main: {
     lastUpdateDate: null,
     reported: createInitialMainGraphData("reported"),
@@ -305,7 +305,7 @@ export const graphInfoSlice = createSlice({
 
       const currentValue = state.main[type].settings[checkName];
       if (typeof currentValue === "boolean") {
-        (state.main[type].settings as any)[checkName] = !currentValue;
+        (state.main[type].settings as Record<string, boolean>)[checkName] = !currentValue;
       }
     },
 
@@ -334,6 +334,10 @@ export const graphInfoSlice = createSlice({
     setRange(state, action: PayloadAction<SetRangePayload>) {
       const { type, start, finish } = action.payload;
       state.main[type].settings.range = { start, finish };
+    },
+
+    setSimulationLoading(state, action: PayloadAction<boolean>) {
+      state.simulationLoading = action.payload;
     },
   },
   extraReducers(builder) {
@@ -506,6 +510,9 @@ export const selectLastUpdateDate = createSelector(
   (main) => main?.lastUpdateDate ?? null
 );
 
+export const selectSimulationLoading = (state: GraphInfoState) =>
+  state.simulationLoading ?? false;
+
 // Export actions
 export const {
   initMain,
@@ -515,6 +522,7 @@ export const {
   resetChecks,
   resetSelectedLines,
   setRange,
+  setSimulationLoading,
 } = graphInfoSlice.actions;
 
 export default graphInfoSlice.reducer;

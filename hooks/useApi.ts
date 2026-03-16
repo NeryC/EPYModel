@@ -37,7 +37,7 @@ function useApi<T>(
   });
 
   const { immediate = false, onSuccess, onError } = options;
-  const isMountedRef = useRef(true);
+  const isMountedRef = useRef(false);
 
   const execute = useCallback(async () => {
     if (!isMountedRef.current) return;
@@ -85,6 +85,7 @@ function useApi<T>(
   }, []);
 
   useEffect(() => {
+    isMountedRef.current = true;
     if (immediate) {
       execute();
     }

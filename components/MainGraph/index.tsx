@@ -6,6 +6,7 @@ import { selectRawData } from "../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
 import { DownloadButton } from "../utils/DownloadButton";
 import Subtitle from "../utils/Subtitle";
+import { useMemo } from "react";
 
 interface MainGraphProps {
   type: "reported" | "hospitalized" | "ICU" | "deceases";
@@ -24,8 +25,11 @@ interface MainGraphProps {
 const MainGraph = ({ type, dimensions }: MainGraphProps) => {
   const { t } = useTranslation("common");
   const rawData = useSelector(selectRawData(type));
-  const data = JSON.parse(JSON.stringify(rawData));
-  parseD3(data);
+  const data = useMemo(() => {
+    const clone = JSON.parse(JSON.stringify(rawData));
+    parseD3(clone);
+    return clone;
+  }, [rawData]);
 
   return (
     <div className="rounded-lg overflow-hidden shadow-lg bg-white mb-3 md:mb-6 py-3 md:py-6 flex flex-col border border-gray-theme text-black">

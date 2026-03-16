@@ -45,16 +45,17 @@ export const CSS_CLASSES: CssClasses = {
   
   // Button classes
   BUTTON: {
-    PRIMARY: "flex items-center px-4 py-2 text-white font-bold rounded-md transition-colors",
-    PRIMARY_LOADING: "bg-indigo-400 cursor-not-allowed",
+    PRIMARY: "flex items-center justify-center gap-2 px-4 py-2 text-white font-bold rounded-md transition-all duration-200",
+    PRIMARY_LOADING: "bg-indigo-600 cursor-not-allowed opacity-80 animate-pulse",
     PRIMARY_NORMAL: "bg-indigo-500 hover:bg-indigo-600",
+    PRIMARY_DISABLED: "bg-indigo-300 cursor-not-allowed",
     SECONDARY: "items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-md",
     RT_ADD: "text-white bg-indigo-500 hover:bg-indigo-600 font-bold text-xl rounded-md p-2",
     RT_REMOVE: "text-white bg-red-500 hover:bg-red-600 text-xl rounded-md p-2",
   },
-  
+
   // Spinner classes
-  SPINNER: "animate-spin -ml-1 mr-2 h-4 w-4 text-white",
+  SPINNER: "animate-spin h-5 w-5 text-white flex-shrink-0",
 } as const;
 
 // ARIA Labels

@@ -11,6 +11,7 @@ import { SecondaryButton } from './SecondaryButton';
  */
 export const ActionButtonsSection = ({
   isLoading,
+  hasChanges,
   error,
   onSimulate,
   onReset,
@@ -21,7 +22,7 @@ export const ActionButtonsSection = ({
       <LoadingButton
         isLoading={isLoading}
         onClick={onSimulate}
-        disabled={isLoading}
+        disabled={isLoading || !hasChanges}
       >
         Simulate
       </LoadingButton>

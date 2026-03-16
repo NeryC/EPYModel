@@ -13,35 +13,15 @@ import { SimulationData as ApiSimulationData } from "../types/api";
 
 import {
   selectSimulationGraphData,
+  selectSimulationLoading,
   setSimulation,
 } from "../store/reducers/graphInfoSlice";
 
 /* eslint-disable @next/next/no-page-custom-font */
 
-// Import DataPoint type from the slice
-type DataPoint = {
-  fecha: string;
-  [key: string]: any;
-};
-
-interface SimulationData {
-  cumulative: DataPoint[];
-  cumulative_deaths: DataPoint[];
-  exposed: DataPoint[];
-  hospitalized: DataPoint[];
-  immune: DataPoint[];
-  infectious: DataPoint[];
-  susceptible: DataPoint[];
-  uci: DataPoint[];
-}
-
-const FAVICON_URL =
-  "https://www.uaa.edu.py/cdn/images/560cb5c8fdf530a9635a95eab14b.png";
-const FONT_URL =
-  "https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap";
-
 function Simulador() {
   const graphsStatus = useSelector(selectSimulationGraphData);
+  const isSimulating = useSelector(selectSimulationLoading);
 
   const readyGraphs = useMemo(
     () => graphsStatus.filter(({ isReady }) => isReady),
@@ -52,27 +32,53 @@ function Simulador() {
     <>
       <Head>
         <meta name="description" content="Gráficos del COVID-19 en Paraguay" />
-        <link href={FAVICON_URL} rel="icon" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link href={FONT_URL} rel="stylesheet" />
       </Head>
       <Layout>
-        <div className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back">
+        <main className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back">
           <div className="flex flex-col md:flex-row justify-between gap-3 border-b border-gray-theme pb-5 mb-6">
             <TitleSection tab={"simulation"} />
             <SimulationFilter />
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 mb-6 w-full">
-            {readyGraphs.map(({ type }) => (
-              <SimulationGraph key={type} type={type} />
-            ))}
+          <div className="relative">
+            {isSimulating && (
+              <div
+                className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-lg bg-white/70 backdrop-blur-sm"
+                aria-live="polite"
+                aria-label="Simulation in progress"
+              >
+                <svg
+                  className="animate-spin h-10 w-10 text-indigo-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+                <span className="text-indigo-600 font-semibold text-lg">
+                  Simulando...
+                </span>
+              </div>
+            )}
+            <div className={`grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 mb-6 w-full${isSimulating ? " pointer-events-none select-none opacity-40" : ""}`}>
+              {readyGraphs.map(({ type }) => (
+                <SimulationGraph key={type} type={type} />
+              ))}
+            </div>
           </div>
-        </div>
+        </main>
       </Layout>
     </>
   );
@@ -102,6 +108,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           props: {
             ...(await serverSideTranslations(locale ?? "es", ["common"])),
           },
+          revalidate: 3600, // Re-fetch cada hora
         };
       } catch (error) {
         console.error("Error fetching simulation data:", error);
@@ -110,6 +117,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           props: {
             ...(await serverSideTranslations(locale ?? "es", ["common"])),
           },
+          revalidate: 3600, // Re-fetch cada hora
         };
       }
     }

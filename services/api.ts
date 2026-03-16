@@ -115,7 +115,10 @@ export class ApiService {
    * Generic GET request with caching and deduplication
    */
   private async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    const cacheKey = `${url}?${JSON.stringify(config?.params || {})}`;
+    const sortedParams = config?.params
+      ? Object.fromEntries(Object.entries(config.params as Record<string, unknown>).sort())
+      : {};
+    const cacheKey = `${url}?${JSON.stringify(sortedParams)}`;
     
     // Check if request is already in progress
     if (this.requestQueue.has(cacheKey)) {
@@ -232,9 +235,9 @@ export class ApiService {
       const response = await this.get<SimulationData>('/api/v1/get-first-simulation-data');
       
       // Transform data from backend format (day) to frontend format (fecha)
-      const transformDataPoint = (item: any): DataPoint => ({
+      const transformDataPoint = (item: any, index: number): DataPoint => ({
         ...item,
-        fecha: item.day !== undefined ? `day-${item.day}` : (item.fecha || `unknown-${Math.random()}`),
+        fecha: item.day !== undefined ? `day-${item.day}` : (item.fecha || `day-${index}`),
       });
 
       const transformedResponse: SimulationData = {
@@ -281,6 +284,7 @@ export class ApiService {
    * Download file from server
    */
   async downloadFile(url: string, filename?: string): Promise<void> {
+    if (typeof window === 'undefined') return;
     try {
       const response = await this.client.get(url, {
         responseType: 'blob',

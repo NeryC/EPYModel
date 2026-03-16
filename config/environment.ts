@@ -18,7 +18,7 @@ function getApiUrl(): string {
   
   switch (nodeEnv) {
     case 'production':
-      return 'http://epymodel.uaa.edu.py:3001';
+      return process.env.NEXT_PUBLIC_API_URL_PROD || '';
     case 'test':
       return 'http://localhost:3001';
     case 'development':

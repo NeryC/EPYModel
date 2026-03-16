@@ -174,12 +174,15 @@ const SettingsComponent = ({ type, data }: SettingsComponentProps) => {
       onMouseEnter={handleMouseEnter}
       className="flex flex-col items-end top-6 right-7 md:top-10 md:right-14 absolute"
     >
-      <div
+      <button
+        type="button"
         onClick={toggleDropdown}
+        aria-expanded={dropdown}
+        aria-label="Chart settings"
         className="p-3 shadow-2xl mb-2 rounded-full shadow-gray-900 inline-flex text-sm border text-gray-600 hover:bg-gray-600 hover:text-white bg-white"
       >
         <FontAwesomeIcon icon={faSliders} />
-      </div>
+      </button>
 
       <div
         className={`${expandedClass} shadow border bg-white z-40 rounded flex flex-col p-2 items-center text-sm w-72`}

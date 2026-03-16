@@ -26,8 +26,8 @@
     "strictPropertyInitialization": false, // Disabled for refs and optional props
     "noImplicitThis": true,
     "alwaysStrict": true,
-    "noUnusedLocals": false, // Disabled to avoid breaking existing code
-    "noUnusedParameters": false, // Disabled to avoid breaking existing code
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "noImplicitReturns": false, // Disabled for flexibility
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": false,

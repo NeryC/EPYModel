@@ -77,6 +77,7 @@ export interface InputFieldsSectionProps {
 
 export interface ActionButtonsSectionProps {
   isLoading: boolean;
+  hasChanges: boolean;
   error: string | null;
   onSimulate: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onReset: () => void;
@@ -113,6 +114,7 @@ export interface CssClasses {
     PRIMARY: string;
     PRIMARY_LOADING: string;
     PRIMARY_NORMAL: string;
+    PRIMARY_DISABLED: string;
     SECONDARY: string;
     RT_ADD: string;
     RT_REMOVE: string;

@@ -21,6 +21,7 @@ const GraphInfoTooltip = ({
   showedElements,
 }: GraphInfoTooltipProps) => {
   const ref = useRef<SVGGElement | null>(null);
+  const fixedPositionRef = useRef<boolean>(false);
   const cuadroRef = useRef<SVGRectElement | null>(null);
   const contentDotsRef = useRef<SVGGElement | null>(null);
   const contentRef = useRef<SVGGElement | null>(null);
@@ -97,7 +98,7 @@ const GraphInfoTooltip = ({
 
   const followPoints = useCallback(
     (e: any) => {
-      const x = xScale.invert(d3.pointer(e, this)[0]);
+      const x = xScale.invert(d3.pointer(e, ref.current)[0]);
       const bisectDate = d3.bisector((d: any) => d[dateField]).left;
       let baseXPos = 0;
 
@@ -162,26 +163,25 @@ const GraphInfoTooltip = ({
   );
 
   useEffect(() => {
-    let fixedPosition = false;
     cuadro
       .on("mouseout.tooltip", () => {
-        !fixedPosition && d3.select(ref.current).attr("opacity", 0);
+        !fixedPositionRef.current && d3.select(ref.current).attr("opacity", 0);
       })
       .on("mouseover.tooltip", () => {
-        !fixedPosition && d3.select(ref.current).attr("opacity", 1);
+        !fixedPositionRef.current && d3.select(ref.current).attr("opacity", 1);
       })
       .on("mousemove.tooltip", (e) => {
-        !fixedPosition && d3.select(ref.current).attr("opacity", 1);
-        !fixedPosition && followPoints(e);
+        !fixedPositionRef.current && d3.select(ref.current).attr("opacity", 1);
+        !fixedPositionRef.current && followPoints(e);
       })
       .on("click.tooltip", (e) => {
-        if (fixedPosition) {
+        if (fixedPositionRef.current) {
           d3.select(ref.current).attr("opacity", 0);
         } else {
-          !fixedPosition && followPoints(e);
+          !fixedPositionRef.current && followPoints(e);
           d3.select(ref.current).attr("opacity", 1);
         }
-        fixedPosition = !fixedPosition;
+        fixedPositionRef.current = !fixedPositionRef.current;
       });
   }, [cuadro, followPoints]);
 

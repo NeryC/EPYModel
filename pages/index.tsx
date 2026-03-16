@@ -13,7 +13,7 @@ import { useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 import { wrapper } from "../store/store";
 import { apiService } from "../services/api";
-import { ProjectionData } from "../types/api";
+import { ProjectionData, DataPoint } from "../types/api";
 /* eslint-disable @next/next/no-page-custom-font */
 
 // --- Type Definitions ---
@@ -31,11 +31,6 @@ interface Dimensions {
   top: number;
   right: number;
   bottom: number;
-}
-
-interface DataPoint {
-  fecha: string;
-  [key: string]: any;
 }
 
 // Legacy interface - keeping for backward compatibility
@@ -63,21 +58,6 @@ function Graphs(): React.ReactElement {
     () => (
       <Head>
         <meta name="description" content="Gráficos del COVID-19 en Paraguay" />
-        <link
-          href="https://www.uaa.edu.py/cdn/images/560cb5c8fdf530a9635a95eab14b.png"
-          rel="icon"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet"
-          crossOrigin="anonymous"
-        />
       </Head>
     ),
     []
@@ -131,6 +111,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           props: {
             ...(await serverSideTranslations(locale ?? "es", ["common"])),
           },
+          revalidate: 3600, // Re-fetch cada hora
         };
       } catch (error) {
         console.error("Error fetching projection data:", error);
@@ -140,6 +121,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           props: {
             ...(await serverSideTranslations(locale ?? "es", ["common"])),
           },
+          revalidate: 3600, // Re-fetch cada hora
         };
       }
     }

@@ -36,7 +36,6 @@ export const setNewSelectedLines = (selectedLines: LineItem[], item: LineItem): 
   if (selectedLines.some((element: LineItem) => element.label === item.label)) {
     return selectedLines.filter((e: LineItem) => e.label !== item.label);
   } else {
-    selectedLines.push(item);
-    return [...selectedLines];
+    return [...selectedLines, item];
   }
 };
