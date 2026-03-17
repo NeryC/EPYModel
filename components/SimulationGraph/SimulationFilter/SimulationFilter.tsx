@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from "react";
+import { useCallback, useState, useMemo } from "react";
 import { default_filters } from "./constants";
 import { useDispatch } from "react-redux";
 import { setSimulation, setSimulationLoading } from "../../../store/reducers/graphInfoSlice";

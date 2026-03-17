@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import Image from "next/image";
-import React, { memo, MouseEvent, useCallback, useRef, useState } from "react";
+import { memo, MouseEvent, useCallback, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useSelector } from "react-redux";
 import { DataPoint } from "../../store/reducers/graphInfoSlice";

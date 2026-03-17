@@ -305,7 +305,7 @@ export const graphInfoSlice = createSlice({
 
       const currentValue = state.main[type].settings[checkName];
       if (typeof currentValue === "boolean") {
-        (state.main[type].settings as Record<string, boolean>)[checkName] = !currentValue;
+        (state.main[type].settings as unknown as Record<string, boolean>)[checkName] = !currentValue;
       }
     },
 

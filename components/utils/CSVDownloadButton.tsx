@@ -1,4 +1,4 @@
-import React, { memo, MouseEvent, useCallback } from "react";
+import { memo, useCallback } from "react";
 import { saveAs } from "file-saver";
 import { DataPoint } from "../../store/reducers/graphInfoSlice";
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactElement } from 'react';
 
 interface LoadingProps {
   size?: 'sm' | 'md' | 'lg';
@@ -9,7 +9,7 @@ interface LoadingProps {
 /**
  * Loading component with customizable size and text
  */
-function Loading({ size = 'md', text, className = '' }: LoadingProps): React.ReactElement {
+function Loading({ size = 'md', text, className = '' }: LoadingProps): ReactElement {
   const sizeClasses = {
     sm: 'h-4 w-4',
     md: 'h-8 w-8',

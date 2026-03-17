@@ -1,17 +1,17 @@
-import React from 'react';
+import { FC, ReactNode } from 'react';
 import Head from 'next/head';
 import Header from './Header';
 import Footer from './Footer';
 
 interface LayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 /**
  * Layout component that wraps pages with Header and Footer
  * Provides consistent page structure across the application
  */
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: FC<LayoutProps> = ({ children }) => {
   return (
     <>
       <Head>

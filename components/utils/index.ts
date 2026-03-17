@@ -29,7 +29,7 @@ export const basicDeclareLineD3 = (
 
   return (xScale: any, yScale: any) =>
     d3
-      .line()
+      .line<any>()
       .x((d: any) => xScale(d[baseLineData.xField]))
       .y((d: any) => yScale(shouldReduce ? d[dataYField] / 1000 : d[dataYField]))
       .curve(isSmooth)

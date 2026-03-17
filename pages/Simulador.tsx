@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Layout from "../components/Layout";
-import React, { useMemo } from "react";
+import { memo, useMemo } from "react";
 import SimulationFilter from "../components/SimulationGraph/SimulationFilter/SimulationFilter";
 import SimulationGraph from "../components/SimulationGraph/SimulationGraph";
 import { GetStaticProps } from "next";
@@ -123,4 +123,4 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
     }
 );
 
-export default React.memo(Simulador);
+export default memo(Simulador);

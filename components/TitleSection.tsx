@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { selectLastUpdateDate } from "../store/reducers/graphInfoSlice";
 import { useDateFormat } from "../hooks/useDateFormat";
 import { useSelector } from "react-redux";

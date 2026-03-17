@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -8,7 +8,7 @@ import LanguajeDropdown from './LanguajeDropdown';
 /**
  * Header component that displays the application logo, navigation links, and language selector
  */
-const Header: React.FC = () => {
+const Header: FC = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
 

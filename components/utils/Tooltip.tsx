@@ -1,8 +1,8 @@
-import React from "react";
+import { ReactNode } from "react";
 
 interface TooltipProps {
   text: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
   position?: "top" | "bottom" | "left" | "right";
   className?: string;
   showDefaultIcon?: boolean;
