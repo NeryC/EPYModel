@@ -1,33 +1,32 @@
 FROM node:18-alpine
 
-# Set working directory
 WORKDIR /usr/app
 
-# Install PM2 globally
+# Instalar PM2 globalmente
 RUN npm install --global pm2
 
-# Copy package.json and package-lock.json before other files
-# Utilise Docker cache to save re-installing dependencies if unchanged
-COPY ./package*.json ./
+# Copiar archivos de dependencias (yarn.lock resuelve conflictos de peer deps)
+COPY package.json yarn.lock ./
 
-# Install dependencies
-RUN npm install --production
+# Instalar todas las dependencias (incluyendo devDeps necesarias para el build)
+RUN yarn install --frozen-lockfile
 
-# Copy all files
-COPY ./ ./
+# Copiar el resto del código
+COPY . .
 
-RUN npm install --save-dev typescript @types/node
+# ARG permite pasar la URL del backend en tiempo de build:
+#   docker build --build-arg NEXT_PUBLIC_API_URL=http://tu-servidor:3001 .
+# Si no se pasa, usa localhost (válido cuando frontend y backend están en el mismo servidor)
+ARG NEXT_PUBLIC_API_URL=http://localhost:3001
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
-# Build app
-RUN npm run build
+# Build de producción (Next.js bake el NEXT_PUBLIC_API_URL en el bundle aquí)
+RUN yarn build
 
-# Expose the listening port
+# Exponer puerto del frontend
 EXPOSE 3000
 
-# Run container as non-root (unprivileged) user
-# The node user is provided in the Node.js Alpine base image
+# Correr como usuario no-root
 USER node
 
-# Run npm start script when container starts
-CMD [ "pm2-runtime", "npm", "--", "start" ]
-# CMD [ "npm", "start" ]
+CMD ["pm2-runtime", "npm", "--", "start"]

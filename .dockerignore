@@ -1,9 +1,6 @@
-.git/
-.gitignore
-.next/
-.dockerignore
-Dockerfile
-docker-compose.yml
-node_modules/
-nginx/  
-package-lock.json      
+node_modules
+.next
+.env.local
+.env.*.local
+*.log
+.git
