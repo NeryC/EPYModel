@@ -31,6 +31,8 @@ interface SimulationTooltipProps {
   xScale: d3.ScaleTime<number, number>;
   /** D3 linear scale for y-axis */
   yScale: d3.ScaleLinear<number, number>;
+  /** Optional value transformer applied before passing to yScale and for display (e.g. v => v / 1000) */
+  valueReducer?: (v: number) => number;
   /** Width of the tooltip area */
   width: number;
   /** Height of the tooltip area */
@@ -51,6 +53,7 @@ interface SimulationTooltipProps {
 const SimulationTooltip = ({
   xScale,
   yScale,
+  valueReducer,
   width,
   height,
   data,
@@ -114,15 +117,17 @@ const SimulationTooltip = ({
 
   const placeDots = useCallback(
     (actualData: SimulationData, color: string, baseXPos: number) => {
+      const rawValue = actualData[VALUE_FIELD] as number;
+      const scaledValue = valueReducer ? valueReducer(rawValue) : rawValue;
       const contentDots = d3.select(contentDotsRef.current);
       contentDots
         .append("circle")
         .attr("r", DOT_RADIUS)
         .attr("fill", color)
         .attr("cx", (_d) => baseXPos)
-        .attr("cy", (_d) => yScale(actualData[VALUE_FIELD] as number));
+        .attr("cy", (_d) => yScale(scaledValue));
     },
-    [contentDotsRef, yScale]
+    [contentDotsRef, yScale, valueReducer]
   );
 
   const followPoints = useCallback(
@@ -160,12 +165,13 @@ const SimulationTooltip = ({
         .append("g")
         .attr("transform", "translate(6,5)");
       insideContent.append("circle").attr("r", 6).attr("fill", TOOLTIP_COLOR);
+      const rawValue = actualData[VALUE_FIELD] as number;
       insideContent
         .append("text")
         .attr("class", "performanceItemMarketValue")
         .attr("fill", "white")
         .attr("font-family", "Nunito, sans-serif")
-        .text(Math.round(actualData[VALUE_FIELD] as number).toLocaleString());
+        .text(Math.round(rawValue).toLocaleString());
 
       baseXPos = xScale(actualData[DATE_FIELD]);
       placeDots(actualData, TOOLTIP_COLOR, baseXPos);
@@ -181,6 +187,7 @@ const SimulationTooltip = ({
     [
       xScale,
       data,
+      valueReducer,
       contentRef,
       contentDotsRef,
       drawLine,
@@ -189,6 +196,11 @@ const SimulationTooltip = ({
       placeDots,
     ]
   );
+
+  useEffect(() => {
+    fixedPositionRef.current = false;
+    d3.select(ref.current).attr("opacity", 0);
+  }, [data]);
 
   useEffect(() => {
     const cuadro = d3.select(cuadroRef.current);

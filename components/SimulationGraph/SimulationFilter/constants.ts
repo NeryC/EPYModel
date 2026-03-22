@@ -11,16 +11,17 @@ export const RT_CONSTRAINTS: RtConstraints = {
   STEP_SIZE: 0.1,
   DEFAULT_NEW_VALUE: 1.0,
   MIN_COUNT: 1,
+  MAX_COUNT: 12,
 } as const;
 
 // UCI and VFiltered constraints
 export const NUMERIC_CONSTRAINTS: NumericConstraintsMap = {
   UCI: {
-    MIN: 0,
+    MIN: 1,
     MAX: 5000,
   },
   V_FILTERED: {
-    MIN: 0,
+    MIN: 1,
     MAX: 5000,
   },
   LAMBDA_I_TO_H: {
@@ -50,8 +51,8 @@ export const CSS_CLASSES: CssClasses = {
     PRIMARY_NORMAL: "bg-indigo-500 hover:bg-indigo-600",
     PRIMARY_DISABLED: "bg-indigo-300 cursor-not-allowed",
     SECONDARY: "items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-md",
-    RT_ADD: "text-white bg-indigo-500 hover:bg-indigo-600 font-bold text-xl rounded-md p-2",
-    RT_REMOVE: "text-white bg-red-500 hover:bg-red-600 text-xl rounded-md p-2",
+    RT_ADD: "text-white bg-indigo-500 hover:bg-indigo-600 font-bold text-xl rounded-md p-2 min-w-[44px] min-h-[44px]",
+    RT_REMOVE: "text-white bg-red-500 hover:bg-red-600 text-xl rounded-md p-2 min-w-[44px] min-h-[44px]",
   },
 
   // Spinner classes
@@ -77,5 +78,5 @@ export const default_filters: DefaultFilters = {
   Rt: [1.1, 1.2, 1.3, 0.8, 0.7, 0.9],
   UCI_threshold: 100,
   V_filtered: 1000,
-  lambda_I_to_H: 0.5,
+  lambda_I_to_H: 0.01,
 };

@@ -152,6 +152,15 @@ const SettingsComponent = ({ type, data }: SettingsComponentProps) => {
     }
   }, []);
 
+  // Cerrar dropdown con Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setDropdown(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   // Cleanup all timeouts on unmount
   useEffect(() => {
     return () => {
@@ -234,7 +243,9 @@ const SettingsComponent = ({ type, data }: SettingsComponentProps) => {
 
         <div className="flex flex-row-reverse w-full mb-2 text-sm">
           <button
+            type="button"
             onClick={resetSettings}
+            aria-label={`${translations.reset} - configuración de gráfico`}
             className="bg-transparent hover:bg-indigo-600 text-indigo-600 font-semibold hover:text-white px-2 border border-indigo-600 hover:border-transparent rounded"
           >
             {translations.reset}

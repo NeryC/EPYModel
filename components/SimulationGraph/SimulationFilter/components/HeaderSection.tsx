@@ -10,8 +10,8 @@ export const HeaderSection = () => {
   const { t } = useTranslation("common");
   
   return (
-    <span className={CSS_CLASSES.TITLE}>
+    <h2 className={CSS_CLASSES.TITLE}>
       {t("chart-setting")}
-    </span>
+    </h2>
   );
 };

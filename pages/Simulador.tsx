@@ -15,7 +15,9 @@ import {
   selectSimulationGraphData,
   selectSimulationLoading,
   setSimulation,
+  setSimulationUciThreshold,
 } from "../store/reducers/graphInfoSlice";
+import { default_filters } from "../components/SimulationGraph/SimulationFilter/constants";
 
 /* eslint-disable @next/next/no-page-custom-font */
 
@@ -31,10 +33,11 @@ function Simulador() {
   return (
     <>
       <Head>
-        <meta name="description" content="Gráficos del COVID-19 en Paraguay" />
+        <title>Simulador SEIR-H COVID-19 | EPIModel</title>
+        <meta name="description" content="Simula escenarios epidemiológicos de COVID-19 en Paraguay usando el modelo SEIR-H. Ajusta parámetros de transmisibilidad, UCI y vacunación." />
       </Head>
       <Layout>
-        <main className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back">
+        <main id="main-content" className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back max-w-screen-2xl mx-auto w-full" aria-label="Simulador SEIR-H COVID-19">
           <div className="flex flex-col md:flex-row justify-between gap-3 border-b border-gray-theme pb-5 mb-6">
             <TitleSection tab={"simulation"} />
             <SimulationFilter />
@@ -44,7 +47,7 @@ function Simulador() {
               <div
                 className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-lg bg-white/70 backdrop-blur-sm"
                 aria-live="polite"
-                aria-label="Simulation in progress"
+                aria-label="Simulación en progreso"
               >
                 <svg
                   className="animate-spin h-10 w-10 text-indigo-500"
@@ -103,6 +106,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
             uci: chartData.uci,
           })
         );
+        store.dispatch(setSimulationUciThreshold(default_filters.UCI_threshold));
 
         return {
           props: {

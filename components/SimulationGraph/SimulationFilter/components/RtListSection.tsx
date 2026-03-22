@@ -19,11 +19,11 @@ export const RtListSection = ({
   const { t } = useTranslation("common");
   
   return (
-    <div className={CSS_CLASSES.SECTION_ROW}>
-      <label className={CSS_CLASSES.LABEL}>
+    <fieldset className={CSS_CLASSES.SECTION_ROW}>
+      <legend className={`${CSS_CLASSES.LABEL} flex items-center gap-1`}>
         {t("rt-list")}
         <Tooltip text={t("rt-list-description")} />
-      </label>
+      </legend>
       <div className={CSS_CLASSES.RT_CONTAINER}>
         {rtList.map((rt, index) => (
           <div key={index} className="flex items-center">
@@ -40,6 +40,6 @@ export const RtListSection = ({
           onRemove={() => onRemoveRt(rtList.length - 1)}
         />
       </div>
-    </div>
+    </fieldset>
   );
 };

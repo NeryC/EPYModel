@@ -42,7 +42,7 @@ const ToggleButton = memo(function ToggleButton({
       <label
         htmlFor={name}
         className="inline-flex relative items-center cursor-pointer"
-        aria-label={`Toggle ${label}`}
+        aria-label={label}
       >
         <input
           type="checkbox"

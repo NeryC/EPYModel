@@ -1,7 +1,7 @@
 import { useCallback, useState, useMemo } from "react";
 import { default_filters } from "./constants";
 import { useDispatch } from "react-redux";
-import { setSimulation, setSimulationLoading } from "../../../store/reducers/graphInfoSlice";
+import { setSimulation, setSimulationLoading, setSimulationUciThreshold } from "../../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
 import { requestFilteredData } from "./utils";
 import { useRtList, useNumericInput, useSimulationState } from "./hooks";
@@ -93,6 +93,7 @@ function SimulationFilter() {
     try {
       const chartData = await requestFilteredData(formValues);
       setLastSubmitted(JSON.stringify({ Rt: rtList, UCI_threshold: uci, V_filtered: vFiltered, lambda_I_to_H: lambdaItoH }));
+      dispatch(setSimulationUciThreshold(uci));
       dispatch(setSimulation({
         cumulative: chartData.cumulative,
         cumulative_deaths: chartData.cumulative_deaths,
@@ -104,7 +105,7 @@ function SimulationFilter() {
         uci: chartData.uci,
       }));
     } catch (err: unknown) {
-      console.error('Simulation error:', err);
+      console.warn('Simulation error:', err instanceof Error ? err.message : err);
       const message = err instanceof Error ? err.message : String(err);
       setSimulationError(message || t('simulation-error'));
     } finally {
@@ -119,12 +120,15 @@ function SimulationFilter() {
     resetVFiltered();
     resetLambdaItoH();
     clearError();
+    // Usar cadena vacía para que hasChanges sea true tras el reset,
+    // habilitando el botón de simular con los valores por defecto
+    setLastSubmitted("");
   }, [resetRtList, resetUci, resetVFiltered, resetLambdaItoH, clearError]);
 
 
   return (
     <div className={CSS_CLASSES.CONTAINER}>
-      <div className={CSS_CLASSES.CARD}>
+      <form className={CSS_CLASSES.CARD} onSubmit={handleSimulation} aria-label={t("simulation-title")}>
         <HeaderSection />
         
         <RtListSection
@@ -150,7 +154,7 @@ function SimulationFilter() {
           onSimulate={handleSimulation}
           onReset={handleReset}
         />
-      </div>
+      </form>
     </div>
   );
 }

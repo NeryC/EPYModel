@@ -6,17 +6,14 @@ const UCIInput = ({ UCI, handleUCIChange }) => {
 
   return (
     <div className="flex flex-col gap-1 w-full">
-      <label
-        htmlFor="uci_input"
-        className="md:text-sm font-bold flex items-center gap-1 pr-2"
-      >
-        {t("uci-setting")}
+      <div className="md:text-sm font-bold flex items-center gap-1 pr-2">
+        <label htmlFor="uci_input">{t("uci-setting")}</label>
         <Tooltip text={t("uci-setting-description")} />
-      </label>
+      </div>
       <input
         type="number"
         id="uci_input"
-        min="0"
+        min="1"
         max="3000"
         value={UCI}
         onChange={handleUCIChange}

@@ -19,9 +19,9 @@ const Subtitle = memo(function Subtitle({ type }: SubtitleProps) {
   const { t } = useTranslation("common");
 
   return (
-    <div className="whitespace-pre-line pt-2 text-base text-text-secondary">
+    <p className="whitespace-pre-line pt-2 text-base text-text-secondary">
       {t(`${type}-subtitle`)}
-    </div>
+    </p>
   );
 });
 

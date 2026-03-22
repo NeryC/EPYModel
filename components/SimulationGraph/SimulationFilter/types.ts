@@ -90,6 +90,7 @@ export interface RtConstraints {
   STEP_SIZE: number;
   DEFAULT_NEW_VALUE: number;
   MIN_COUNT: number;
+  MAX_COUNT: number;
 }
 
 export interface NumericConstraintsMap {

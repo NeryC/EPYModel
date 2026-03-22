@@ -14,38 +14,41 @@ const Header: FC = () => {
 
   const getClass = (actualRoute: string): string => {
     return actualRoute === router.route
-      ? 'text-blue-700 hidden sm:block'
-      : 'hover:text-blue-700';
+      ? 'text-blue-700 hidden sm:inline-flex items-center py-3 px-1'
+      : 'hover:text-blue-700 inline-flex items-center py-3 px-1';
   };
 
   return (
-    <div className="relative bg-white border-b-2 border-b-gray-theme drop-shadow-md">
+    <header className="relative bg-white border-b-2 border-b-gray-theme drop-shadow-md">
       <div className="mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center py-2">
           <div className="relative flex justify-start md:flex-0">
             <div className="relative h-9 w-16">
               <Image
                 src="/logo.png"
-                alt="Picture of something nice"
+                alt="EPIModel — Visualizador epidemiológico COVID-19"
                 fill
+                sizes="64px"
                 style={{ objectFit: 'contain' }}
               />
             </div>
           </div>
-          <div className="flex w-auto items-center justify-between gap-8 font-bold">
-            <Link href="/" className={getClass('/')}>
-              {t('home')}
-            </Link>
-            <Link href="/Simulador" className={getClass('/Simulador')}>
-              {t('simulator')}
-            </Link>
-          </div>
+          <nav aria-label="Navegación principal">
+            <div className="flex w-auto items-center justify-between gap-8 font-bold">
+              <Link href="/" className={getClass('/')} aria-current={router.route === '/' ? 'page' : undefined}>
+                {t('home')}
+              </Link>
+              <Link href="/Simulador" className={getClass('/Simulador')} aria-current={router.route === '/Simulador' ? 'page' : undefined}>
+                {t('simulator')}
+              </Link>
+            </div>
+          </nav>
           <div className="flex items-center">
             <LanguajeDropdown />
           </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 

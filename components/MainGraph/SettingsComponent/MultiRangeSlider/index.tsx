@@ -127,6 +127,8 @@ const MultiRangeSlider = ({
         max={max}
         value={selectedMin}
         ref={minValRef}
+        aria-label="Fecha de inicio del rango"
+        aria-valuetext={formData.minInput}
         onChange={(event) => {
           const value = Math.min(+event.target.value, selectedMax - 1);
           onChange({ min: value, max: selectedMax });
@@ -142,6 +144,8 @@ const MultiRangeSlider = ({
         max={max}
         value={selectedMax}
         ref={maxValRef}
+        aria-label="Fecha de fin del rango"
+        aria-valuetext={formData.maxInput}
         onChange={(event) => {
           const value = Math.max(+event.target.value, selectedMin + 1);
           onChange({ min: selectedMin, max: value });
@@ -158,6 +162,8 @@ const MultiRangeSlider = ({
             formData.minInputError ? "errorDate" : ""
           }`}
           type="date"
+          aria-label="Fecha de inicio"
+          aria-invalid={formData.minInputError}
           value={formData.minInput}
           min={data[min].fecha}
           max={data[selectedMax].fecha}
@@ -168,6 +174,8 @@ const MultiRangeSlider = ({
             formData.maxInputError ? "errorDate" : ""
           }`}
           type="date"
+          aria-label="Fecha de fin"
+          aria-invalid={formData.maxInputError}
           value={formData.maxInput}
           min={data[selectedMin].fecha}
           max={data[max].fecha}

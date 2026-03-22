@@ -1,11 +1,13 @@
 import * as d3 from "d3";
-import { useRef, useEffect, useId } from "react";
+import { useRef, useEffect, useId, useCallback } from "react";
+import { useTranslation } from "next-i18next";
 import { drawLines } from "./utils";
 import { basicDeclareLineD3, useCreateScale, useGetDomain } from "../../utils";
 import useDimensions from "../../../hooks/useDimensions";
 import SimulationTooltip from "../SimulationTooltip";
 
-const Graph = ({ type, data }) => {
+const Graph = ({ type, data, uciThreshold }: { type: string; data: any[]; uciThreshold?: number | null }) => {
+  const { t } = useTranslation("common");
   const svgChartRef = useRef<SVGSVGElement | null>(null);
   const yAxisRef = useRef<SVGGElement | null>(null);
   const xAxisRef = useRef<SVGGElement | null>(null);
@@ -50,6 +52,8 @@ const Graph = ({ type, data }) => {
     xField: dayField,
   };
 
+  const valueReducer = useCallback((v: number) => v / 1000, []);
+
   const dataLine = basicDeclareLineD3(baseLineData, valueField, true);
 
   useEffect(() => {
@@ -92,7 +96,17 @@ const Graph = ({ type, data }) => {
 
   return (
     <div className="w-full relative" ref={containerRef}>
-      <svg id={type} width={svgWidth} height={svgHeight} ref={svgChartRef}>
+      <svg
+        id={type}
+        width={svgWidth}
+        height={svgHeight}
+        ref={svgChartRef}
+        role="img"
+        aria-labelledby={`${type}-sim-title`}
+        aria-describedby={`${type}-sim-desc`}
+      >
+        <title id={`${type}-sim-title`}>{t(`${type}-simulation`)}</title>
+        <desc id={`${type}-sim-desc`}>{t(`${type}-subtitle`)}</desc>
         <g id="elements" transform={`translate(${left},${top})`}>
           {width > 0 && (
             <clipPath id={clip}>
@@ -105,6 +119,14 @@ const Graph = ({ type, data }) => {
             </clipPath>
           )}
           <g id="YAxis" ref={yAxisRef} />
+          <text
+            transform={`translate(${-left + 10}, ${(height - bottom) / 2}) rotate(-90)`}
+            textAnchor="middle"
+            fontSize={10}
+            fill="#9ca3af"
+          >
+            ×1,000
+          </text>
           <g
             id="XAxis"
             ref={xAxisRef}
@@ -122,9 +144,23 @@ const Graph = ({ type, data }) => {
             />
           </g>
 
+          {uciThreshold != null && yScale(uciThreshold / 1000) >= 0 && (
+            <line
+              x1={0}
+              x2={width - right}
+              y1={yScale(uciThreshold / 1000)}
+              y2={yScale(uciThreshold / 1000)}
+              stroke="red"
+              strokeWidth={1.5}
+              strokeDasharray="6 3"
+              opacity={0.8}
+            />
+          )}
+
           <SimulationTooltip
             xScale={xScale}
             yScale={yScale}
+            valueReducer={valueReducer}
             width={width}
             height={height}
             data={data}

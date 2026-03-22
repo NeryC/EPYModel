@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { useRef, useId, useEffect, useMemo, useCallback } from "react";
+import { useTranslation } from "next-i18next";
 import SettingsComponent from "../SettingsComponent";
 import { dateField } from "../../../utils/constants";
 import GraphInfoTooltip from "../Tooltips/GraphInfoTooltip";
@@ -40,6 +41,7 @@ interface GraphProps {
 }
 
 const Graph = ({ type, data, dimensions }: GraphProps) => {
+  const { t } = useTranslation("common");
   const svgChartRef = useRef<SVGSVGElement | null>(null);
   const yAxisRef = useRef<SVGGElement | null>(null);
   const xAxisRef = useRef<SVGGElement | null>(null);
@@ -242,7 +244,17 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
 
   return (
     <div className="w-full relative px-1 md:px-3">
-      <svg id={type} width={svgWidth} height={svgHeight} ref={svgChartRef}>
+      <svg
+        id={type}
+        width={svgWidth}
+        height={svgHeight}
+        ref={svgChartRef}
+        role="img"
+        aria-labelledby={`${type}-svg-title`}
+        aria-describedby={`${type}-svg-desc`}
+      >
+        <title id={`${type}-svg-title`}>{t(`${type}-title`)}</title>
+        <desc id={`${type}-svg-desc`}>{t(`${type}-subtitle`)}</desc>
         <g id="elements" transform={`translate(${left},${top})`}>
           <clipPath id={clip}>
             <rect

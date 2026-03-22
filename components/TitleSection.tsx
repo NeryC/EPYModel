@@ -54,8 +54,8 @@ export function TitleSection({ tab = "main" }: TitleSectionProps) {
 
   return (
     <div className={containerClass}>
-      <span className="font-bold text-black text-2xl mb-2">{title}</span>
-      <span className={borderClass}>{description}</span>
+      <h1 className="font-bold text-black text-2xl mb-2">{title}</h1>
+      <p className={borderClass}>{description}</p>
     </div>
   );
 }

@@ -40,31 +40,41 @@ const SelectedLines = ({ type }: SelectedLinesProps) => {
     dispatch(resetSelectedLines({ type }));
   };
 
+  const isItemSelected = (item) =>
+    selected.some((element) => element.label === item.label);
+
   const renderSelected = () =>
-    options.map((item) => (
-      <ScenarioTooltip item={[item]} key={item.label} type={type} top={false}>
-        <button
-          key={item.label}
-          className={`flex items-center gap-2 border rounded-3xl py-1 px-3 w-full lg:w-auto ${isSelected(
-            item
-          )}`}
-          onClick={() => selectOption(item)}
-        >
-          <div
-            className={chooseClass(item)}
-            style={chooseLineColor(item.name)}
-          />
-          <div className="text-sm font-bold">{t(item.label)}</div>
-        </button>
-      </ScenarioTooltip>
-    ));
+    options.map((item) => {
+      const active = isItemSelected(item);
+      return (
+        <ScenarioTooltip item={[item]} key={item.label} type={type} top={false}>
+          <button
+            key={item.label}
+            className={`flex items-center gap-2 border rounded-3xl min-h-[44px] py-1 px-3 w-full lg:w-auto ${isSelected(item)}`}
+            onClick={() => selectOption(item)}
+            aria-pressed={active}
+          >
+            <div
+              className={chooseClass(item)}
+              style={chooseLineColor(item.name)}
+            />
+            <div className="text-sm font-bold">{t(item.label)}</div>
+            {active && (
+              <span className="sr-only">(activo)</span>
+            )}
+          </button>
+        </ScenarioTooltip>
+      );
+    });
 
   return (
     <div className="grid lg:flex grid-cols-4 gap-2 lg:gap-4 text-sm pt-3 lg:pt-1 justify-center">
       {renderSelected()}
       <button
-        className="flex items-center gap-2 border border-gray-300 rounded-3xl py-1 px-3 w-full lg:w-auto"
+        type="button"
+        className="flex items-center gap-2 border border-gray-300 rounded-3xl min-h-[44px] py-1 px-3 w-full lg:w-auto"
         onClick={handleReset}
+        aria-label={t("reset-lines-selection")}
       >
         <div className="text-sm font-bold ">{t("reset")}</div>
       </button>

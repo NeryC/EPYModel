@@ -3,6 +3,7 @@ import { CSS_CLASSES } from '../constants';
 import { ErrorMessage } from './ErrorMessage';
 import { LoadingButton } from './LoadingButton';
 import { SecondaryButton } from './SecondaryButton';
+import { useTranslation } from 'next-i18next';
 
 /**
  * ActionButtonsSection Component
@@ -15,23 +16,27 @@ export const ActionButtonsSection = ({
   error,
   onSimulate,
   onReset,
-}: ActionButtonsSectionProps) => (
-  <div className={CSS_CLASSES.ACTIONS_CONTAINER}>
-    <ErrorMessage error={error} />
-    <div className={CSS_CLASSES.ACTIONS_ROW}>
-      <LoadingButton
-        isLoading={isLoading}
-        onClick={onSimulate}
-        disabled={isLoading || !hasChanges}
-      >
-        Simulate
-      </LoadingButton>
-      <SecondaryButton
-        onClick={onReset}
-        disabled={isLoading}
-      >
-        Reset
-      </SecondaryButton>
+}: ActionButtonsSectionProps) => {
+  const { t } = useTranslation('common');
+
+  return (
+    <div className={CSS_CLASSES.ACTIONS_CONTAINER}>
+      <ErrorMessage error={error} />
+      <div className={CSS_CLASSES.ACTIONS_ROW}>
+        <LoadingButton
+          isLoading={isLoading}
+          onClick={onSimulate}
+          disabled={isLoading || !hasChanges}
+        >
+          {t('simulate')}
+        </LoadingButton>
+        <SecondaryButton
+          onClick={onReset}
+          disabled={isLoading}
+        >
+          {t('reset')}
+        </SecondaryButton>
+      </div>
     </div>
-  </div>
-);
+  );
+};

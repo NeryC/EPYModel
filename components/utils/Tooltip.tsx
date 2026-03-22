@@ -31,6 +31,8 @@ function Tooltip({
     }
   };
 
+  const tooltipId = `tooltip-${text.slice(0, 20).replace(/\s+/g, "-").replace(/[^a-zA-Z0-9-]/g, "")}`;
+
   const DefaultIcon = () => (
     <div className="relative inline-block">
       <div className="group">
@@ -40,6 +42,11 @@ function Tooltip({
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
+          tabIndex={0}
+          role="img"
+          aria-label="Información"
+          aria-describedby={tooltipId}
+          focusable="true"
         >
           <path
             strokeLinecap="round"
@@ -49,7 +56,9 @@ function Tooltip({
           />
         </svg>
         <div
-          className={`absolute ${getPositionClasses()} px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 max-w-[300px] w-max break-words whitespace-normal pointer-events-none`}
+          id={tooltipId}
+          role="tooltip"
+          className={`absolute ${getPositionClasses()} px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200 z-50 max-w-[300px] w-max break-words whitespace-normal pointer-events-none`}
         >
           {text}
         </div>

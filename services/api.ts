@@ -72,7 +72,7 @@ export class ApiService {
       },
       (error: AxiosError) => {
         const apiError = this.handleApiError(error);
-        console.error('API Error:', apiError);
+        console.warn('API Error:', apiError.message);
         return Promise.reject(apiError);
       }
     );
@@ -85,7 +85,7 @@ export class ApiService {
     if (error.response) {
       // Server responded with error status
       const responseData = error.response.data as any;
-      const message = responseData?.message || responseData?.error || 'Server error';
+      const message = responseData?.error || responseData?.message || 'Server error';
       return new ApiServiceError(
         message,
         error.response.status,

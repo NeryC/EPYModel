@@ -1,5 +1,4 @@
 import { FC, ReactNode } from 'react';
-import Head from 'next/head';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -14,30 +13,20 @@ interface LayoutProps {
 const Layout: FC<LayoutProps> = ({ children }) => {
   return (
     <>
-      <Head>
-        <link
-          href="https://www.uaa.edu.py/cdn/images/560cb5c8fdf530a9635a95eab14b.png"
-          rel="icon"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet"
-          crossOrigin="anonymous"
-        />
-      </Head>
-      <div className="bg-gray-200 text-black relative">
+      <div className="bg-back text-black relative">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:rounded focus:shadow-lg focus:text-deep-blue focus:font-bold"
+        >
+          Saltar al contenido principal
+        </a>
         <Header />
         {children}
         <Footer />
       </div>
     </>
   );
+
 };
 
 export default Layout;

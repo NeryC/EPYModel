@@ -13,6 +13,7 @@ export const SecondaryButton = ({
   className 
 }: SecondaryButtonProps) => (
   <button
+    type="button"
     className={`${CSS_CLASSES.BUTTON.SECONDARY} ${className || ''}`}
     onClick={onClick}
     disabled={disabled}

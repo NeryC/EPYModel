@@ -86,6 +86,7 @@ interface GraphInfoState {
   main: MainState;
   simulation: SimulationState;
   simulationLoading: boolean;
+  simulationUciThreshold: number | null;
 }
 
 // Action payload types
@@ -205,6 +206,7 @@ const createInitialSimulationGraphData = (
 // Initial state
 const initialState: GraphInfoState = {
   simulationLoading: false,
+  simulationUciThreshold: null,
   main: {
     lastUpdateDate: null,
     reported: createInitialMainGraphData("reported"),
@@ -338,6 +340,10 @@ export const graphInfoSlice = createSlice({
 
     setSimulationLoading(state, action: PayloadAction<boolean>) {
       state.simulationLoading = action.payload;
+    },
+
+    setSimulationUciThreshold(state, action: PayloadAction<number>) {
+      state.simulationUciThreshold = action.payload;
     },
   },
   extraReducers(builder) {
@@ -513,6 +519,9 @@ export const selectLastUpdateDate = createSelector(
 export const selectSimulationLoading = (state: GraphInfoState) =>
   state.simulationLoading ?? false;
 
+export const selectSimulationUciThreshold = (state: GraphInfoState) =>
+  state.simulationUciThreshold;
+
 // Export actions
 export const {
   initMain,
@@ -523,6 +532,7 @@ export const {
   resetSelectedLines,
   setRange,
   setSimulationLoading,
+  setSimulationUciThreshold,
 } = graphInfoSlice.actions;
 
 export default graphInfoSlice.reducer;

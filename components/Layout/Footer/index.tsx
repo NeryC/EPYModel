@@ -8,13 +8,14 @@ const Footer: FC = () => {
   const { t } = useTranslation('common');
 
   return (
-    <footer className="bg-back px-2 pb-10 text-center font-bold">
+    <footer className="bg-back px-2 pb-10 text-center font-bold" aria-label="Información del proyecto">
       {t('more-information')}
       <a
         className="underline text-blue-600"
         target="_blank"
         href="https://www.mdpi.com/2076-3417/11/20/9726/htm"
         rel="noopener noreferrer"
+        aria-label={t('go-here-aria')}
       >
         {t('go-here')}
       </a>

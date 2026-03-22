@@ -29,10 +29,15 @@ const CSVDownloadButton = memo(({ type, data }: CSVDownloadButtonProps) => {
   }, [data, type]);
 
   return (
-    <li className="dropdown-item hover:bg-blue-100 px-5 md:px-4 py-3 md:py-1">
-      <span className="block cursor-pointer" onClick={downloadCSV}>
+    <li role="none">
+      <button
+        type="button"
+        role="menuitem"
+        className="block w-full text-left px-5 md:px-4 py-3 md:py-2 hover:bg-blue-100"
+        onClick={downloadCSV}
+      >
         csv
-      </span>
+      </button>
     </li>
   );
 });

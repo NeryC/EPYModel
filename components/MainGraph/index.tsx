@@ -6,6 +6,8 @@ import { selectRawData } from "../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
 import { DownloadButton } from "../utils/DownloadButton";
 import Subtitle from "../utils/Subtitle";
+import DataTable from "../utils/DataTable";
+import { linesDescriptions } from "../../utils/descriptions";
 import { useMemo } from "react";
 
 interface MainGraphProps {
@@ -31,12 +33,17 @@ const MainGraph = ({ type, dimensions }: MainGraphProps) => {
     return clone;
   }, [rawData]);
 
+  const tableColumns = useMemo(
+    () => linesDescriptions(type).map((desc) => ({ key: desc.name, label: t(desc.label) })),
+    [type, t]
+  );
+
   return (
     <div className="rounded-lg overflow-hidden shadow-lg bg-white mb-3 md:mb-6 py-3 md:py-6 flex flex-col border border-gray-theme text-black">
       <div className="px-3 md:px-6">
-        <div className="border-b-2 text-2xl md:mb-2 font-bold flex flex-col w-full pb-2 md:pb-4">
-          <div className="flex justify-between">
-            {t(`${type}-title`)}
+        <div className="border-b-2 md:mb-2 font-bold flex flex-col w-full pb-2 md:pb-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl">{t(`${type}-title`)}</h2>
             <DownloadButton page={"main"} type={type} />
           </div>
           <Subtitle page={"main"} type={type} />
@@ -44,6 +51,7 @@ const MainGraph = ({ type, dimensions }: MainGraphProps) => {
         <SelectedLines type={type} />
       </div>
       <Graph type={type} data={data} dimensions={dimensions} />
+      <DataTable title={t(`${type}-title`)} data={rawData} dateField="fecha" columns={tableColumns} />
     </div>
   );
 };

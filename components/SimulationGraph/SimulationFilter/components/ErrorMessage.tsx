@@ -10,7 +10,7 @@ export const ErrorMessage = ({ error }: ErrorMessageProps) => {
   if (!error) return null;
   
   return (
-    <div className={CSS_CLASSES.ERROR_MESSAGE}>
+    <div className={CSS_CLASSES.ERROR_MESSAGE} role="alert" aria-live="polite">
       {error}
     </div>
   );

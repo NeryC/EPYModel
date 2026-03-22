@@ -25,7 +25,7 @@ const ScenarioTooltip = ({
 
   const tooltipClassName = `absolute ${
     top ? 'bottom-11' : 'top-10'
-  } flex flex-col items-center  w-12 opacity-0 transition-opacity group-hover:opacity-100 delay-500 duration-150 pointer-events-none`;
+  } flex flex-col items-center  w-12 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 delay-500 duration-150 pointer-events-none`;
 
   const tooltipContentClassName = `relative z-10 flex flex-col gap-2 w-52 p-2 text-xs leading-4 text-white whitespace-no-wrap bg-dark-blue shadow-lg rounded-md`;
 
@@ -36,7 +36,7 @@ const ScenarioTooltip = ({
   return (
     <div className="relative flex items-center group">
       {children}
-      <div className={tooltipClassName}>
+      <div className={tooltipClassName} role="tooltip">
         <span className={tooltipContentClassName}>
           {item.map((i) => (
             <div key={i.label}>

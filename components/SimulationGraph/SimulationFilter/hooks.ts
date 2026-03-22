@@ -32,7 +32,10 @@ export const useRtList = (initialValue: number[] = default_filters.Rt): RtListHo
   }, []);
 
   const addRtValue = useCallback(() => {
-    setRtList(current => [...current, RT_CONSTRAINTS.DEFAULT_NEW_VALUE]);
+    setRtList(current => {
+      if (current.length >= RT_CONSTRAINTS.MAX_COUNT) return current;
+      return [...current, RT_CONSTRAINTS.DEFAULT_NEW_VALUE];
+    });
   }, []);
 
   const removeRtValue = useCallback((index: number) => {

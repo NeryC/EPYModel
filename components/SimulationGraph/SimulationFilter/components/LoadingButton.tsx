@@ -28,6 +28,7 @@ export const LoadingButton = ({
             ? CSS_CLASSES.BUTTON.PRIMARY_DISABLED
             : CSS_CLASSES.BUTTON.PRIMARY_NORMAL
       } ${className || ''}`}
+      type="submit"
       onClick={onClick}
       disabled={isDisabled}
       title={isDisabled && !isLoading ? 'No hay cambios para simular' : undefined}

@@ -10,6 +10,7 @@ import {
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { TitleSection } from "../components";
 import { useMemo, useRef } from "react";
+import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
 import { wrapper } from "../store/store";
 import { apiService } from "../services/api";
@@ -46,6 +47,7 @@ function Graphs(): React.ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
   const graphsStatus: GraphStatus[] = useSelector(selectMainGraphData);
   const dimensions: Dimensions = useDimensions(containerRef, 534);
+  const { t } = useTranslation("common");
 
   // Memoize the filtered graphs to prevent unnecessary re-renders
   const readyGraphs = useMemo(
@@ -57,7 +59,8 @@ function Graphs(): React.ReactElement {
   const headContent = useMemo(
     () => (
       <Head>
-        <meta name="description" content="Gráficos del COVID-19 en Paraguay" />
+        <title>Proyecciones COVID-19 Paraguay | EPIModel</title>
+        <meta name="description" content="Proyecciones epidemiológicas de COVID-19 en Paraguay: infectados, hospitalizados, UCI y fallecidos. Proyecto PINV20-40, CONACYT." />
       </Head>
     ),
     []
@@ -68,14 +71,14 @@ function Graphs(): React.ReactElement {
       {headContent}
       <Layout>
         <main
-          className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back"
+          id="main-content"
+          className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back max-w-screen-2xl mx-auto w-full"
           ref={containerRef}
-          role="main"
-          aria-label="COVID-19 Graphs Dashboard"
+          aria-label="Proyecciones COVID-19 Paraguay"
         >
           <TitleSection />
           {dimensions.width > 0 && readyGraphs.length > 0 && (
-            <section aria-label="Graphs Container">
+            <section aria-label={t("graphs-container")}>
               {readyGraphs.map(({ type }: GraphStatus) => (
                 <MainGraph key={type} type={type} dimensions={dimensions} />
               ))}

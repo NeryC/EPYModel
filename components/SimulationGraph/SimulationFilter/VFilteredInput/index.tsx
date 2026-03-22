@@ -6,17 +6,14 @@ const VFilteredInput = ({ vFiltered, handleVFilteredChange }) => {
 
   return (
     <div className="flex flex-col gap-1 w-full">
-      <label
-        htmlFor="filtered"
-        className="md:text-sm font-bold flex items-center gap-1 pr-2"
-      >
-        {t("v_filtered")}
+      <div className="md:text-sm font-bold flex items-center gap-1 pr-2">
+        <label htmlFor="filtered">{t("v_filtered")}</label>
         <Tooltip text={t("v_filtered-description")} />
-      </label>
+      </div>
       <input
         id="filtered"
         type="number"
-        min="0"
+        min="1"
         max="5000"
         value={vFiltered}
         onChange={handleVFilteredChange}

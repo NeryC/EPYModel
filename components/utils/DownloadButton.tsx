@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import Image from "next/image";
-import { memo, MouseEvent, useCallback, useRef, useState } from "react";
+import { memo, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useSelector } from "react-redux";
 import { DataPoint } from "../../store/reducers/graphInfoSlice";
@@ -26,7 +26,7 @@ interface DownloadButtonProps {
 
 interface DownloadOptionProps {
   text: string;
-  onClick: (e: MouseEvent<HTMLSpanElement>) => void;
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
 
@@ -64,12 +64,25 @@ function DownloadButtonComponent({ page, type, data }: DownloadButtonProps) {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowDropdown(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const DownloadOption = useCallback(
     ({ text, onClick }: DownloadOptionProps) => (
-      <li className="dropdown-item hover:bg-blue-100 px-5 md:px-4 py-3 md:py-1">
-        <span className="block cursor-pointer" onClick={onClick}>
+      <li role="none">
+        <button
+          type="button"
+          role="menuitem"
+          className="block w-full text-left px-5 md:px-4 py-3 md:py-2 hover:bg-blue-100"
+          onClick={onClick}
+        >
           {text}
-        </span>
+        </button>
       </li>
     ),
     []
@@ -155,16 +168,20 @@ function DownloadButtonComponent({ page, type, data }: DownloadButtonProps) {
       <div className="dropdown relative text-deep-blue w-16 md:w-auto">
         <button
           onClick={openMenu}
+          aria-label={t("download-graph")}
+          aria-expanded={showDropdown}
+          aria-haspopup="menu"
           className={`
-            flex 
-            items-center 
-            ${showDropdown ? "bg-gray-200" : "bg-transparent"} 
-            font-semibold 
+            flex
+            items-center
+            ${showDropdown ? "bg-gray-200" : "bg-transparent"}
+            font-semibold
             py-3
-            md:py-1
-            px-3 
-            border 
-            border-gray-theme 
+            md:py-2
+            min-h-[44px]
+            px-3
+            border
+            border-gray-theme
             rounded-3xl
           `}
         >
@@ -173,7 +190,8 @@ function DownloadButtonComponent({ page, type, data }: DownloadButtonProps) {
               src="/assets/icons/download.svg"
               height={20}
               width={20}
-              alt="Download Icon"
+              alt=""
+              aria-hidden="true"
             />
           </div>
           <span className="font-bold hidden md:block">
@@ -181,6 +199,8 @@ function DownloadButtonComponent({ page, type, data }: DownloadButtonProps) {
           </span>
         </button>
         <ul
+          role="menu"
+          aria-label={t("download-graph")}
           className={`
             w-full
             dropdown-menu
