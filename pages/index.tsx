@@ -9,7 +9,7 @@ import {
 } from "../store/reducers/graphInfoSlice";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { TitleSection } from "../components";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
 import { wrapper } from "../store/store";
@@ -59,6 +59,17 @@ function Graphs(): React.ReactElement {
   const loadedCount = readyGraphs.length;
   const isLoading = dimensions.width > 0 && loadedCount < totalGraphs;
 
+  // Tras 8 segundos sin datos, mostrar banner de error
+  const [showLoadError, setShowLoadError] = useState(false);
+  useEffect(() => {
+    if (!isLoading) {
+      setShowLoadError(false);
+      return;
+    }
+    const timer = setTimeout(() => setShowLoadError(true), 8000);
+    return () => clearTimeout(timer);
+  }, [isLoading]);
+
   // Memoize the head content to prevent unnecessary re-renders
   const headContent = useMemo(
     () => (
@@ -83,7 +94,7 @@ function Graphs(): React.ReactElement {
           <TitleSection />
           {dimensions.width > 0 && (
             <>
-              {isLoading && (
+              {isLoading && !showLoadError && (
                 <div className="flex flex-col items-center justify-center py-16 gap-4 text-text-secondary">
                   <div
                     className="h-10 w-10 border-4 border-gray-300 border-t-deep-blue rounded-full animate-spin"
@@ -99,6 +110,25 @@ function Graphs(): React.ReactElement {
                     </p>
                   )}
                   <p className="text-xs text-gray-400">{t("loading-hint")}</p>
+                </div>
+              )}
+              {isLoading && showLoadError && (
+                <div className="flex flex-col items-center justify-center py-16 gap-4 text-center px-4">
+                  <div className="h-12 w-12 text-red-400">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                      />
+                    </svg>
+                  </div>
+                  <p className="text-lg font-semibold text-black">{t("error-loading-title")}</p>
+                  <p className="text-text-secondary max-w-sm">{t("error-loading-desc")}</p>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="px-6 py-2 bg-deep-blue text-white rounded-full font-semibold hover:opacity-90 transition-opacity"
+                  >
+                    {t("error-loading-retry")}
+                  </button>
                 </div>
               )}
               {readyGraphs.length > 0 && (

@@ -208,21 +208,23 @@ const SettingsComponent = ({ type, data }: SettingsComponentProps) => {
           checkedState={isSmooth}
         />
 
-        <div className="flex flex-col mb-11 w-full">
+        <div className="flex flex-col w-full">
           <div className="flex items-center gap-1 mb-2">
             <span className="mr-3 flex-none">{translations.dateRange}</span>
             <Tooltip text={translations.dateRangeDescription} />
           </div>
-          <MultiRangeSlider
-            min={0}
-            max={settings.dataLength}
-            selectedMin={localRange.start}
-            selectedMax={localRange.finish}
-            data={data}
-            onChange={handleChangeRange}
-          />
+          <div className="mb-11">
+            <MultiRangeSlider
+              min={0}
+              max={settings.dataLength}
+              selectedMin={localRange.start}
+              selectedMax={localRange.finish}
+              data={data}
+              onChange={handleChangeRange}
+            />
+          </div>
           {data.length > 0 && (
-            <p className="text-xs text-gray-400 mt-1 text-center">
+            <p className="text-xs text-gray-400 text-center -mt-2 mb-3">
               {t("available-data-range", {
                 start: data[0].fecha,
                 end: data[data.length - 1].fecha,

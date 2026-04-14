@@ -150,7 +150,7 @@ function DownloadButtonComponent({ page, type, data, dataRange }: DownloadButton
     if (page === "main") {
       return (
         <DownloadOption
-          text="csv"
+          text={`csv — ${t("download-format-csv")}`}
           onClick={handleDownloadCSV}
         />
       );
@@ -158,7 +158,7 @@ function DownloadButtonComponent({ page, type, data, dataRange }: DownloadButton
       return <CSVDownloadButton type={type} data={data} />;
     }
     return null;
-  }, [page, type, data, DownloadOption, handleDownloadCSV]);
+  }, [page, type, data, DownloadOption, handleDownloadCSV, t]);
 
   return (
     <div
@@ -203,9 +203,10 @@ function DownloadButtonComponent({ page, type, data, dataRange }: DownloadButton
           role="menu"
           aria-label={t("download-graph")}
           className={`
-            w-56
+            min-w-max
             dropdown-menu
             absolute
+            right-0
             bg-white
             z-50
             py-2
@@ -219,7 +220,7 @@ function DownloadButtonComponent({ page, type, data, dataRange }: DownloadButton
           `}
         >
           {dataRange && (
-            <li role="none" className="px-4 py-1 text-xs text-gray-500 border-b border-gray-100 mb-1">
+            <li role="none" className="px-4 py-1 text-xs text-gray-500 border-b border-gray-100 mb-1 whitespace-nowrap">
               {t("download-info-period", { start: dataRange.start, end: dataRange.end })}
             </li>
           )}
