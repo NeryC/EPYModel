@@ -38,13 +38,27 @@ const MainGraph = ({ type, dimensions }: MainGraphProps) => {
     [type, t]
   );
 
+  const dataRange = useMemo(() => {
+    if (!data || data.length === 0) return null;
+    return { start: data[0].fecha as string, end: data[data.length - 1].fecha as string };
+  }, [data]);
+
   return (
     <div className="rounded-lg overflow-hidden shadow-lg bg-white mb-3 md:mb-6 py-3 md:py-6 flex flex-col border border-gray-theme text-black">
       <div className="px-3 md:px-6">
         <div className="border-b-2 md:mb-2 font-bold flex flex-col w-full pb-2 md:pb-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl">{t(`${type}-title`)}</h2>
-            <DownloadButton page={"main"} type={type} />
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl">{t(`${type}-title`)}</h2>
+              <span
+                title={t(`${type}-subtitle`)}
+                aria-label={t(`${type}-subtitle`)}
+                className="text-text-secondary text-sm cursor-help select-none"
+              >
+                ⓘ
+              </span>
+            </div>
+            <DownloadButton page={"main"} type={type} dataRange={dataRange} />
           </div>
           <Subtitle page={"main"} type={type} />
         </div>

@@ -22,6 +22,7 @@ interface DownloadButtonProps {
   page: "main" | "simulation";
   type: MainSubtitleType | SimulationSubtitleType;
   data?: DataPoint[];
+  dataRange?: { start: string; end: string } | null;
 }
 
 interface DownloadOptionProps {
@@ -30,7 +31,7 @@ interface DownloadOptionProps {
 }
 
 
-function DownloadButtonComponent({ page, type, data }: DownloadButtonProps) {
+function DownloadButtonComponent({ page, type, data, dataRange }: DownloadButtonProps) {
   const { t } = useTranslation("common");
   const [showDropdown, setShowDropdown] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -202,7 +203,7 @@ function DownloadButtonComponent({ page, type, data }: DownloadButtonProps) {
           role="menu"
           aria-label={t("download-graph")}
           className={`
-            w-full
+            w-56
             dropdown-menu
             absolute
             bg-white
@@ -217,7 +218,12 @@ function DownloadButtonComponent({ page, type, data }: DownloadButtonProps) {
             border-none
           `}
         >
-          <DownloadOption text="svg" onClick={() => downloadGraph()} />
+          {dataRange && (
+            <li role="none" className="px-4 py-1 text-xs text-gray-500 border-b border-gray-100 mb-1">
+              {t("download-info-period", { start: dataRange.start, end: dataRange.end })}
+            </li>
+          )}
+          <DownloadOption text={`svg — ${t("download-format-svg")}`} onClick={() => downloadGraph()} />
           <DownloadCSVOption />
         </ul>
       </div>

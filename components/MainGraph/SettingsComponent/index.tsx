@@ -221,6 +221,14 @@ const SettingsComponent = ({ type, data }: SettingsComponentProps) => {
             data={data}
             onChange={handleChangeRange}
           />
+          {data.length > 0 && (
+            <p className="text-xs text-gray-400 mt-1 text-center">
+              {t("available-data-range", {
+                start: data[0].fecha,
+                end: data[data.length - 1].fecha,
+              })}
+            </p>
+          )}
         </div>
 
         <ToggleButton

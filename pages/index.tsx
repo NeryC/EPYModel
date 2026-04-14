@@ -55,6 +55,10 @@ function Graphs(): React.ReactElement {
     [graphsStatus]
   );
 
+  const totalGraphs = graphsStatus.length;
+  const loadedCount = readyGraphs.length;
+  const isLoading = dimensions.width > 0 && loadedCount < totalGraphs;
+
   // Memoize the head content to prevent unnecessary re-renders
   const headContent = useMemo(
     () => (
@@ -77,12 +81,34 @@ function Graphs(): React.ReactElement {
           aria-label="Proyecciones COVID-19 Paraguay"
         >
           <TitleSection />
-          {dimensions.width > 0 && readyGraphs.length > 0 && (
-            <section aria-label={t("graphs-container")}>
-              {readyGraphs.map(({ type }: GraphStatus) => (
-                <MainGraph key={type} type={type} dimensions={dimensions} />
-              ))}
-            </section>
+          {dimensions.width > 0 && (
+            <>
+              {isLoading && (
+                <div className="flex flex-col items-center justify-center py-16 gap-4 text-text-secondary">
+                  <div
+                    className="h-10 w-10 border-4 border-gray-300 border-t-deep-blue rounded-full animate-spin"
+                    role="status"
+                    aria-label={t("loading-data")}
+                  />
+                  <p className="text-base font-medium">
+                    {loadedCount === 0 ? t("loading-data") : t("loading-graphs")}
+                  </p>
+                  {loadedCount > 0 && (
+                    <p className="text-sm text-gray-400">
+                      {loadedCount}/{totalGraphs} {t("graphs-container").toLowerCase()}
+                    </p>
+                  )}
+                  <p className="text-xs text-gray-400">{t("loading-hint")}</p>
+                </div>
+              )}
+              {readyGraphs.length > 0 && (
+                <section aria-label={t("graphs-container")}>
+                  {readyGraphs.map(({ type }: GraphStatus) => (
+                    <MainGraph key={type} type={type} dimensions={dimensions} />
+                  ))}
+                </section>
+              )}
+            </>
           )}
         </main>
       </Layout>

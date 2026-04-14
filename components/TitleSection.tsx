@@ -8,54 +8,43 @@ interface TitleSectionProps {
   tab?: "main" | "simulation";
 }
 
-interface TitleSectionData {
-  title: string;
-  description: string;
-  containerClass: string;
-  borderClass: string;
-}
-
 export function TitleSection({ tab = "main" }: TitleSectionProps) {
   const { t } = useTranslation("common");
   const { formatDate } = useDateFormat();
   const lastUpdateDate = useSelector(selectLastUpdateDate);
-
   const isMainGraph = tab === "main";
 
-  const { title, description, containerClass, borderClass } =
-    useMemo((): TitleSectionData => {
-      const title = isMainGraph ? t("home-title") : t("simulation-title");
+  const { title, description, source, containerClass, borderClass } = useMemo(() => {
+    const title = isMainGraph ? t("home-title") : t("simulation-title");
 
-      let description = isMainGraph
-        ? t("home-description")
-        : t("simulation-description");
+    let description = isMainGraph ? t("home-description") : t("simulation-description");
+    const source = isMainGraph ? t("home-description-source") : "";
 
-      // Add last update date to description if on main graph and date is available
-      if (isMainGraph && lastUpdateDate) {
-        const formattedDate = formatDate(lastUpdateDate);
-        description += ` - ${t("updated-until")} ${formattedDate}`;
-      }
+    if (isMainGraph && lastUpdateDate) {
+      const formattedDate = formatDate(lastUpdateDate);
+      description += ` — ${t("updated-until")} ${formattedDate}`;
+    }
 
-      const borderClass = `text-lg md:text-xl ${
-        isMainGraph ? "border-b border-gray-theme pb-5" : ""
-      }`;
+    const borderClass = `text-lg md:text-xl ${
+      isMainGraph ? "border-b border-gray-theme pb-5" : ""
+    }`;
 
-      const containerClass = `flex flex-col mt-3 mb-5 ${
-        !isMainGraph ? "grow justify-center" : ""
-      }`;
+    const containerClass = `flex flex-col mt-3 mb-5 ${
+      !isMainGraph ? "grow justify-center" : ""
+    }`;
 
-      return {
-        title,
-        description,
-        containerClass,
-        borderClass,
-      };
-    }, [isMainGraph, t, lastUpdateDate, formatDate]);
+    return { title, description, source, containerClass, borderClass };
+  }, [isMainGraph, t, lastUpdateDate, formatDate]);
 
   return (
     <div className={containerClass}>
       <h1 className="font-bold text-black text-2xl mb-2">{title}</h1>
-      <p className={borderClass}>{description}</p>
+      <p className={borderClass}>
+        {description}
+        {source && (
+          <span className="block text-sm text-text-secondary mt-1">{source}</span>
+        )}
+      </p>
     </div>
   );
 }
