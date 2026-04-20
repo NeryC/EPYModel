@@ -14,7 +14,7 @@ const Header: FC = () => {
 
   const getClass = (actualRoute: string): string => {
     return actualRoute === router.route
-      ? 'text-blue-700 hidden sm:inline-flex items-center py-3 px-1'
+      ? 'text-blue-700 inline-flex items-center py-3 px-1'
       : 'hover:text-blue-700 inline-flex items-center py-3 px-1';
   };
 
