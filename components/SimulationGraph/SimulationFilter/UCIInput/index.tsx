@@ -6,7 +6,7 @@ const UCIInput = ({ UCI, handleUCIChange }) => {
 
   return (
     <div className="flex flex-col gap-1 w-full">
-      <div className="md:text-sm font-bold flex items-center gap-1 pr-2">
+      <div className="text-xs md:text-sm font-bold flex items-center gap-1 pr-2">
         <label htmlFor="uci_input">{t("uci-setting")}</label>
         <Tooltip text={t("uci-setting-description")} />
       </div>

@@ -5,7 +5,7 @@ function LambdaItoHInput({ lambdaItoH, handleLambdaItoHChange }) {
   const { t } = useTranslation("common");
   return (
     <div className="flex flex-col md:flex-row justify-between items-center">
-      <div className="md:text-sm font-bold flex items-center gap-1 pr-2">
+      <div className="text-xs md:text-sm font-bold flex items-center gap-1 pr-2 shrink-0">
         <label htmlFor="lambda">{t("lambda_I_to_H")}</label>
         <Tooltip text={t("lambda_I_to_H-description")} />
       </div>

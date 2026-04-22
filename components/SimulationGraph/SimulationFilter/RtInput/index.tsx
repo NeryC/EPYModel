@@ -2,7 +2,7 @@ function RtInput({ value, index, handleRTChange }) {
   const month = index + 1;
   return (
     <div
-      className="flex h-14 md:h-11 rounded-lg relative bg-transparent mx-auto"
+      className="flex h-10 md:h-11 rounded-lg relative bg-transparent mx-auto"
       role="group"
       aria-label={`Rt mes ${month}`}
     >

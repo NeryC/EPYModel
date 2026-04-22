@@ -6,7 +6,7 @@ const VFilteredInput = ({ vFiltered, handleVFilteredChange }) => {
 
   return (
     <div className="flex flex-col gap-1 w-full">
-      <div className="md:text-sm font-bold flex items-center gap-1 pr-2">
+      <div className="text-xs md:text-sm font-bold flex items-center gap-1 pr-2">
         <label htmlFor="filtered">{t("v_filtered")}</label>
         <Tooltip text={t("v_filtered-description")} />
       </div>
