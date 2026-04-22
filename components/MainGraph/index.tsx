@@ -45,11 +45,11 @@ const MainGraph = ({ type, dimensions }: MainGraphProps) => {
 
   return (
     <div className="rounded-lg overflow-hidden shadow-lg bg-white mb-3 md:mb-6 py-3 md:py-6 flex flex-col border border-gray-theme text-black">
-      <div className="px-3 md:px-6">
-        <div className="border-b-2 md:mb-2 font-bold flex flex-col w-full pb-2 md:pb-4">
+      <div className="px-2 md:px-6">
+        <div className="border-b-2 md:mb-2 flex flex-col w-full pb-2 md:pb-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <h2 className="text-2xl">{t(`${type}-title`)}</h2>
+              <h2 className="text-lg md:text-2xl font-bold">{t(`${type}-title`)}</h2>
               <span
                 title={t(`${type}-subtitle`)}
                 aria-label={t(`${type}-subtitle`)}

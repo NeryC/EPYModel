@@ -50,7 +50,7 @@ const SelectedLines = ({ type }: SelectedLinesProps) => {
         <ScenarioTooltip item={[item]} key={item.label} type={type} top={false}>
           <button
             key={item.label}
-            className={`flex items-center gap-2 border rounded-3xl min-h-[44px] py-1 px-3 w-full lg:w-auto ${isSelected(item)}`}
+            className={`flex items-center gap-1.5 border rounded-3xl min-h-[40px] py-1 px-2.5 ${isSelected(item)}`}
             onClick={() => selectOption(item)}
             aria-pressed={active}
           >
@@ -58,7 +58,7 @@ const SelectedLines = ({ type }: SelectedLinesProps) => {
               className={chooseClass(item)}
               style={chooseLineColor(item.name)}
             />
-            <div className="text-sm font-bold">{t(item.label)}</div>
+            <div className="text-xs md:text-sm font-bold whitespace-nowrap">{t(item.label)}</div>
             {active && (
               <span className="sr-only">(activo)</span>
             )}
@@ -68,15 +68,15 @@ const SelectedLines = ({ type }: SelectedLinesProps) => {
     });
 
   return (
-    <div className="grid lg:flex grid-cols-4 gap-2 lg:gap-4 text-sm pt-3 lg:pt-1 justify-center">
+    <div className="flex flex-wrap gap-1.5 md:gap-2 text-sm pt-2 md:pt-1">
       {renderSelected()}
       <button
         type="button"
-        className="flex items-center gap-2 border border-gray-300 rounded-3xl min-h-[44px] py-1 px-3 w-full lg:w-auto"
+        className="flex items-center gap-1.5 border border-gray-300 rounded-3xl min-h-[40px] py-1 px-2.5"
         onClick={handleReset}
         aria-label={t("reset-lines-selection")}
       >
-        <div className="text-sm font-bold ">{t("reset")}</div>
+        <div className="text-xs md:text-sm font-bold whitespace-nowrap">{t("reset")}</div>
       </button>
     </div>
   );

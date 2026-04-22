@@ -25,11 +25,11 @@ export function TitleSection({ tab = "main" }: TitleSectionProps) {
       description += ` — ${t("updated-until")} ${formattedDate}`;
     }
 
-    const borderClass = `text-lg md:text-xl ${
-      isMainGraph ? "border-b border-gray-theme pb-5" : ""
+    const borderClass = `text-sm md:text-base lg:text-lg ${
+      isMainGraph ? "border-b border-gray-theme pb-4" : ""
     }`;
 
-    const containerClass = `flex flex-col mt-3 mb-5 ${
+    const containerClass = `flex flex-col mt-2 mb-4 ${
       !isMainGraph ? "grow justify-center" : ""
     }`;
 
@@ -38,7 +38,7 @@ export function TitleSection({ tab = "main" }: TitleSectionProps) {
 
   return (
     <div className={containerClass}>
-      <h1 className="font-bold text-black text-2xl mb-2">{title}</h1>
+      <h1 className="font-bold text-black text-xl md:text-2xl mb-1.5">{title}</h1>
       <p className={borderClass}>
         {description}
         {source && (
