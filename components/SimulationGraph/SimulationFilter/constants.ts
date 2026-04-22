@@ -32,10 +32,10 @@ export const NUMERIC_CONSTRAINTS: NumericConstraintsMap = {
 
 // CSS Classes
 export const CSS_CLASSES: CssClasses = {
-  CONTAINER: "flex justify-end grow text-base",
+  CONTAINER: "flex md:justify-end grow text-base",
   CARD: "rounded-lg shadow-lg bg-white p-3 md:p-6 flex flex-col gap-3 border border-gray-theme text-black mb-4 grow md:min-w-[500px] md:max-w-[650px]",
   TITLE: "border-b border-gray-theme pb-1 w-full font-bold",
-  SECTION_ROW: "flex flex-col md:flex-row gap-3 md:gap-1 items-center",
+  SECTION_ROW: "flex flex-col md:flex-row gap-3 md:gap-1 items-start md:items-center",
   LABEL: "text-xs md:text-sm font-bold flex items-center pr-2 shrink-0",
   RT_CONTAINER: "flex flex-wrap gap-2 md:gap-4 w-full",
   RT_BUTTON_CONTAINER: "flex flex-row gap-2",

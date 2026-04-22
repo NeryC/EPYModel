@@ -34,8 +34,8 @@ const SimulationGraph = ({ type }: SimulationGraphProps) => {
 
   return (
     <div className="rounded-lg overflow-hidden shadow-lg bg-white p-3 md:p-6 flex flex-col border border-gray-theme text-black h-fit">
-      <div className="border-b-2 md:mb-2 font-bold flex justify-between items-center pb-4">
-        <h2 className="text-2xl">{t(titleKey)}</h2>
+      <div className="border-b-2 md:mb-2 flex justify-between items-center pb-4">
+        <h2 className="text-lg md:text-2xl font-bold">{t(titleKey)}</h2>
         <DownloadButton page="simulation" type={type} data={rawData} />
       </div>
       <Subtitle page="simulation" type={type} />
