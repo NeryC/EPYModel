@@ -51,12 +51,19 @@ export default defineConfig({
         'config/**',
       ],
       thresholds: {
-        // Calibrated initial state (no tests yet). Will be raised as tests land.
-        // Target state documented in docs/TEST_METRICS.md.
-        lines: 0,
-        branches: 0,
-        functions: 0,
-        statements: 0,
+        // Calibrated to measured initial coverage with ~5% growth headroom.
+        // Per-layer aspirational targets documented in docs/TEST_METRICS.md.
+        'store/reducers/**/*.ts': { lines: 76, branches: 72, functions: 80, statements: 76 },
+        'hooks/**/*.{ts,tsx}': { lines: 75, branches: 71, functions: 40, statements: 75 },
+        'utils/**/*.ts': { lines: 95, branches: 45, functions: 95, statements: 95 },
+        'services/**/*.ts': { lines: 56, branches: 49, functions: 66, statements: 56 },
+        'components/Loading/**/*.{ts,tsx}': { lines: 95, branches: 95, functions: 95, statements: 95 },
+        'components/ErrorBoundary/**/*.{ts,tsx}': { lines: 77, branches: 68, functions: 95, statements: 77 },
+        // Global floor — low because we have not tested pages/, _app, _document, etc.
+        lines: 54,
+        branches: 63,
+        functions: 56,
+        statements: 54,
       },
     },
   },
