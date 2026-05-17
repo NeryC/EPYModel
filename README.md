@@ -63,7 +63,7 @@ The application is built with Next.js 12, TypeScript, Redux Toolkit for state ma
 
 ### 🧪 Model Simulation
 
-- **Customizable Parameters**: 
+- **Customizable Parameters**:
   - **Rt (Reproductive Number)**: Single value or time series
   - **UCI Threshold**: Intensive care capacity threshold
   - **V Filtered**: Filtration parameter
@@ -163,9 +163,10 @@ yarn install
 ### 3. Configure Environment Variables (Optional)
 
 > **Note**: The `API_URL` is automatically configured based on `NODE_ENV`:
+>
 > - **Development** (`yarn dev`): `http://localhost:3001`
 > - **Production** (`yarn build && yarn start`): `http://epymodel.uaa.edu.py:3001`
-> 
+>
 > You only need to create `.env.local` if you want to customize the configuration.
 
 Create a `.env.local` file in the project root (optional):
@@ -239,6 +240,7 @@ NEXT_PUBLIC_ERROR_REPORTING=true
 #### Option 2: Environment Variables on Deployment Platform
 
 **Vercel:**
+
 1. Go to your project in Vercel
 2. Settings → Environment Variables
 3. Add the variables:
@@ -250,10 +252,12 @@ NEXT_PUBLIC_ERROR_REPORTING=true
    - `NODE_ENV=production` (automatic)
 
 **Netlify:**
+
 1. Go to Site settings → Build & deploy → Environment
 2. Add environment variables (same as Vercel)
 
 **Docker:**
+
 ```bash
 # Use environment variables when running the container
 docker run -p 3000:3000 \
@@ -264,6 +268,7 @@ docker run -p 3000:3000 \
 ```
 
 **VPS/Cloud Server:**
+
 ```bash
 # Create .env.production file
 nano .env.production
@@ -306,11 +311,11 @@ To verify that the configuration is correct:
 
 ### Configuration Summary by Environment
 
-| Environment | NODE_ENV | API_URL | Debug Logs | Error Reporting |
-|-------------|----------|---------|------------|-----------------|
-| **Development** | `development` | `http://localhost:3001` | `false` (optional) | `false` (optional) |
-| **Production** | `production` | `http://epymodel.uaa.edu.py:3001` | `false` | `true` (recommended) |
-| **Test** | `test` | `http://localhost:3001` | `false` | `false` |
+| Environment     | NODE_ENV      | API_URL                           | Debug Logs         | Error Reporting      |
+| --------------- | ------------- | --------------------------------- | ------------------ | -------------------- |
+| **Development** | `development` | `http://localhost:3001`           | `false` (optional) | `false` (optional)   |
+| **Production**  | `production`  | `http://epymodel.uaa.edu.py:3001` | `false`            | `true` (recommended) |
+| **Test**        | `test`        | `http://localhost:3001`           | `false`            | `false`              |
 
 > **Important note**: The `API_URL` is automatically configured based on `NODE_ENV`. You don't need to define it manually unless you need to use a different URL.
 
@@ -320,14 +325,14 @@ To verify that the configuration is correct:
 
 ### Environment Variables
 
-| Variable | Description | Default Value | Required |
-|----------|-------------|---------------|----------|
-| `NEXT_PUBLIC_API_URL` | Backend API URL | **Automatic based on NODE_ENV**<br>- Development: `http://localhost:3001`<br>- Production: `http://epymodel.uaa.edu.py:3001` | No |
-| `NEXT_PUBLIC_API_TIMEOUT` | API request timeout (ms) | `30000` | No |
-| `NEXT_PUBLIC_API_RETRY_ATTEMPTS` | Retry attempts for failed requests | `3` | No |
-| `NEXT_PUBLIC_DEBUG_LOGS` | Enable debug logs | `false` | No |
-| `NEXT_PUBLIC_ERROR_REPORTING` | Enable error reporting | `false` | No |
-| `NODE_ENV` | Execution mode | Automatic (Next.js configures it)<br>- `development` (yarn dev)<br>- `production` (yarn build) | No |
+| Variable                         | Description                        | Default Value                                                                                                                | Required |
+| -------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `NEXT_PUBLIC_API_URL`            | Backend API URL                    | **Automatic based on NODE_ENV**<br>- Development: `http://localhost:3001`<br>- Production: `http://epymodel.uaa.edu.py:3001` | No       |
+| `NEXT_PUBLIC_API_TIMEOUT`        | API request timeout (ms)           | `30000`                                                                                                                      | No       |
+| `NEXT_PUBLIC_API_RETRY_ATTEMPTS` | Retry attempts for failed requests | `3`                                                                                                                          | No       |
+| `NEXT_PUBLIC_DEBUG_LOGS`         | Enable debug logs                  | `false`                                                                                                                      | No       |
+| `NEXT_PUBLIC_ERROR_REPORTING`    | Enable error reporting             | `false`                                                                                                                      | No       |
+| `NODE_ENV`                       | Execution mode                     | Automatic (Next.js configures it)<br>- `development` (yarn dev)<br>- `production` (yarn build)                               | No       |
 
 **Important note**: The `API_URL` is automatically configured based on the environment. You only need to define `NEXT_PUBLIC_API_URL` if you want to use a different URL than the default.
 
@@ -543,11 +548,13 @@ docker build -t epimodel-next .
 #### Run Container
 
 **Without environment variables (uses automatic configuration):**
+
 ```bash
 docker run -p 3000:3000 epimodel-next
 ```
 
 **With custom environment variables:**
+
 ```bash
 docker run -p 3000:3000 \
   -e NODE_ENV=production \
@@ -558,6 +565,7 @@ docker run -p 3000:3000 \
 ```
 
 **With .env.production file:**
+
 ```bash
 docker run -p 3000:3000 --env-file .env.production epimodel-next
 ```
@@ -570,8 +578,9 @@ docker-compose up -d
 ```
 
 **docker-compose.yml example:**
+
 ```yaml
-version: '3.8'
+version: "3.8"
 services:
   app:
     build: .
@@ -600,6 +609,7 @@ The project is configured for deployment on Vercel:
 3. Deploy automatically
 
 **Automatic configuration on Vercel:**
+
 - `NODE_ENV=production` is automatically set during build
 - `NEXT_PUBLIC_API_URL` is automatically configured as `http://epymodel.uaa.edu.py:3001`
 
