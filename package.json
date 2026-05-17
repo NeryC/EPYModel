@@ -6,7 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest",
+    "test:unit": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:a11y": "vitest run --grep=accessibility",
+    "test:mutation": "stryker run",
+    "test:ci": "yarn test:unit && yarn test:coverage && yarn build && yarn test:e2e"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
