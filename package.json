@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "vitest",
     "test:unit": "vitest run",
     "test:watch": "vitest",
@@ -15,7 +15,8 @@
     "test:e2e:ui": "playwright test --ui",
     "test:a11y": "vitest run --grep=accessibility",
     "test:mutation": "stryker run",
-    "test:ci": "yarn test:unit && yarn test:coverage && yarn build && yarn test:e2e"
+    "test:ci": "yarn test:unit && yarn test:coverage && yarn build && yarn test:e2e",
+    "prepare": "husky"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
@@ -65,10 +66,13 @@
     "autoprefixer": "^10.4.5",
     "eslint": "^9.39.1",
     "eslint-config-next": "^16.2.3",
+    "husky": "^9.1.0",
     "jest-axe": "^9.0.0",
     "jsdom": "^25.0.0",
+    "lint-staged": "^15.2.0",
     "msw": "^2.6.0",
     "postcss": "^8.4.12",
+    "prettier": "^3.3.0",
     "tailwindcss": "^3.0.24",
     "typescript": "^5.9.3",
     "vitest": "^3.0.0",
