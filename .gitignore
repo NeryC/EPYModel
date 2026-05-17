@@ -37,3 +37,11 @@ tsconfig.tsbuildinfo
 
 # next.js auto-generated (do not commit)
 next-env.d.ts
+
+# Test artifacts
+coverage/
+.stryker-tmp/
+reports/
+playwright-report/
+test-results/
+.vitest-cache/
