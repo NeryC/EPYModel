@@ -167,19 +167,25 @@ const createInitialElements = (type: string): Elements => {
   };
 };
 
+// Default zoom anchor for the projections chart, expressed as a row index
+// into the daily-resolution dataset. With production data (~900+ points) this
+// surfaces the last ~80 days. For shorter datasets we clamp to the data
+// length so the slider's `data[range.start].fecha` access stays in bounds.
+const DEFAULT_RANGE_START = 820;
+
 const createInitialSettings = (amountOfData: number = 0): Settings => ({
   isSmooth: true,
   uncertainty: false,
   dotsOption: false,
   range: {
-    start: 820,
+    start: Math.min(DEFAULT_RANGE_START, amountOfData),
     finish: amountOfData,
   },
   dataLength: amountOfData,
 });
 
 const createInitialSettingsSimulation = (
-  amountOfData: number = 0
+  amountOfData: number = 0,
 ): SimulationSettings => ({
   range: {
     start: 0,
@@ -196,7 +202,7 @@ const createInitialMainGraphData = (type: string): MainGraphData => ({
 });
 
 const createInitialSimulationGraphData = (
-  type: string
+  type: string,
 ): SimulationGraphData => ({
   type,
   data: [],
@@ -292,13 +298,13 @@ export const graphInfoSlice = createSlice({
 
       const newSelectedLines = setNewSelectedLines(
         main[type].elements.selectedLines,
-        selectedLine
+        selectedLine,
       );
 
       main[type].elements.selectedLines = newSelectedLines;
       main[type].elements.showedElements = concat(
         hiddableLines(type, false),
-        newSelectedLines
+        newSelectedLines,
       );
     },
 
@@ -307,7 +313,9 @@ export const graphInfoSlice = createSlice({
 
       const currentValue = state.main[type].settings[checkName];
       if (typeof currentValue === "boolean") {
-        (state.main[type].settings as unknown as Record<string, boolean>)[checkName] = !currentValue;
+        (state.main[type].settings as unknown as Record<string, boolean>)[
+          checkName
+        ] = !currentValue;
       }
     },
 
@@ -320,7 +328,7 @@ export const graphInfoSlice = createSlice({
 
     resetSelectedLines(
       state,
-      action: PayloadAction<ResetSelectedLinesPayload>
+      action: PayloadAction<ResetSelectedLinesPayload>,
     ) {
       const { main } = state;
       const { type } = action.payload;
@@ -329,7 +337,7 @@ export const graphInfoSlice = createSlice({
       main[type].elements.selectedLines = defaultSelectedLines;
       main[type].elements.showedElements = concat(
         hiddableLines(type, false),
-        defaultSelectedLines
+        defaultSelectedLines,
       );
     },
 
@@ -382,7 +390,7 @@ export const selectGraphData = createSelector(
     }));
 
     return { main: mainGraphs, simulation: simulationGraphs };
-  }
+  },
 );
 
 // Specific selector for simulation graphs (for backward compatibility)
@@ -397,7 +405,7 @@ export const selectSimulationGraphData = createSelector(
       type,
       isReady: simulation[type]?.isReady ?? false,
     }));
-  }
+  },
 );
 
 // Specific selector for main graphs
@@ -412,31 +420,31 @@ export const selectMainGraphData = createSelector(
       type,
       isReady: main[type]?.isReady ?? false,
     }));
-  }
+  },
 );
 
 export const selectScenarios = (type: MainGraphType) =>
   createSelector(
     [(state: GraphInfoState) => state.main?.[type]],
-    (graphData) => graphData?.elements?.scenario ?? []
+    (graphData) => graphData?.elements?.scenario ?? [],
   );
 
 export const selectRawData = (type: MainGraphType) =>
   createSelector(
     [(state: GraphInfoState) => state.main?.[type]],
-    (graphData) => graphData?.data ?? []
+    (graphData) => graphData?.data ?? [],
   );
 
 export const selectRawDataSimulation = (type: keyof SimulationState) =>
   createSelector(
     [(state: GraphInfoState) => state.simulation?.[type]],
-    (graphData) => graphData?.data ?? []
+    (graphData) => graphData?.data ?? [],
   );
 
 export const selectShowedElements = (type: MainGraphType) =>
   createSelector(
     [(state: GraphInfoState) => state.main?.[type]],
-    (graphData) => graphData?.elements?.showedElements ?? []
+    (graphData) => graphData?.elements?.showedElements ?? [],
   );
 
 export const selectDropdownInfo = (type: MainGraphType) =>
@@ -445,37 +453,37 @@ export const selectDropdownInfo = (type: MainGraphType) =>
     (graphData) => [
       graphData?.elements?.options ?? [],
       graphData?.elements?.selectedLines ?? [],
-    ]
+    ],
   );
 
 export const selectSettings = (type: MainGraphType) =>
   createSelector(
     [(state: GraphInfoState) => state.main?.[type]],
-    (graphData) => graphData?.settings ?? createInitialSettings()
+    (graphData) => graphData?.settings ?? createInitialSettings(),
   );
 
 export const selectSelectedLines = (type: MainGraphType) =>
   createSelector(
     [(state: GraphInfoState) => state.main?.[type]],
-    (graphData) => graphData?.elements?.selectedLines ?? []
+    (graphData) => graphData?.elements?.selectedLines ?? [],
   );
 
 export const selectIsSmooth = (type: MainGraphType) =>
   createSelector(
     [(state: GraphInfoState) => state.main?.[type]],
-    (graphData) => graphData?.settings?.isSmooth ?? true
+    (graphData) => graphData?.settings?.isSmooth ?? true,
   );
 
 export const selectUncertainty = (type: MainGraphType) =>
   createSelector(
     [(state: GraphInfoState) => state.main?.[type]],
-    (graphData) => graphData?.settings?.uncertainty ?? false
+    (graphData) => graphData?.settings?.uncertainty ?? false,
   );
 
 export const selectDotsOption = (type: MainGraphType) =>
   createSelector(
     [(state: GraphInfoState) => state.main?.[type]],
-    (graphData) => graphData?.settings?.dotsOption ?? false
+    (graphData) => graphData?.settings?.dotsOption ?? false,
   );
 
 export const selectRange = (graphsType: "main" | "simulation", type: string) =>
@@ -502,18 +510,18 @@ export const selectRange = (graphsType: "main" | "simulation", type: string) =>
           createInitialSettingsSimulation().range
         );
       }
-    }
+    },
   );
 
 export const selectDotField = (type: MainGraphType) =>
   createSelector(
     [(state: GraphInfoState) => state.main?.[type]],
-    (graphData) => graphData?.elements?.dotField ?? ""
+    (graphData) => graphData?.elements?.dotField ?? "",
   );
 
 export const selectLastUpdateDate = createSelector(
   [(state: GraphInfoState) => state.main],
-  (main) => main?.lastUpdateDate ?? null
+  (main) => main?.lastUpdateDate ?? null,
 );
 
 export const selectSimulationLoading = (state: GraphInfoState) =>
