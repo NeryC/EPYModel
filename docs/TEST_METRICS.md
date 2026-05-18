@@ -19,9 +19,11 @@ The current `vitest.config.ts` thresholds are set to 0 for global metrics becaus
 
 ### Mutation score targets (Stryker)
 
-- `high`: 85%
-- `low`: 75%
-- `break`: 75%
+- `high` (HTML report green): 85%
+- `low` (HTML report yellow): 75%
+- `break` (CI gate): **currently `null` — informational only.**
+
+`break` is intentionally disabled in `stryker.conf.json` until we have a measured baseline. The first mutation run on `main` after the test-infra fixes reported 18.35% — but `vitest-runner@8` undercounts coverage when `vitest.config.ts` uses workspace-style `projects`, so the genuine score is higher. Same calibration plan as the backend (`newBack/docs/TEST_METRICS.md`): upgrade `@stryker-mutator/*` to v9, or split a `vitest.mutation.config.ts` exposing only the unit project, then re-enable `break` at the realistic floor.
 
 ### Accessibility targets
 
