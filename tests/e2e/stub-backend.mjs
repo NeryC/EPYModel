@@ -1,10 +1,28 @@
 import { createServer } from 'node:http';
 
+// Production projections span ~900 daily points. The frontend's default
+// chart range starts at index 820 (createInitialSettings in graphInfoSlice),
+// so the stub must provide at least that many points or the slider crashes.
+const DATA_POINTS = 900;
+const START_DATE = new Date('2022-01-01T00:00:00Z');
+
+const generateSeries = (baseValue) => {
+  const out = [];
+  for (let i = 0; i < DATA_POINTS; i++) {
+    const d = new Date(START_DATE.getTime() + i * 24 * 60 * 60 * 1000);
+    out.push({
+      fecha: d.toISOString().slice(0, 10),
+      value: Math.round(baseValue + Math.sin(i / 30) * baseValue * 0.3 + i * 0.1),
+    });
+  }
+  return out;
+};
+
 const projections = {
-  R: [{ fecha: '2024-01-01', value: 10 }, { fecha: '2024-01-02', value: 12 }],
-  H: [{ fecha: '2024-01-01', value: 5 },  { fecha: '2024-01-02', value: 6 }],
-  U: [{ fecha: '2024-01-01', value: 2 },  { fecha: '2024-01-02', value: 3 }],
-  F: [{ fecha: '2024-01-01', value: 1 },  { fecha: '2024-01-02', value: 1 }],
+  R: generateSeries(100),
+  H: generateSeries(50),
+  U: generateSeries(20),
+  F: generateSeries(5),
 };
 
 const simulation = {
