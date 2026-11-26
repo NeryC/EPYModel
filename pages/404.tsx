@@ -3,6 +3,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetStaticProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+// Config explícita: en Vercel la función de regeneración (ISR) no encuentra
+// next-i18next.config.js por su cuenta (no se empaqueta).
+import nextI18NextConfig from "../next-i18next.config";
 import { useTranslation } from "next-i18next";
 
 // Contenido fallback bilingüe mientras next-i18next hidrata
@@ -50,6 +53,10 @@ export default function NotFound() {
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale ?? "es", ["common"])),
+    ...(await serverSideTranslations(
+      locale ?? "es",
+      ["common"],
+      nextI18NextConfig,
+    )),
   },
 });
