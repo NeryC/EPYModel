@@ -7,6 +7,7 @@ The SimulationFilter component has been completely refactored to improve readabi
 ## 🏗️ Architecture
 
 ### File Structure
+
 ```
 SimulationFilter/
 ├── SimulationFilter.jsx     # Main component (refactored)
@@ -21,17 +22,20 @@ SimulationFilter/
 ## 🔧 Key Improvements
 
 ### 1. **Separation of Concerns**
+
 - **Main Component**: Focuses only on orchestrating the UI and business logic
 - **Custom Hooks**: Handle specific state management concerns
 - **UI Components**: Reusable, focused components for different sections
 - **Constants**: Centralized configuration and styling
 
 ### 2. **Custom Hooks**
+
 - `useRtList`: Manages RT list state and operations
 - `useNumericInput`: Handles numeric input validation
 - `useSimulationState`: Manages loading and error states
 
 ### 3. **Component Composition**
+
 - `HeaderSection`: Title and header
 - `RtListSection`: RT list management
 - `InputFieldsSection`: Form inputs
@@ -40,11 +44,13 @@ SimulationFilter/
 - `LoadingButton`: Button with loading state
 
 ### 4. **Performance Optimizations**
+
 - `useCallback` for event handlers to prevent unnecessary re-renders
 - Memoized state updates in custom hooks
 - Reduced prop drilling through better component structure
 
 ### 5. **Code Quality**
+
 - Comprehensive JSDoc documentation
 - Consistent naming conventions
 - Type safety with proper prop validation
@@ -55,7 +61,7 @@ SimulationFilter/
 The component interface remains the same, so no changes are needed in parent components:
 
 ```jsx
-import SimulationFilter from './SimulationFilter';
+import SimulationFilter from "./SimulationFilter";
 
 function MyComponent() {
   return <SimulationFilter />;
@@ -77,25 +83,25 @@ export const CSS_CLASSES = {
 ## 🔄 State Management
 
 ### RT List Management
+
 ```javascript
-const {
-  rtList,
-  updateRtValue,
-  addRtValue,
-  removeRtValue,
-  resetRtList,
-} = useRtList();
+const { rtList, updateRtValue, addRtValue, removeRtValue, resetRtList } =
+  useRtList();
 ```
 
 ### Numeric Inputs
+
 ```javascript
-const [value, handleChange, reset] = useNumericInput(
+// text: lo que escribió el usuario (puede estar vacío o fuera de rango)
+// value: número válido o null · error: null | 'required' | 'out-of-range'
+const { text, value, error, onChange, reset } = useNumericInput(
   initialValue,
-  constraints
+  constraints, // { MIN, MAX, STEP? } — ver NUMERIC_CONSTRAINTS (= SIMULATION_LIMITS del backend)
 );
 ```
 
 ### Simulation State
+
 ```javascript
 const {
   isLoading,

@@ -1,0 +1,54 @@
+# Stack completo: backend (newBack) + frontend (Next.js) + nginx.
+#
+# Supone los dos repos clonados uno al lado del otro:
+#   <carpeta>/newBack   y   <carpeta>/epimodel-next
+#
+# Uso (desde epimodel-next/):
+#   docker compose -f docker-compose.full.yml up -d --build
+#   → sitio en http://localhost:8080 (nginx), API en http://localhost:3001
+#
+# Variables opcionales (en un .env junto a este archivo o en el entorno):
+#   PUBLIC_API_URL    URL del backend VISTA DESDE EL NAVEGADOR (se fija al
+#                     construir la imagen del frontend). Por defecto
+#                     http://localhost:3001; en un servidor, su dominio o IP.
+#   CORS_ORIGIN       Orígenes permitidos por el backend (por defecto el sitio
+#                     servido por nginx y el frontend directo).
+#   REVALIDATE_TOKEN  Habilita POST /api/revalidate para refrescar las páginas
+#                     después de actualizar los datos del backend.
+#
+# Al arrancar, las páginas se generaron sin backend (no existe durante el
+# build): se regeneran solas a los 30 s usando API_URL_INTERNAL, o al instante
+# con POST /api/revalidate?secret=$REVALIDATE_TOKEN.
+name: epimodel
+
+services:
+  backend:
+    build: ../newBack
+    ports: ["3001:3001"]
+    environment:
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080,http://localhost:3000}
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:3001/health"]
+      interval: 10s
+      retries: 30
+    restart: unless-stopped
+
+  nextjs:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_API_URL: ${PUBLIC_API_URL:-http://localhost:3001}
+    environment:
+      # Red interna de Docker: el render del lado del servidor llega al backend
+      API_URL_INTERNAL: http://backend:3001
+      REVALIDATE_TOKEN: ${REVALIDATE_TOKEN:-}
+    ports: ["3000:3000"]
+    depends_on:
+      backend: { condition: service_healthy }
+    restart: unless-stopped
+
+  nginx:
+    build: ./nginx
+    ports: ["8080:80"]
+    depends_on: [nextjs]
+    restart: unless-stopped

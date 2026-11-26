@@ -1,14 +1,20 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import { ENV_CONFIG } from '../config/environment';
-import { 
-  ApiResponse, 
-  ProjectionData, 
-  SimulationData, 
+import axios, {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosError,
+} from "axios";
+import { ENV_CONFIG } from "../config/environment";
+import {
+  ApiResponse,
+  ProjectionData,
+  SimulationData,
+  SimulationDefaults,
   SimulationQueryParams,
   ProjectionQueryParams,
   ApiClientConfig,
-  DataPoint
-} from '../types/api';
+  DataPoint,
+} from "../types/api";
 
 /**
  * Custom API Error class for better error handling
@@ -17,13 +23,22 @@ export class ApiServiceError extends Error {
   public status?: number;
   public code?: string;
   public originalError?: AxiosError;
+  /** Segundos a esperar antes de reintentar (respuestas 429 del backend). */
+  public retryAfterSeconds?: number;
 
-  constructor(message: string, status?: number, code?: string, originalError?: AxiosError) {
+  constructor(
+    message: string,
+    status?: number,
+    code?: string,
+    originalError?: AxiosError,
+    retryAfterSeconds?: number,
+  ) {
     super(message);
-    this.name = 'ApiServiceError';
+    this.name = "ApiServiceError";
     this.status = status;
     this.code = code;
     this.originalError = originalError;
+    this.retryAfterSeconds = retryAfterSeconds;
   }
 }
 
@@ -40,7 +55,7 @@ export class ApiService {
       baseURL: config.baseURL,
       timeout: config.timeout || 30000,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...config.headers,
       },
     });
@@ -55,13 +70,15 @@ export class ApiService {
     // Request interceptor
     this.client.interceptors.request.use(
       (config) => {
-        console.log(`API Request: ${config.method?.toUpperCase()} ${config.url}`);
+        console.log(
+          `API Request: ${config.method?.toUpperCase()} ${config.url}`,
+        );
         return config;
       },
       (error) => {
-        console.error('Request interceptor error:', error);
+        console.error("Request interceptor error:", error);
         return Promise.reject(error);
-      }
+      },
     );
 
     // Response interceptor
@@ -72,9 +89,9 @@ export class ApiService {
       },
       (error: AxiosError) => {
         const apiError = this.handleApiError(error);
-        console.warn('API Error:', apiError.message);
+        console.warn("API Error:", apiError.message);
         return Promise.reject(apiError);
-      }
+      },
     );
   }
 
@@ -82,31 +99,39 @@ export class ApiService {
    * Handle and transform Axios errors to ApiServiceError
    */
   private handleApiError(error: AxiosError): ApiServiceError {
-    if (error.response) {
+    // status 0 = el navegador no obtuvo respuesta (servidor caído, CORS, sin red):
+    // se trata como error de red, no como respuesta del servidor.
+    if (error.response && error.response.status > 0) {
       // Server responded with error status
       const responseData = error.response.data as any;
-      const message = responseData?.error || responseData?.message || 'Server error';
+      const message =
+        responseData?.error || responseData?.message || "Server error";
+      const retryAfter = Number(
+        responseData?.retryAfterSeconds ??
+          error.response.headers?.["retry-after"],
+      );
       return new ApiServiceError(
         message,
         error.response.status,
         responseData?.code,
-        error
+        error,
+        Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : undefined,
       );
     } else if (error.request) {
       // Request was made but no response received
       return new ApiServiceError(
-        'Network error - no response from server',
+        "Network error - no response from server",
         undefined,
-        'NETWORK_ERROR',
-        error
+        "NETWORK_ERROR",
+        error,
       );
     } else {
       // Something else happened
       return new ApiServiceError(
-        error.message || 'Unknown error occurred',
+        error.message || "Unknown error occurred",
         undefined,
-        'UNKNOWN_ERROR',
-        error
+        "UNKNOWN_ERROR",
+        error,
       );
     }
   }
@@ -116,27 +141,30 @@ export class ApiService {
    */
   private async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const sortedParams = config?.params
-      ? Object.fromEntries(Object.entries(config.params as Record<string, unknown>).sort())
+      ? Object.fromEntries(
+          Object.entries(config.params as Record<string, unknown>).sort(),
+        )
       : {};
     const cacheKey = `${url}?${JSON.stringify(sortedParams)}`;
-    
+
     // Check if request is already in progress
     if (this.requestQueue.has(cacheKey)) {
       return this.requestQueue.get(cacheKey)!;
     }
 
-    const requestPromise = this.client.get<ApiResponse<T>>(url, config)
+    const requestPromise = this.client
+      .get<ApiResponse<T>>(url, config)
       .then((response) => {
         // Remove from queue when completed
         this.requestQueue.delete(cacheKey);
-        
+
         if (response.data.success) {
           return response.data.data as T;
         } else {
           throw new ApiServiceError(
-            response.data.message || 'Request failed',
+            response.data.message || "Request failed",
             400,
-            'REQUEST_FAILED'
+            "REQUEST_FAILED",
           );
         }
       })
@@ -148,23 +176,28 @@ export class ApiService {
 
     // Store request in queue
     this.requestQueue.set(cacheKey, requestPromise);
-    
+
     return requestPromise;
   }
 
   /**
    * Get projections data in specified format
    */
-  async getProjections(params: ProjectionQueryParams = {}): Promise<ProjectionData> {
+  async getProjections(
+    params: ProjectionQueryParams = {},
+  ): Promise<ProjectionData> {
     try {
       const queryParams = {
-        format: params.format || 'json',
+        format: params.format || "json",
       };
 
       // Use the new API v1 endpoint
-      const backendResponse = await this.get<Record<string, DataPoint[]>>('/api/v1/projections', {
-        params: queryParams,
-      });
+      const backendResponse = await this.get<Record<string, DataPoint[]>>(
+        "/api/v1/projections",
+        {
+          params: queryParams,
+        },
+      );
 
       // Map backend keys to frontend expected keys
       const response: ProjectionData = {
@@ -177,10 +210,10 @@ export class ApiService {
       return response;
     } catch (error) {
       throw new ApiServiceError(
-        `Failed to fetch projections: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        `Failed to fetch projections: ${error instanceof Error ? error.message : "Unknown error"}`,
         undefined,
-        'PROJECTIONS_ERROR',
-        error as AxiosError
+        "PROJECTIONS_ERROR",
+        error as AxiosError,
       );
     }
   }
@@ -191,17 +224,36 @@ export class ApiService {
   async getSimulation(params: SimulationQueryParams): Promise<SimulationData> {
     try {
       // Use the new API v1 endpoint
-      const response = await this.get<SimulationData>('/api/v1/simulations', {
+      const response = await this.get<SimulationData>("/api/v1/simulations", {
         params,
       });
 
       return response;
     } catch (error) {
+      // Se conserva el ApiServiceError original: la UI necesita su status
+      // (400/422/429/5xx o ninguno si no hubo respuesta) para explicar el error.
+      if (error instanceof ApiServiceError) throw error;
       throw new ApiServiceError(
-        `Failed to fetch simulation: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        `Failed to fetch simulation: ${error instanceof Error ? error.message : "Unknown error"}`,
         undefined,
-        'SIMULATION_ERROR',
-        error as AxiosError
+        "SIMULATION_ERROR",
+        error as AxiosError,
+      );
+    }
+  }
+
+  /**
+   * Valores por defecto del simulador (escenario base + parámetros ajustados por R)
+   */
+  async getSimulationDefaults(): Promise<SimulationDefaults> {
+    try {
+      return await this.get<SimulationDefaults>("/api/v1/simulation-defaults");
+    } catch (error) {
+      if (error instanceof ApiServiceError) throw error;
+      throw new ApiServiceError(
+        `Failed to fetch simulation defaults: ${error instanceof Error ? error.message : "Unknown error"}`,
+        undefined,
+        "SIMULATION_DEFAULTS_ERROR",
       );
     }
   }
@@ -214,14 +266,16 @@ export class ApiService {
   async getFirstSimulation(): Promise<SimulationData> {
     try {
       // Use the new API v1 endpoint
-      const response = await this.get<SimulationData>('/api/v1/get-first-simulation');
+      const response = await this.get<SimulationData>(
+        "/api/v1/get-first-simulation",
+      );
       return response;
     } catch (error) {
       throw new ApiServiceError(
-        `Failed to fetch first simulation: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        `Failed to fetch first simulation: ${error instanceof Error ? error.message : "Unknown error"}`,
         undefined,
-        'FIRST_SIMULATION_ERROR',
-        error as AxiosError
+        "FIRST_SIMULATION_ERROR",
+        error as AxiosError,
       );
     }
   }
@@ -232,17 +286,23 @@ export class ApiService {
   async getFirstSimulationData(): Promise<SimulationData> {
     try {
       // Use the new API v1 endpoint
-      const response = await this.get<SimulationData>('/api/v1/get-first-simulation-data');
-      
+      const response = await this.get<SimulationData>(
+        "/api/v1/get-first-simulation-data",
+      );
+
       // Transform data from backend format (day) to frontend format (fecha)
       const transformDataPoint = (item: any, index: number): DataPoint => ({
         ...item,
-        fecha: item.day !== undefined ? `day-${item.day}` : (item.fecha || `day-${index}`),
+        fecha:
+          item.day !== undefined
+            ? `day-${item.day}`
+            : item.fecha || `day-${index}`,
       });
 
       const transformedResponse: SimulationData = {
         cumulative: response.cumulative?.map(transformDataPoint) || [],
-        cumulative_deaths: response.cumulative_deaths?.map(transformDataPoint) || [],
+        cumulative_deaths:
+          response.cumulative_deaths?.map(transformDataPoint) || [],
         exposed: response.exposed?.map(transformDataPoint) || [],
         hospitalized: response.hospitalized?.map(transformDataPoint) || [],
         immune: response.immune?.map(transformDataPoint) || [],
@@ -254,10 +314,10 @@ export class ApiService {
       return transformedResponse;
     } catch (error) {
       throw new ApiServiceError(
-        `Failed to fetch first simulation data: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        `Failed to fetch first simulation data: ${error instanceof Error ? error.message : "Unknown error"}`,
         undefined,
-        'FIRST_SIMULATION_DATA_ERROR',
-        error as AxiosError
+        "FIRST_SIMULATION_DATA_ERROR",
+        error as AxiosError,
       );
     }
   }
@@ -268,14 +328,16 @@ export class ApiService {
   async getFirstSimulationWithExecution(): Promise<SimulationData> {
     try {
       // Use the new API v1 endpoint
-      const response = await this.get<SimulationData>('/api/v1/get-first-simulation-2');
+      const response = await this.get<SimulationData>(
+        "/api/v1/get-first-simulation-2",
+      );
       return response;
     } catch (error) {
       throw new ApiServiceError(
-        `Failed to execute simulation: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        `Failed to execute simulation: ${error instanceof Error ? error.message : "Unknown error"}`,
         undefined,
-        'SIMULATION_EXECUTION_ERROR',
-        error as AxiosError
+        "SIMULATION_EXECUTION_ERROR",
+        error as AxiosError,
       );
     }
   }
@@ -284,31 +346,30 @@ export class ApiService {
    * Download file from server
    */
   async downloadFile(url: string, filename?: string): Promise<void> {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
     try {
       const response = await this.client.get(url, {
-        responseType: 'blob',
+        responseType: "blob",
       });
 
       // Create blob link to download
       const blob = new Blob([response.data]);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
-      link.download = filename || 'download';
+      link.download = filename || "download";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(link.href);
     } catch (error) {
       throw new ApiServiceError(
-        `Failed to download file: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        `Failed to download file: ${error instanceof Error ? error.message : "Unknown error"}`,
         undefined,
-        'DOWNLOAD_ERROR',
-        error as AxiosError
+        "DOWNLOAD_ERROR",
+        error as AxiosError,
       );
     }
   }
-
 
   /**
    * Clear request queue (useful for cleanup)
@@ -335,4 +396,10 @@ export const apiService = new ApiService({
 });
 
 // Export types for convenience
-export type { ApiResponse, ProjectionData, SimulationData, SimulationQueryParams, ProjectionQueryParams };
+export type {
+  ApiResponse,
+  ProjectionData,
+  SimulationData,
+  SimulationQueryParams,
+  ProjectionQueryParams,
+};

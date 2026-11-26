@@ -1,26 +1,15 @@
-import { useTranslation } from "next-i18next";
-import Tooltip from "../../../utils/Tooltip";
+import { NumericField } from "../components/NumericField";
+import { NUMERIC_CONSTRAINTS } from "../constants";
+import { NumericInputHook } from "../types";
 
-const VFilteredInput = ({ vFiltered, handleVFilteredChange }) => {
-  const { t } = useTranslation("common");
-
-  return (
-    <div className="flex flex-col gap-1 w-full">
-      <div className="text-xs md:text-sm font-bold flex items-center gap-1 pr-2">
-        <label htmlFor="filtered">{t("v_filtered")}</label>
-        <Tooltip text={t("v_filtered-description")} />
-      </div>
-      <input
-        id="filtered"
-        type="number"
-        min="1"
-        max="5000"
-        value={vFiltered}
-        onChange={handleVFilteredChange}
-        className="border border-gray-theme rounded-md p-1"
-      />
-    </div>
-  );
-};
+const VFilteredInput = ({ field }: { field: NumericInputHook }) => (
+  <NumericField
+    id="filtered"
+    labelKey="v_filtered"
+    descriptionKey="v_filtered-description"
+    field={field}
+    constraints={NUMERIC_CONSTRAINTS.V_FILTERED}
+  />
+);
 
 export default VFilteredInput;

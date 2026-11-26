@@ -25,15 +25,29 @@ const DataTable = memo(function DataTable({
   columns,
   sampleEvery = 10,
 }: DataTableProps) {
-  const { t } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
 
   if (!data || data.length === 0) return null;
 
-  // Tomar una muestra representativa del dataset
-  const sampled = data.filter((_, i) => i % sampleEvery === 0 || i === data.length - 1);
+  // Personas: enteros con el separador de miles del idioma de la página
+  // (antes: "2,866,492.69" en formato inglés y con decimales).
+  const formatNumber = (n: number) =>
+    n.toLocaleString(i18n.language, { maximumFractionDigits: 0 });
 
-  const hasDateField = dateField in (data[0] ?? {});
-  const rowField = hasDateField ? dateField : valueField === "value" ? "day" : dateField;
+  // Tomar una muestra representativa del dataset
+  const sampled = data.filter(
+    (_, i) => i % sampleEvery === 0 || i === data.length - 1,
+  );
+
+  // Las simulaciones traen `day` numérico; la carga inicial además agrega una
+  // pseudo-fecha "day-N" (services/api.ts). Si hay `day`, se muestra el día.
+  const hasDayField = typeof (data[0] ?? {})["day"] === "number";
+  const hasDateField = !hasDayField && dateField in (data[0] ?? {});
+  const rowField = hasDateField
+    ? dateField
+    : valueField === "value"
+      ? "day"
+      : dateField;
 
   return (
     <details className="px-3 md:px-6 mt-1 mb-2">
@@ -47,20 +61,30 @@ const DataTable = memo(function DataTable({
           </caption>
           <thead className="bg-gray-50">
             <tr>
-              <th scope="col" className="px-3 py-1 text-left font-semibold text-gray-600 border-b border-gray-200">
+              <th
+                scope="col"
+                className="px-3 py-1 text-left font-semibold text-gray-600 border-b border-gray-200"
+              >
                 {hasDateField ? t("data-table-date") : t("data-table-day")}
               </th>
-              {columns
-                ? columns.map((col) => (
-                    <th key={col.key} scope="col" className="px-3 py-1 text-right font-semibold text-gray-600 border-b border-gray-200">
-                      {col.label}
-                    </th>
-                  ))
-                : (
-                    <th scope="col" className="px-3 py-1 text-right font-semibold text-gray-600 border-b border-gray-200">
-                      {t("data-table-value")}
-                    </th>
-                  )}
+              {columns ? (
+                columns.map((col) => (
+                  <th
+                    key={col.key}
+                    scope="col"
+                    className="px-3 py-1 text-right font-semibold text-gray-600 border-b border-gray-200"
+                  >
+                    {col.label}
+                  </th>
+                ))
+              ) : (
+                <th
+                  scope="col"
+                  className="px-3 py-1 text-right font-semibold text-gray-600 border-b border-gray-200"
+                >
+                  {t("data-table-value")}
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -71,22 +95,27 @@ const DataTable = memo(function DataTable({
                 : String(row["day"] ?? i);
               return (
                 <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                  <td className="px-3 py-1 text-gray-700 border-b border-gray-100">{displayKey}</td>
-                  {columns
-                    ? columns.map((col) => (
-                        <td key={col.key} className="px-3 py-1 text-right text-gray-700 border-b border-gray-100 tabular-nums">
-                          {typeof row[col.key] === "number"
-                            ? (row[col.key] as number).toLocaleString(undefined, { maximumFractionDigits: 2 })
-                            : String(row[col.key] ?? "—")}
-                        </td>
-                      ))
-                    : (
-                        <td className="px-3 py-1 text-right text-gray-700 border-b border-gray-100 tabular-nums">
-                          {typeof row[valueField] === "number"
-                            ? (row[valueField] as number).toLocaleString(undefined, { maximumFractionDigits: 2 })
-                            : String(row[valueField] ?? "—")}
-                        </td>
-                      )}
+                  <td className="px-3 py-1 text-gray-700 border-b border-gray-100">
+                    {displayKey}
+                  </td>
+                  {columns ? (
+                    columns.map((col) => (
+                      <td
+                        key={col.key}
+                        className="px-3 py-1 text-right text-gray-700 border-b border-gray-100 tabular-nums"
+                      >
+                        {typeof row[col.key] === "number"
+                          ? formatNumber(row[col.key] as number)
+                          : String(row[col.key] ?? "—")}
+                      </td>
+                    ))
+                  ) : (
+                    <td className="px-3 py-1 text-right text-gray-700 border-b border-gray-100 tabular-nums">
+                      {typeof row[valueField] === "number"
+                        ? formatNumber(row[valueField] as number)
+                        : String(row[valueField] ?? "—")}
+                    </td>
+                  )}
                 </tr>
               );
             })}

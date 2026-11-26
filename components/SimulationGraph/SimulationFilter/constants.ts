@@ -1,4 +1,9 @@
-import { RtConstraints, NumericConstraintsMap, CssClasses, AriaLabels } from './types';
+import {
+  RtConstraints,
+  NumericConstraintsMap,
+  CssClasses,
+  AriaLabels,
+} from "./types";
 
 /**
  * Constants for SimulationFilter component
@@ -14,19 +19,27 @@ export const RT_CONSTRAINTS: RtConstraints = {
   MAX_COUNT: 12,
 } as const;
 
-// UCI and VFiltered constraints
+// Límites de los campos. DEBEN coincidir con SIMULATION_LIMITS del backend
+// (newBack/src/domain/simulation.ts), que es quien los hace cumplir.
 export const NUMERIC_CONSTRAINTS: NumericConstraintsMap = {
+  // Camas UCI disponibles
   UCI: {
     MIN: 1,
     MAX: 5000,
   },
+  // Nuevos vacunados POR DÍA
   V_FILTERED: {
     MIN: 1,
     MAX: 5000,
   },
+  // Fracción de infectados que se hospitaliza. Paso de 0,1 %: el valor que
+  // ajustó el modelo R para dic-2022 es ≈ 0,3 % (antes el paso era 10 % y
+  // ese rango realista era inalcanzable). Máximo 99 % porque una parte de los
+  // infectados fallece sin hospitalizarse.
   LAMBDA_I_TO_H: {
     MIN: 0,
-    MAX: 1,
+    MAX: 0.99,
+    STEP: 0.001,
   },
 } as const;
 
@@ -35,24 +48,31 @@ export const CSS_CLASSES: CssClasses = {
   CONTAINER: "flex md:justify-end grow text-base",
   CARD: "rounded-lg shadow-lg bg-white p-3 md:p-6 flex flex-col gap-3 border border-gray-theme text-black mb-4 grow md:min-w-[500px] md:max-w-[650px]",
   TITLE: "border-b border-gray-theme pb-1 w-full font-bold",
-  SECTION_ROW: "flex flex-col md:flex-row gap-3 md:gap-1 items-start md:items-center",
+  SECTION_ROW:
+    "flex flex-col md:flex-row gap-3 md:gap-1 items-start md:items-center",
   LABEL: "text-xs md:text-sm font-bold flex items-center pr-2 shrink-0",
   RT_CONTAINER: "flex flex-wrap gap-2 md:gap-4 w-full",
   RT_BUTTON_CONTAINER: "flex flex-row gap-2",
   INPUTS_ROW: "flex flex-wrap gap-3 md:gap-4",
   ACTIONS_CONTAINER: "flex flex-col gap-2",
-  ERROR_MESSAGE: "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md text-sm",
+  ERROR_MESSAGE:
+    "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md text-sm",
   ACTIONS_ROW: "flex gap-2",
-  
+
   // Button classes
   BUTTON: {
-    PRIMARY: "flex items-center justify-center gap-2 px-4 py-2 text-white font-bold rounded-md transition-all duration-200",
-    PRIMARY_LOADING: "bg-indigo-600 cursor-not-allowed opacity-80 animate-pulse",
+    PRIMARY:
+      "flex items-center justify-center gap-2 px-4 py-2 text-white font-bold rounded-md transition-all duration-200",
+    PRIMARY_LOADING:
+      "bg-indigo-600 cursor-not-allowed opacity-80 animate-pulse",
     PRIMARY_NORMAL: "bg-indigo-500 hover:bg-indigo-600",
     PRIMARY_DISABLED: "bg-indigo-300 cursor-not-allowed",
-    SECONDARY: "items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-md",
-    RT_ADD: "text-white bg-indigo-500 hover:bg-indigo-600 font-bold text-xl rounded-md p-2 min-w-[44px] min-h-[44px]",
-    RT_REMOVE: "text-white bg-red-500 hover:bg-red-600 text-xl rounded-md p-2 min-w-[44px] min-h-[44px]",
+    SECONDARY:
+      "items-center px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-md",
+    RT_ADD:
+      "text-white bg-indigo-500 hover:bg-indigo-600 font-bold text-xl rounded-md p-2 min-w-[44px] min-h-[44px]",
+    RT_REMOVE:
+      "text-white bg-red-500 hover:bg-red-600 text-xl rounded-md p-2 min-w-[44px] min-h-[44px]",
   },
 
   // Spinner classes
@@ -65,7 +85,6 @@ export const ARIA_LABELS: AriaLabels = {
   REMOVE_RT: "Remove Rt value",
 } as const;
 
-
 // Default filters (keeping original for compatibility)
 interface DefaultFilters {
   Rt: number[];
@@ -74,9 +93,12 @@ interface DefaultFilters {
   lambda_I_to_H: number;
 }
 
+// Valores de respaldo: el formulario usa los que devuelve
+// GET /api/v1/simulation-defaults (escenario base + λ ajustada por el modelo R).
+// Estos solo se usan si ese endpoint no respondió al generar la página.
 export const default_filters: DefaultFilters = {
   Rt: [1.1, 1.2, 1.3, 0.8, 0.7, 0.9],
   UCI_threshold: 100,
   V_filtered: 1000,
-  lambda_I_to_H: 0.01,
+  lambda_I_to_H: 0.003,
 };

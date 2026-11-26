@@ -5,7 +5,7 @@
 // RT List types
 export interface RtListHook {
   rtList: number[];
-  updateRtValue: (index: number, action: 'increment' | 'decrement') => void;
+  updateRtValue: (index: number, action: "increment" | "decrement") => void;
   addRtValue: () => void;
   removeRtValue: (index: number) => void;
   resetRtList: () => void;
@@ -15,13 +15,26 @@ export interface RtListHook {
 export interface NumericConstraints {
   MIN: number;
   MAX: number;
+  STEP?: number;
 }
 
-export type NumericInputHook<T> = [
-  T,
-  (event: React.ChangeEvent<HTMLInputElement>) => void,
-  () => void
-];
+/** Motivo por el que el texto de un campo numérico no es un valor válido. */
+export type NumericInputError = "required" | "out-of-range";
+
+export interface NumericInputHook {
+  /** Texto tal como lo escribió el usuario (puede estar vacío o fuera de rango). */
+  text: string;
+  /** Valor numérico válido, o null si el texto no lo es. */
+  value: number | null;
+  error: NumericInputError | null;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  reset: () => void;
+}
+
+export interface NumericFieldProps {
+  field: NumericInputHook;
+  constraints: NumericConstraints;
+}
 
 // Simulation state types
 export interface SimulationStateHook {
@@ -42,6 +55,8 @@ export interface LoadingButtonProps {
   isLoading: boolean;
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
+  /** Texto (ya traducido) que explica por qué el botón está deshabilitado. */
+  disabledReason?: string;
   children: React.ReactNode;
   className?: string;
 }
@@ -55,7 +70,7 @@ export interface SecondaryButtonProps {
 
 export interface RtListSectionProps {
   rtList: number[];
-  onRtChange: (index: number, action: 'increment' | 'decrement') => void;
+  onRtChange: (index: number, action: "increment" | "decrement") => void;
   onAddRt: () => void;
   onRemoveRt: (index: number) => void;
 }
@@ -67,17 +82,16 @@ export interface RtActionButtonsProps {
 }
 
 export interface InputFieldsSectionProps {
-  uci: number;
-  onUciChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  vFiltered: number;
-  onVFilteredChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  lambdaItoH: number;
-  onLambdaItoHChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  uci: NumericInputHook;
+  vFiltered: NumericInputHook;
+  lambdaItoH: NumericInputHook;
 }
 
 export interface ActionButtonsSectionProps {
   isLoading: boolean;
   hasChanges: boolean;
+  /** Hay algún campo con un valor inválido. */
+  hasInvalidFields: boolean;
   error: string | null;
   onSimulate: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onReset: () => void;
@@ -96,7 +110,7 @@ export interface RtConstraints {
 export interface NumericConstraintsMap {
   UCI: NumericConstraints;
   V_FILTERED: NumericConstraints;
-  LAMBDA_I_TO_H: NumericConstraints;
+  LAMBDA_I_TO_H: Required<NumericConstraints>;
 }
 
 export interface CssClasses {
