@@ -5,6 +5,9 @@ import SimulationFilter from "../components/SimulationGraph/SimulationFilter/Sim
 import SimulationGraph from "../components/SimulationGraph/SimulationGraph";
 import { GetStaticProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+// Config explícita: en Vercel la función de regeneración (ISR) no encuentra
+// next-i18next.config.js por su cuenta (no se empaqueta).
+import nextI18NextConfig from "../next-i18next.config";
 import { useTranslation } from "next-i18next";
 import { TitleSection } from "../components/TitleSection";
 import { useSelector } from "react-redux";
@@ -22,8 +25,6 @@ import {
   setSimulationUciThreshold,
 } from "../store/reducers/graphInfoSlice";
 import { default_filters } from "../components/SimulationGraph/SimulationFilter/constants";
-
- 
 
 function Simulador({
   simulationDefaults = null,
@@ -139,7 +140,11 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
 
         return {
           props: {
-            ...(await serverSideTranslations(locale ?? "es", ["common"])),
+            ...(await serverSideTranslations(
+              locale ?? "es",
+              ["common"],
+              nextI18NextConfig,
+            )),
             simulationDefaults,
           },
           revalidate: 3600, // Re-fetch cada hora
@@ -149,7 +154,11 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
 
         return {
           props: {
-            ...(await serverSideTranslations(locale ?? "es", ["common"])),
+            ...(await serverSideTranslations(
+              locale ?? "es",
+              ["common"],
+              nextI18NextConfig,
+            )),
             simulationDefaults,
           },
           // Sin datos (p. ej. backend inalcanzable al construir la imagen Docker):

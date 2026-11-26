@@ -8,6 +8,9 @@ import {
   selectMainGraphData,
 } from "../store/reducers/graphInfoSlice";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+// Config explícita: en Vercel la función de regeneración (ISR) no encuentra
+// next-i18next.config.js por su cuenta (no se empaqueta).
+import nextI18NextConfig from "../next-i18next.config";
 import { TitleSection } from "../components";
 import { useMemo, useRef, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
@@ -15,7 +18,6 @@ import { useSelector } from "react-redux";
 import { wrapper } from "../store/store";
 import { apiService } from "../services/api";
 import { ProjectionData, DataPoint } from "../types/api";
- 
 
 // --- Type Definitions ---
 interface GraphStatus {
@@ -178,7 +180,11 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
 
         return {
           props: {
-            ...(await serverSideTranslations(locale ?? "es", ["common"])),
+            ...(await serverSideTranslations(
+              locale ?? "es",
+              ["common"],
+              nextI18NextConfig,
+            )),
           },
           revalidate: 3600, // Re-fetch cada hora
         };
@@ -188,7 +194,11 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         // Return fallback props even if data fetching fails
         return {
           props: {
-            ...(await serverSideTranslations(locale ?? "es", ["common"])),
+            ...(await serverSideTranslations(
+              locale ?? "es",
+              ["common"],
+              nextI18NextConfig,
+            )),
           },
           // Sin datos (p. ej. backend inalcanzable al construir la imagen Docker):
           // reintentar pronto en vez de mostrar gráficos vacíos durante una hora.

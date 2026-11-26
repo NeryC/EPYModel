@@ -28,7 +28,7 @@ const eslintConfig = defineConfig([
   {
     // CommonJS legítimo: next.config.js y los mocks de vitest (vi.mock no
     // admite import estático dentro de la fábrica).
-    files: ["next.config.js", "tests/setup.ts"],
+    files: ["next.config.js", "next-i18next.config.js", "tests/setup.ts"],
     rules: { "@typescript-eslint/no-require-imports": "off" },
   },
   globalIgnores([
