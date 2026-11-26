@@ -1,10 +1,8 @@
-// Note: Next 16 removed the `next lint` command, so we would normally invoke
-// ESLint directly. However, ESLint 9 + eslint-config-next 16 currently crashes
-// via FlatCompat with a "Converting circular structure to JSON" error.
-// See docs/TEST_METRICS.md "Known issues". Until upstream fixes land, ESLint is
-// excluded from pre-commit. Re-enable by un-commenting the eslint entry once
-// `yarn lint` runs cleanly.
+// ESLint vuelve al pre-commit: el fallo "Converting circular structure to JSON"
+// venía de cargar eslint-config-next 16 (ya flat config) con FlatCompat; ver
+// eslint.config.mjs. Los errores bloquean el commit; las advertencias heredadas
+// (reglas del React Compiler, `any`, etc.) no, para no frenar commits ajenos.
 module.exports = {
-  '*.{ts,tsx,js,jsx}': [/* 'eslint --fix --max-warnings=0', */ () => 'vitest related --run'],
+  '*.{ts,tsx,js,jsx}': ['eslint --fix', () => 'vitest related --run'],
   '*.{ts,tsx,js,jsx,md,json}': ['prettier --write'],
 };

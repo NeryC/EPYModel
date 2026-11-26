@@ -22,7 +22,10 @@ interface MaxValue {
 }
 
 interface GraphElements {
-  [key: string]: (xScale: d3.ScaleTime<number, number>, yScale: d3.ScaleLinear<number, number>) => (data: DataPoint[]) => string;
+  [key: string]: (
+    xScale: d3.ScaleTime<number, number>,
+    yScale: d3.ScaleLinear<number, number>,
+  ) => (data: DataPoint[]) => string;
 }
 
 /**
@@ -31,9 +34,9 @@ interface GraphElements {
 export const getNewLines = (
   selectedLines: LineItem[],
   uncertainty: boolean,
-  dotField: string
+  dotField: string,
 ): string[] => {
-  const newLines = [...selectedLines.map(line => line.name), dotField];
+  const newLines = [...selectedLines.map((line) => line.name), dotField];
   if (uncertainty) newLines.push("peor");
   return newLines;
 };
@@ -51,13 +54,13 @@ export const drawLines = (
   yScale: d3.ScaleLinear<number, number>,
   data: DataPoint[],
   xAxisGroup: d3.Selection<SVGGElement, unknown, null, undefined>,
-  yAxisGroup: d3.Selection<SVGGElement, unknown, null, undefined>
+  yAxisGroup: d3.Selection<SVGGElement, unknown, null, undefined>,
 ): void => {
   showedElements.forEach((element) => {
     if (element.style === "dot") return;
     const lineGenerator = graphElements[element.name];
     if (!lineGenerator) return;
-    
+
     const d = lineGenerator(xScale, yScale)(data);
 
     svgChart
@@ -69,7 +72,7 @@ export const drawLines = (
   if (uncertainty && graphElements["uncertainty"]) {
     uncertaintyElement.attr(
       "d",
-      graphElements["uncertainty"](xScale, yScale)(data)
+      graphElements["uncertainty"](xScale, yScale)(data),
     );
   } else {
     uncertaintyElement.attr("d", null);
@@ -94,12 +97,18 @@ export const drawLines = (
 /**
  * Get the field with the maximum value from data
  */
-export const getMaxField = (data: DataPoint[], lines: (LineItem | string)[]): string => {
-  let maxvalue: MaxValue = { value: 0, name: "" };
+export const getMaxField = (
+  data: DataPoint[],
+  lines: (LineItem | string)[],
+): string => {
+  const maxvalue: MaxValue = { value: 0, name: "" };
   for (let x = 0; x < lines.length; x++) {
-    const fieldName: string = typeof lines[x] === "string" ? (lines[x] as string) : (lines[x] as LineItem).name;
+    const fieldName: string =
+      typeof lines[x] === "string"
+        ? (lines[x] as string)
+        : (lines[x] as LineItem).name;
     if (!fieldName) continue;
-    
+
     const valuetest = d3.max(data, (item) => item[fieldName] as number);
     if (valuetest && maxvalue.value < valuetest) {
       maxvalue.name = fieldName;
@@ -116,17 +125,19 @@ export const getYDomain = (
   data: DataPoint[],
   selectedLines: (LineItem | string)[],
   xz: d3.ScaleTime<number, number>,
-  yScale: d3.ScaleLinear<number, number>
+  yScale: d3.ScaleLinear<number, number>,
 ): d3.ScaleLinear<number, number> => {
   const xleft = new Date(xz.domain()[0]);
   const xright = new Date(xz.domain()[1]);
 
   const dataSubset = data.filter(
-    (d) => d[dateField] >= xleft && d[dateField] <= xright
+    (d) => d[dateField] >= xleft && d[dateField] <= xright,
   );
 
   const maxField = getMaxField(dataSubset, selectedLines);
-  const countSubset = dataSubset.map((d) => d[maxField]).filter((val): val is number => val != null);
+  const countSubset = dataSubset
+    .map((d) => d[maxField])
+    .filter((val): val is number => val != null);
 
   let ymax_new = d3.max(countSubset) || 0;
 
@@ -141,7 +152,7 @@ export const getYDomain = (
  * Time formatter that uses different formats based on date range
  */
 export function timeFormat(
-  formats: Array<[(date: Date) => string, (date: Date) => boolean]>
+  formats: Array<[(date: Date) => string, (date: Date) => boolean]>,
 ): (date: Date) => string {
   return function (date: Date): string {
     let i = formats.length - 1;
@@ -159,9 +170,15 @@ export function timeFormat(
 export const declareAreaD3 = (
   xField: string,
   y0Field: string,
-  y1Field: string
-): ((xScale: d3.ScaleTime<number, number>, yScale: d3.ScaleLinear<number, number>) => d3.Area<DataPoint>) => {
-  return (xScale: d3.ScaleTime<number, number>, yScale: d3.ScaleLinear<number, number>) =>
+  y1Field: string,
+): ((
+  xScale: d3.ScaleTime<number, number>,
+  yScale: d3.ScaleLinear<number, number>,
+) => d3.Area<DataPoint>) => {
+  return (
+    xScale: d3.ScaleTime<number, number>,
+    yScale: d3.ScaleLinear<number, number>,
+  ) =>
     d3
       .area<DataPoint>()
       .x((d) => xScale(d[xField]))
@@ -178,7 +195,7 @@ export const createZoom = (
   right: number,
   width: number,
   height: number,
-  zoomed: (event: d3.D3ZoomEvent<SVGSVGElement, unknown>) => void
+  zoomed: (event: d3.D3ZoomEvent<SVGSVGElement, unknown>) => void,
 ): d3.ZoomBehavior<SVGSVGElement, unknown> => {
   return d3
     .zoom<SVGSVGElement, unknown>()
@@ -193,4 +210,3 @@ export const createZoom = (
     ])
     .on("zoom", zoomed);
 };
-
