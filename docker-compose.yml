@@ -1,7 +1,11 @@
-version: '3'
 services:
   nextjs:
     build: ./
+    environment:
+      # URL del backend para el render del lado del servidor (getStaticProps/ISR).
+      # Dentro de Docker "localhost" es este contenedor: usar el nombre del
+      # servicio del backend en la red de Docker, p. ej. http://backend:3001
+      - API_URL_INTERNAL=${API_URL_INTERNAL:-}
   nginx:
     build: ./nginx
     ports:
