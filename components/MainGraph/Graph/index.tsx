@@ -46,7 +46,9 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
   const yAxisRef = useRef<SVGGElement | null>(null);
   const xAxisRef = useRef<SVGGElement | null>(null);
   const dotsRef = useRef<SVGGElement | null>(null);
-  const timeoutControllerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timeoutControllerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
 
   const selectedLines = useSelector(selectSelectedLines(type));
   const showedElements = useSelector(selectShowedElements(type));
@@ -66,7 +68,7 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
             xField: dateField,
             isSmooth: isSmooth,
           },
-          element.name
+          element.name,
         );
       }
     });
@@ -94,6 +96,11 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
     const xz = e.transform.rescaleX(xScale);
     const yz = getYDomain(data, newLines, xz, yScale);
     xScale.domain(xz.domain());
+    // El eje Y se ajusta al tramo visible: las líneas, puntos y tooltips tienen
+    // que usar ese mismo dominio. Antes solo se actualizaba el eje y las curvas
+    // seguían en la escala completa (hasta el pico de 2021): con zoom en
+    // 2022–2023 se dibujaban a ~1/3 de su valor real.
+    yScale.domain(yz.domain());
 
     xAxisGroup.call(axis.x, xz);
     yAxisGroup.call(axis.y, yz);
@@ -107,13 +114,19 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
       yScale,
       data,
       xAxisGroup,
-      yAxisGroup
+      yAxisGroup,
     );
+    // Los puntos de datos observados también siguen al zoom (antes quedaban
+    // en la posición de la escala completa, fuera del área visible).
+    svgChart
+      .selectAll(`#${dotField}-${type}`)
+      .attr("cx", (d: any) => xScale(d[dateField]))
+      .attr("cy", (d: any) => yScale(d[dotField]));
   }
 
   const newLines = useMemo(
     () => getNewLines(selectedLines, uncertainty, dotField),
-    [selectedLines, uncertainty, dotField]
+    [selectedLines, uncertainty, dotField],
   );
 
   const maxField = getMaxField(data, newLines);
@@ -150,9 +163,9 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
         .scale(
           base /
             (xScale(data[range.finish][dateField]) -
-              xScale(data[range.start][dateField]))
+              xScale(data[range.start][dateField])),
         )
-        .translate(-xScale(data[range.start][dateField]), 0)
+        .translate(-xScale(data[range.start][dateField]), 0),
     );
   }, [data, range.finish, range.start, right, svgChart, width, xScale, zoom]);
 
@@ -163,7 +176,7 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
           d3
             .axisLeft(y1)
             .ticks(5)
-            .tickSize(-(width - right))
+            .tickSize(-(width - right)),
         ),
       x: (g, x1) =>
         g.call(
@@ -172,7 +185,7 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
             .ticks(4)
             .tickSize(-(height - bottom))
             .tickFormat(
-              (timeFormat([
+              timeFormat([
                 [
                   d3.timeFormat("%Y"),
                   function () {
@@ -191,9 +204,9 @@ const Graph = ({ type, data, dimensions }: GraphProps) => {
                     return d.getDate() != 1;
                   },
                 ],
-              ]) as unknown) as (d: any, i: number) => string
+              ]) as unknown as (d: any, i: number) => string,
             )
-            .tickPadding(10)
+            .tickPadding(10),
         ),
     };
   }, [bottom, height, right, width]);
