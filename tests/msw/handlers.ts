@@ -1,7 +1,11 @@
-import { http, HttpResponse } from 'msw';
-import { fakeProjectionResponse, fakeSimulationResponse } from '../fixtures/responses';
+import { http, HttpResponse } from "msw";
+import {
+  fakeProjectionResponse,
+  fakeSimulationResponse,
+  fakeSimulationDefaults,
+} from "../fixtures/responses";
 
-const apiBase = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
+const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
 export const handlers = [
   http.get(`${apiBase}/api/v1/projections`, () =>
@@ -10,10 +14,13 @@ export const handlers = [
   http.get(`${apiBase}/api/v1/simulations`, () =>
     HttpResponse.json({ success: true, data: fakeSimulationResponse }),
   ),
+  http.get(`${apiBase}/api/v1/simulation-defaults`, () =>
+    HttpResponse.json({ success: true, data: fakeSimulationDefaults }),
+  ),
   http.get(`${apiBase}/api/v1/get-first-simulation-data`, () =>
     HttpResponse.json({ success: true, data: fakeSimulationResponse }),
   ),
   http.get(`${apiBase}/health`, () =>
-    HttpResponse.json({ status: 'OK', timestamp: new Date().toISOString() }),
+    HttpResponse.json({ status: "OK", timestamp: new Date().toISOString() }),
   ),
 ];

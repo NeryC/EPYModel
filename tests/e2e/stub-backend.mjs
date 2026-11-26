@@ -36,6 +36,16 @@ const simulation = {
   uci: [{ day: 0, value: 0 }],
 };
 
+const simulationDefaults = {
+  startDate: '2022-12-24',
+  Rt: [1.1, 1.2, 1.3, 0.8, 0.7, 0.9],
+  UCI_threshold: 100,
+  V_filtered: 1000,
+  lambda_I_to_H: 0.003,
+  estimatedRt: 3.25,
+  fractions: { lambda_I_to_F: 0.000033, lambda_H_to_U: 0.15, lambda_H_to_F: 0.0753, lambda_U_to_F: 0.4465 },
+};
+
 const send = (res, status, body) => {
   res.writeHead(status, {
     'Content-Type': 'application/json',
@@ -48,6 +58,7 @@ const server = createServer((req, res) => {
   if (!req.url) return send(res, 404, { error: 'no url' });
   if (req.url.startsWith('/health')) return send(res, 200, { status: 'OK' });
   if (req.url.startsWith('/api/v1/projections')) return send(res, 200, { success: true, data: projections });
+  if (req.url.startsWith('/api/v1/simulation-defaults')) return send(res, 200, { success: true, data: simulationDefaults });
   if (req.url.startsWith('/api/v1/simulations')) return send(res, 200, { success: true, data: simulation });
   if (req.url.startsWith('/api/v1/get-first-simulation-data')) return send(res, 200, { success: true, data: simulation });
   return send(res, 404, { error: 'not stubbed' });

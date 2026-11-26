@@ -42,6 +42,22 @@ export interface SimulationParams {
   lambda_I_to_H: number;
 }
 
+/**
+ * Valores con los que arranca el simulador (GET /api/v1/simulation-defaults):
+ * escenario base + parámetros ajustados por el modelo R.
+ */
+export interface SimulationDefaults {
+  /** Fecha del estado inicial (día 0), YYYY-MM-DD. */
+  startDate: string;
+  Rt: number[];
+  UCI_threshold: number;
+  V_filtered: number;
+  lambda_I_to_H: number;
+  /** Rt efectivo estimado por el modelo R al inicio. */
+  estimatedRt: number;
+  fractions: Record<string, number>;
+}
+
 export interface SimulationQueryParams {
   Rt: string;
   UCI_threshold: string;
@@ -50,7 +66,7 @@ export interface SimulationQueryParams {
 }
 
 export interface ProjectionQueryParams {
-  format?: 'json' | 'csv';
+  format?: "json" | "csv";
 }
 
 // ApiError type moved to services/api.ts to avoid conflicts

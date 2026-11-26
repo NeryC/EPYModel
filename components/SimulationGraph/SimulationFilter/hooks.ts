@@ -1,45 +1,59 @@
-import { useState, useCallback } from 'react';
-import { default_filters } from './constants';
-import { RT_CONSTRAINTS } from './constants';
-import { RtListHook, NumericConstraints, NumericInputHook, SimulationStateHook } from './types';
+import { useState, useCallback, useMemo } from "react";
+import { default_filters } from "./constants";
+import { RT_CONSTRAINTS } from "./constants";
+import {
+  RtListHook,
+  NumericConstraints,
+  NumericInputHook,
+  SimulationStateHook,
+} from "./types";
+import { parseNumericInput } from "./utils";
 
 /**
  * Custom hook for managing RT list state and operations
  */
-export const useRtList = (initialValue: number[] = default_filters.Rt): RtListHook => {
+export const useRtList = (
+  initialValue: number[] = default_filters.Rt,
+): RtListHook => {
   const [rtList, setRtList] = useState(initialValue);
 
-  const updateRtValue = useCallback((index: number, action: 'increment' | 'decrement') => {
-    const stepMatrix = {
-      decrement: -RT_CONSTRAINTS.STEP_SIZE,
-      increment: RT_CONSTRAINTS.STEP_SIZE,
-    };
+  const updateRtValue = useCallback(
+    (index: number, action: "increment" | "decrement") => {
+      const stepMatrix = {
+        decrement: -RT_CONSTRAINTS.STEP_SIZE,
+        increment: RT_CONSTRAINTS.STEP_SIZE,
+      };
 
-    setRtList(currentList => {
-      const newList = [...currentList];
-      const currentValue = newList[index];
-      const newValue = parseFloat(
-        (currentValue + stepMatrix[action]).toFixed(1)
-      );
+      setRtList((currentList) => {
+        const newList = [...currentList];
+        const currentValue = newList[index];
+        const newValue = parseFloat(
+          (currentValue + stepMatrix[action]).toFixed(1),
+        );
 
-      // Validate new value is within constraints
-      if (newValue >= RT_CONSTRAINTS.MIN_VALUE && newValue <= RT_CONSTRAINTS.MAX_VALUE) {
-        newList[index] = newValue;
-        return newList;
-      }
-      return currentList; // Return unchanged if validation fails
-    });
-  }, []);
+        // Validate new value is within constraints
+        if (
+          newValue >= RT_CONSTRAINTS.MIN_VALUE &&
+          newValue <= RT_CONSTRAINTS.MAX_VALUE
+        ) {
+          newList[index] = newValue;
+          return newList;
+        }
+        return currentList; // Return unchanged if validation fails
+      });
+    },
+    [],
+  );
 
   const addRtValue = useCallback(() => {
-    setRtList(current => {
+    setRtList((current) => {
       if (current.length >= RT_CONSTRAINTS.MAX_COUNT) return current;
       return [...current, RT_CONSTRAINTS.DEFAULT_NEW_VALUE];
     });
   }, []);
 
   const removeRtValue = useCallback((index: number) => {
-    setRtList(current => {
+    setRtList((current) => {
       // Keep at least one RT value
       if (current.length > RT_CONSTRAINTS.MIN_COUNT) {
         return current.filter((_, i) => i !== index);
@@ -49,8 +63,8 @@ export const useRtList = (initialValue: number[] = default_filters.Rt): RtListHo
   }, []);
 
   const resetRtList = useCallback(() => {
-    setRtList(default_filters.Rt);
-  }, []);
+    setRtList(initialValue);
+  }, [initialValue]);
 
   return {
     rtList,
@@ -62,29 +76,33 @@ export const useRtList = (initialValue: number[] = default_filters.Rt): RtListHo
 };
 
 /**
- * Custom hook for managing numeric input validation
+ * Estado de un campo numérico.
+ *
+ * Guarda el TEXTO que escribe el usuario (no solo el número), así el campo se
+ * puede vaciar y reescribir con normalidad. Antes se descartaba cualquier
+ * texto inválido: borrar "100" dejaba "1" y escribir "80" producía "180";
+ * escribir "6000" (fuera de rango) dejaba "600" sin avisar.
  */
-export const useNumericInput = <T extends number>(
-  initialValue: T, 
-  constraints: NumericConstraints
-): NumericInputHook<T> => {
-  const [value, setValue] = useState<T>(initialValue);
+export const useNumericInput = (
+  initialValue: number,
+  constraints: NumericConstraints,
+): NumericInputHook => {
+  const [text, setText] = useState<string>(String(initialValue));
 
-  const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = parseFloat(event.target.value);
-    
-    if (!isNaN(inputValue) && 
-        inputValue >= constraints.MIN && 
-        inputValue <= constraints.MAX) {
-      setValue(inputValue as T);
-    }
-  }, [constraints]);
+  const { value, error } = useMemo(
+    () => parseNumericInput(text, constraints),
+    [text, constraints],
+  );
+
+  const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setText(event.target.value);
+  }, []);
 
   const reset = useCallback(() => {
-    setValue(initialValue);
+    setText(String(initialValue));
   }, [initialValue]);
 
-  return [value, handleChange, reset] as NumericInputHook<T>;
+  return { text, value, error, onChange, reset };
 };
 
 /**

@@ -1,12 +1,25 @@
 import * as d3 from "d3";
-import { useRef, useEffect, useId, useCallback } from "react";
+import { useRef, useEffect, useId, useMemo } from "react";
 import { useTranslation } from "next-i18next";
 import { drawLines } from "./utils";
-import { basicDeclareLineD3, useCreateScale, useGetDomain } from "../../utils";
+import {
+  basicDeclareLineD3,
+  formatAxisValue,
+  useCreateScale,
+  useGetDomain,
+} from "../../utils";
 import useDimensions from "../../../hooks/useDimensions";
 import SimulationTooltip from "../SimulationTooltip";
 
-const Graph = ({ type, data, uciThreshold }: { type: string; data: any[]; uciThreshold?: number | null }) => {
+const Graph = ({
+  type,
+  data,
+  uciThreshold,
+}: {
+  type: string;
+  data: any[];
+  uciThreshold?: number | null;
+}) => {
   const { t } = useTranslation("common");
   const svgChartRef = useRef<SVGSVGElement | null>(null);
   const yAxisRef = useRef<SVGGElement | null>(null);
@@ -24,13 +37,19 @@ const Graph = ({ type, data, uciThreshold }: { type: string; data: any[]; uciThr
   const yAxisGroup = d3.select<SVGGElement, unknown>(yAxisRef.current!);
   const xAxisGroup = d3.select<SVGGElement, unknown>(xAxisRef.current!);
 
-  //y Right
-  //x bottom
-  const yDomain = useGetDomain({
+  // Eje Y desde 0 y con valores reales (sin dividir por 1000): así una subida
+  // de 18,5k a 24,5k no se ve como una explosión y las series chicas (UCI)
+  // no quedan con marcas 0.05, 0.1… El dominio se redondea con nice().
+  const yDataDomain = useGetDomain({
     data,
     field: valueField,
-    shouldReduce: true,
+    includeZero: true,
   });
+  const yDomain = useMemo(
+    () =>
+      d3.scaleLinear().domain(yDataDomain).nice().domain() as [number, number],
+    [yDataDomain],
+  );
   const yScale = useCreateScale({
     range: [height - bottom, 0],
     domain: yDomain,
@@ -52,22 +71,21 @@ const Graph = ({ type, data, uciThreshold }: { type: string; data: any[]; uciThr
     xField: dayField,
   };
 
-  const valueReducer = useCallback((v: number) => v / 1000, []);
-
-  const dataLine = basicDeclareLineD3(baseLineData, valueField, true);
+  const dataLine = basicDeclareLineD3(baseLineData, valueField);
 
   useEffect(() => {
     xAxisGroup.call(
       d3
         .axisBottom(xScale)
         // .ticks(5)
-        .tickSize(-(height - bottom))
+        .tickSize(-(height - bottom)),
     );
     yAxisGroup.call(
       d3
         .axisLeft(yScale)
         .ticks(5)
-        .tickSize(-(width - right))
+        .tickFormat(formatAxisValue)
+        .tickSize(-(width - right)),
     );
     drawLines(
       dataLine,
@@ -77,7 +95,7 @@ const Graph = ({ type, data, uciThreshold }: { type: string; data: any[]; uciThr
       yScale,
       data,
       xAxisGroup,
-      yAxisGroup
+      yAxisGroup,
     );
   }, [
     bottom,
@@ -119,14 +137,6 @@ const Graph = ({ type, data, uciThreshold }: { type: string; data: any[]; uciThr
             </clipPath>
           )}
           <g id="YAxis" ref={yAxisRef} />
-          <text
-            transform={`translate(${-left + 10}, ${(height - bottom) / 2}) rotate(-90)`}
-            textAnchor="middle"
-            fontSize={10}
-            fill="#9ca3af"
-          >
-            ×1,000
-          </text>
           <g
             id="XAxis"
             ref={xAxisRef}
@@ -144,12 +154,12 @@ const Graph = ({ type, data, uciThreshold }: { type: string; data: any[]; uciThr
             />
           </g>
 
-          {uciThreshold != null && yScale(uciThreshold / 1000) >= 0 && (
+          {uciThreshold != null && yScale(uciThreshold) >= 0 && (
             <line
               x1={0}
               x2={width - right}
-              y1={yScale(uciThreshold / 1000)}
-              y2={yScale(uciThreshold / 1000)}
+              y1={yScale(uciThreshold)}
+              y2={yScale(uciThreshold)}
               stroke="red"
               strokeWidth={1.5}
               strokeDasharray="6 3"
@@ -160,7 +170,6 @@ const Graph = ({ type, data, uciThreshold }: { type: string; data: any[]; uciThr
           <SimulationTooltip
             xScale={xScale}
             yScale={yScale}
-            valueReducer={valueReducer}
             width={width}
             height={height}
             data={data}

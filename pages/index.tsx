@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import { wrapper } from "../store/store";
 import { apiService } from "../services/api";
 import { ProjectionData, DataPoint } from "../types/api";
-/* eslint-disable @next/next/no-page-custom-font */
+ 
 
 // --- Type Definitions ---
 interface GraphStatus {
@@ -52,7 +52,7 @@ function Graphs(): React.ReactElement {
   // Memoize the filtered graphs to prevent unnecessary re-renders
   const readyGraphs = useMemo(
     () => graphsStatus.filter(({ isReady }) => isReady),
-    [graphsStatus]
+    [graphsStatus],
   );
 
   const totalGraphs = graphsStatus.length;
@@ -74,11 +74,11 @@ function Graphs(): React.ReactElement {
   const headContent = useMemo(
     () => (
       <Head>
-        <title>Proyecciones COVID-19 Paraguay | EPIModel</title>
-        <meta name="description" content="Proyecciones epidemiológicas de COVID-19 en Paraguay: infectados, hospitalizados, UCI y fallecidos. Proyecto PINV20-40, CONACYT." />
+        <title>{t("home-page-title")}</title>
+        <meta name="description" content={t("home-page-description")} />
       </Head>
     ),
-    []
+    [t],
   );
 
   return (
@@ -102,11 +102,14 @@ function Graphs(): React.ReactElement {
                     aria-label={t("loading-data")}
                   />
                   <p className="text-base font-medium">
-                    {loadedCount === 0 ? t("loading-data") : t("loading-graphs")}
+                    {loadedCount === 0
+                      ? t("loading-data")
+                      : t("loading-graphs")}
                   </p>
                   {loadedCount > 0 && (
                     <p className="text-sm text-gray-400">
-                      {loadedCount}/{totalGraphs} {t("graphs-container").toLowerCase()}
+                      {loadedCount}/{totalGraphs}{" "}
+                      {t("graphs-container").toLowerCase()}
                     </p>
                   )}
                   <p className="text-xs text-gray-400">{t("loading-hint")}</p>
@@ -116,13 +119,20 @@ function Graphs(): React.ReactElement {
                 <div className="flex flex-col items-center justify-center py-16 gap-4 text-center px-4">
                   <div className="h-12 w-12 text-red-400">
                     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
                         d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
                       />
                     </svg>
                   </div>
-                  <p className="text-lg font-semibold text-black">{t("error-loading-title")}</p>
-                  <p className="text-text-secondary max-w-sm">{t("error-loading-desc")}</p>
+                  <p className="text-lg font-semibold text-black">
+                    {t("error-loading-title")}
+                  </p>
+                  <p className="text-text-secondary max-w-sm">
+                    {t("error-loading-desc")}
+                  </p>
                   <button
                     onClick={() => window.location.reload()}
                     className="px-6 py-2 bg-deep-blue text-white rounded-full font-semibold hover:opacity-90 transition-opacity"
@@ -153,7 +163,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       try {
         // Use the new API service to fetch projections data
         const projectionData: ProjectionData = await apiService.getProjections({
-          format: 'json'
+          format: "json",
         });
 
         // Transform the data to match the expected format
@@ -180,10 +190,12 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           props: {
             ...(await serverSideTranslations(locale ?? "es", ["common"])),
           },
-          revalidate: 3600, // Re-fetch cada hora
+          // Sin datos (p. ej. backend inalcanzable al construir la imagen Docker):
+          // reintentar pronto en vez de mostrar gráficos vacíos durante una hora.
+          revalidate: 30,
         };
       }
-    }
+    },
 );
 
 export default Graphs;

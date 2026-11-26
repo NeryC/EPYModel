@@ -43,10 +43,10 @@ interface SimulationTooltipProps {
 
 /**
  * SimulationTooltip Component
- * 
+ *
  * Interactive tooltip component for simulation graphs that shows data points
  * on hover and click. Provides visual feedback with lines, dots, and content.
- * 
+ *
  * @param props - Component props
  * @returns JSX element representing the tooltip overlay
  */
@@ -63,7 +63,7 @@ const SimulationTooltip = ({
   const contentRef = useRef<SVGGElement>(null);
   const contentDotsRef = useRef<SVGGElement>(null);
   const fixedPositionRef = useRef<boolean>(false);
-  const { t } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
 
   const drawLine = useCallback(
     (x: number) => {
@@ -74,7 +74,7 @@ const SimulationTooltip = ({
         .attr("y1", 0)
         .attr("y2", height - 30);
     },
-    [ref, height]
+    [ref, height],
   );
 
   const drawContent = useCallback(
@@ -94,7 +94,7 @@ const SimulationTooltip = ({
         .select(".contentDate")
         .text(`${t("day")} ${toDisplayValue(xScale.invert(x))}`);
     },
-    [xScale, width, height, t]
+    [xScale, width, height, t],
   );
 
   const drawBackground = useCallback(() => {
@@ -127,30 +127,30 @@ const SimulationTooltip = ({
         .attr("cx", (_d) => baseXPos)
         .attr("cy", (_d) => yScale(scaledValue));
     },
-    [contentDotsRef, yScale, valueReducer]
+    [contentDotsRef, yScale, valueReducer],
   );
 
   const followPoints = useCallback(
     (e: MouseEvent) => {
       // Early return if no data available
       if (!data || data.length === 0) return;
-      
+
       const xInverted = xScale.invert(d3.pointer(e)[0]);
       const x = toTimestamp(xInverted);
       const bisectDate = d3.bisector((d: SimulationData) => d[DATE_FIELD]).left;
       let baseXPos = 0;
 
       const index = bisectDate(data, x, 1);
-      
+
       // Validate index bounds
       if (index <= 0 || index >= data.length) return;
-      
+
       const d0 = data[index - 1];
       const d1 = data[index];
-      
+
       // Validate that we have valid data points
       if (!d0 || !d1) return;
-      
+
       const actualData = x - d0[DATE_FIELD] > (d1.day ?? 0) - x ? d1 : d0;
 
       const content = d3.select(contentRef.current);
@@ -171,14 +171,14 @@ const SimulationTooltip = ({
         .attr("class", "performanceItemMarketValue")
         .attr("fill", "white")
         .attr("font-family", "Nunito, sans-serif")
-        .text(Math.round(rawValue).toLocaleString());
+        .text(Math.round(rawValue).toLocaleString(i18n.language));
 
       baseXPos = xScale(actualData[DATE_FIELD]);
       placeDots(actualData, TOOLTIP_COLOR, baseXPos);
 
       d3.selectAll(".performanceItemMarketValue").attr(
         "transform",
-        `translate(${TEXT_OFFSET.x},${TEXT_OFFSET.y})`
+        `translate(${TEXT_OFFSET.x},${TEXT_OFFSET.y})`,
       );
       drawLine(baseXPos);
       drawContent(baseXPos, (e as any).layerY || e.clientY);
@@ -194,7 +194,8 @@ const SimulationTooltip = ({
       drawContent,
       drawBackground,
       placeDots,
-    ]
+      i18n.language,
+    ],
   );
 
   useEffect(() => {

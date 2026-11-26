@@ -5,11 +5,15 @@ import SimulationFilter from "../components/SimulationGraph/SimulationFilter/Sim
 import SimulationGraph from "../components/SimulationGraph/SimulationGraph";
 import { GetStaticProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
 import { TitleSection } from "../components/TitleSection";
 import { useSelector } from "react-redux";
 import { wrapper } from "../store/store";
 import { apiService } from "../services/api";
-import { SimulationData as ApiSimulationData } from "../types/api";
+import {
+  SimulationData as ApiSimulationData,
+  SimulationDefaults,
+} from "../types/api";
 
 import {
   selectSimulationGraphData,
@@ -19,28 +23,37 @@ import {
 } from "../store/reducers/graphInfoSlice";
 import { default_filters } from "../components/SimulationGraph/SimulationFilter/constants";
 
-/* eslint-disable @next/next/no-page-custom-font */
+ 
 
-function Simulador() {
+function Simulador({
+  simulationDefaults = null,
+}: {
+  simulationDefaults?: SimulationDefaults | null;
+}) {
+  const { t } = useTranslation("common");
   const graphsStatus = useSelector(selectSimulationGraphData);
   const isSimulating = useSelector(selectSimulationLoading);
 
   const readyGraphs = useMemo(
     () => graphsStatus.filter(({ isReady }) => isReady),
-    [graphsStatus]
+    [graphsStatus],
   );
 
   return (
     <>
       <Head>
-        <title>Simulador SEIR-H COVID-19 | EPIModel</title>
-        <meta name="description" content="Simula escenarios epidemiológicos de COVID-19 en Paraguay usando el modelo SEIR-H. Ajusta parámetros de transmisibilidad, UCI y vacunación." />
+        <title>{t("simulator-page-title")}</title>
+        <meta name="description" content={t("simulator-page-description")} />
       </Head>
       <Layout>
-        <main id="main-content" className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back max-w-screen-2xl mx-auto w-full" aria-label="Simulador SEIR-H COVID-19">
+        <main
+          id="main-content"
+          className="flex flex-col pt-2 px-2 md:pt-6 md:px-6 text-default-text bg-back max-w-screen-2xl mx-auto w-full"
+          aria-label="Simulador SEIR-H COVID-19"
+        >
           <div className="flex flex-col md:flex-row justify-between gap-3 border-b border-gray-theme pb-5 mb-6">
             <TitleSection tab={"simulation"} />
-            <SimulationFilter />
+            <SimulationFilter defaults={simulationDefaults} />
           </div>
           <div className="relative">
             {isSimulating && (
@@ -75,7 +88,9 @@ function Simulador() {
                 </span>
               </div>
             )}
-            <div className={`grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 mb-6 w-full${isSimulating ? " pointer-events-none select-none opacity-40" : ""}`}>
+            <div
+              className={`grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 mb-6 w-full${isSimulating ? " pointer-events-none select-none opacity-40" : ""}`}
+            >
               {readyGraphs.map(({ type }) => (
                 <SimulationGraph key={type} type={type} />
               ))}
@@ -90,9 +105,19 @@ function Simulador() {
 export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   (store) =>
     async ({ locale }) => {
+      // Valores iniciales del formulario (λ ajustada por R, fecha de inicio…).
+      // Si el backend no responde, el formulario usa default_filters.
+      const simulationDefaults: SimulationDefaults | null = await apiService
+        .getSimulationDefaults()
+        .catch((error) => {
+          console.error("Error fetching simulation defaults:", error);
+          return null;
+        });
+
       try {
         // Use the new API service to fetch first simulation data
-        const chartData: ApiSimulationData = await apiService.getFirstSimulationData();
+        const chartData: ApiSimulationData =
+          await apiService.getFirstSimulationData();
 
         store.dispatch(
           setSimulation({
@@ -104,13 +129,18 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
             infectious: chartData.infectious,
             susceptible: chartData.susceptible,
             uci: chartData.uci,
-          })
+          }),
         );
-        store.dispatch(setSimulationUciThreshold(default_filters.UCI_threshold));
+        store.dispatch(
+          setSimulationUciThreshold(
+            simulationDefaults?.UCI_threshold ?? default_filters.UCI_threshold,
+          ),
+        );
 
         return {
           props: {
             ...(await serverSideTranslations(locale ?? "es", ["common"])),
+            simulationDefaults,
           },
           revalidate: 3600, // Re-fetch cada hora
         };
@@ -120,11 +150,14 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         return {
           props: {
             ...(await serverSideTranslations(locale ?? "es", ["common"])),
+            simulationDefaults,
           },
-          revalidate: 3600, // Re-fetch cada hora
+          // Sin datos (p. ej. backend inalcanzable al construir la imagen Docker):
+          // reintentar pronto en vez de mostrar gráficos vacíos durante una hora.
+          revalidate: 30,
         };
       }
-    }
+    },
 );
 
 export default memo(Simulador);

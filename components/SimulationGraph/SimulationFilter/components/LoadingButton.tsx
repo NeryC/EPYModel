@@ -1,22 +1,23 @@
-import { useTranslation } from 'next-i18next';
-import { LoadingButtonProps } from '../types';
-import { CSS_CLASSES } from '../constants';
-import { LoadingSpinner } from './LoadingSpinner';
+import { useTranslation } from "next-i18next";
+import { LoadingButtonProps } from "../types";
+import { CSS_CLASSES } from "../constants";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 /**
  * LoadingButton Component
- * 
+ *
  * Button component that shows loading state with spinner
  */
-export const LoadingButton = ({ 
-  isLoading, 
-  onClick, 
-  disabled, 
-  children, 
-  className 
+export const LoadingButton = ({
+  isLoading,
+  onClick,
+  disabled,
+  disabledReason,
+  children,
+  className,
 }: LoadingButtonProps) => {
   const { t } = useTranslation("common");
-  
+
   const isDisabled = disabled || isLoading;
 
   return (
@@ -27,16 +28,16 @@ export const LoadingButton = ({
           : isDisabled
             ? CSS_CLASSES.BUTTON.PRIMARY_DISABLED
             : CSS_CLASSES.BUTTON.PRIMARY_NORMAL
-      } ${className || ''}`}
+      } ${className || ""}`}
       type="submit"
       onClick={onClick}
       disabled={isDisabled}
-      title={isDisabled && !isLoading ? 'No hay cambios para simular' : undefined}
+      title={isDisabled && !isLoading ? disabledReason : undefined}
     >
       {isLoading ? (
         <>
           <LoadingSpinner />
-          {t('simulating')}
+          {t("simulating")}
         </>
       ) : (
         children
