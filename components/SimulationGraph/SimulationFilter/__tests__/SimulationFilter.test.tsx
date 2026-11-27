@@ -24,8 +24,24 @@ function setup(defaults: SimulationDefaults | null = null) {
   const simulate = screen.getByRole("button", {
     name: "simulate",
   }) as HTMLButtonElement;
-  return { user, uci, simulate };
+  return { user, uci, simulate, store };
 }
+
+/** Serie mínima de un punto para identificar de qué respuesta vienen los gráficos. */
+const serie = (value: number) => [{ day: 0, value }];
+const simulationWith = (value: number) => ({
+  success: true,
+  data: {
+    cumulative: serie(value),
+    cumulative_deaths: serie(value),
+    exposed: serie(value),
+    hospitalized: serie(value),
+    immune: serie(value),
+    infectious: serie(value),
+    susceptible: serie(value),
+    uci: serie(value),
+  },
+});
 
 describe("SimulationFilter — campos numéricos (regresiones reportadas)", () => {
   it("se puede vaciar UCI y escribir 80 (antes quedaba 180/280)", async () => {
@@ -128,7 +144,7 @@ describe("SimulationFilter — valores iniciales desde /simulation-defaults", ()
     expect(
       (screen.getByLabelText("lambda_I_to_H") as HTMLInputElement).value,
     ).toBe("0.004");
-    expect(screen.getAllByLabelText(/Valor Rt mes/)).toHaveLength(2);
+    expect(screen.getAllByLabelText("rt-month-value")).toHaveLength(2);
     // Sin cambios respecto de lo ya simulado: Simular deshabilitado
     expect(screen.getByRole("button", { name: "simulate" })).toBeDisabled();
   });
@@ -139,6 +155,46 @@ describe("SimulationFilter — valores iniciales desde /simulation-defaults", ()
     await user.type(uci, "999");
     await user.click(screen.getByRole("button", { name: "reset" }));
     expect(uci.value).toBe("250");
+  });
+
+  it("Reiniciar también vuelve a mostrar la simulación inicial (gráficos = formulario)", async () => {
+    server.use(
+      http.get(`${baseURL}/api/v1/simulations`, () =>
+        HttpResponse.json(simulationWith(111)),
+      ),
+      http.get(`${baseURL}/api/v1/get-first-simulation-data`, () =>
+        HttpResponse.json(simulationWith(222)),
+      ),
+    );
+    const { user, uci, simulate, store } = setup(custom);
+    const hospitalized = () =>
+      store.getState().simulation.hospitalized.data[0]?.value;
+
+    // Se simula otro escenario: los gráficos muestran esa respuesta
+    await user.clear(uci);
+    await user.type(uci, "999");
+    await user.click(simulate);
+    await waitFor(() => expect(hospitalized()).toBe(111));
+
+    // Reiniciar: formulario y gráficos vuelven a los valores iniciales
+    await user.click(screen.getByRole("button", { name: "reset" }));
+    await waitFor(() => expect(hospitalized()).toBe(222));
+    expect(uci.value).toBe("250");
+    expect(store.getState().simulationUciThreshold).toBe(250);
+    // Ya no hay nada distinto que simular
+    expect(simulate).toBeDisabled();
+  });
+
+  it("si falla la simulación inicial al reiniciar, avisa y deja Simular habilitado", async () => {
+    server.use(
+      http.get(`${baseURL}/api/v1/get-first-simulation-data`, () =>
+        HttpResponse.json({ success: false }, { status: 500 }),
+      ),
+    );
+    const { user, simulate } = setup(custom);
+    await user.click(screen.getByRole("button", { name: "reset" }));
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
+    expect(simulate).toBeEnabled();
   });
 
   it("muestra desde qué fecha y con qué Rt estimado parte la simulación", () => {

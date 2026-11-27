@@ -7,10 +7,14 @@ import {
   setSimulationUciThreshold,
 } from "../../../store/reducers/graphInfoSlice";
 import { useTranslation } from "next-i18next";
-import { requestFilteredData, getSimulationErrorKey } from "./utils";
+import {
+  requestFilteredData,
+  requestDefaultSimulationData,
+  getSimulationErrorKey,
+} from "./utils";
 import { useRtList, useNumericInput, useSimulationState } from "./hooks";
 import { NUMERIC_CONSTRAINTS, CSS_CLASSES } from "./constants";
-import type { SimulationDefaults } from "../../../types/api";
+import type { SimulationData, SimulationDefaults } from "../../../types/api";
 import {
   HeaderSection,
   RtListSection,
@@ -100,6 +104,26 @@ function SimulationFilter({ defaults = null }: SimulationFilterProps) {
     [current, lastSubmitted],
   );
 
+  // Carga en Redux una simulación (gráficos) junto con su umbral de UCI
+  const showSimulation = useCallback(
+    (chartData: SimulationData, uciThreshold: number) => {
+      dispatch(setSimulationUciThreshold(uciThreshold));
+      dispatch(
+        setSimulation({
+          cumulative: chartData.cumulative,
+          cumulative_deaths: chartData.cumulative_deaths,
+          exposed: chartData.exposed,
+          hospitalized: chartData.hospitalized,
+          immune: chartData.immune,
+          infectious: chartData.infectious,
+          susceptible: chartData.susceptible,
+          uci: chartData.uci,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
   // Event handlers
   const handleSimulation = useCallback(
     async (event) => {
@@ -126,19 +150,7 @@ function SimulationFilter({ defaults = null }: SimulationFilterProps) {
       try {
         const chartData = await requestFilteredData(formValues);
         setLastSubmitted(current);
-        dispatch(setSimulationUciThreshold(uci.value));
-        dispatch(
-          setSimulation({
-            cumulative: chartData.cumulative,
-            cumulative_deaths: chartData.cumulative_deaths,
-            exposed: chartData.exposed,
-            hospitalized: chartData.hospitalized,
-            immune: chartData.immune,
-            infectious: chartData.infectious,
-            susceptible: chartData.susceptible,
-            uci: chartData.uci,
-          }),
-        );
+        showSimulation(chartData, uci.value);
       } catch (err: unknown) {
         console.warn(
           "Simulation error:",
@@ -159,6 +171,7 @@ function SimulationFilter({ defaults = null }: SimulationFilterProps) {
       hasInvalidFields,
       current,
       dispatch,
+      showSimulation,
       startLoading,
       stopLoading,
       setSimulationError,
@@ -169,16 +182,51 @@ function SimulationFilter({ defaults = null }: SimulationFilterProps) {
   const { reset: resetUci } = uci;
   const { reset: resetVFiltered } = vFiltered;
   const { reset: resetLambdaItoH } = lambdaItoH;
-  const handleReset = useCallback(() => {
+  // Reiniciar restaura el formulario Y los gráficos de la simulación inicial
+  // (la de los valores por defecto). Antes solo restauraba el formulario: los
+  // gráficos seguían mostrando el último escenario simulado, distinto de lo
+  // que decían los controles.
+  const handleReset = useCallback(async () => {
     resetRtList();
     resetUci();
     resetVFiltered();
     resetLambdaItoH();
     clearError();
-    // Usar cadena vacía para que hasChanges sea true tras el reset,
-    // habilitando el botón de simular con los valores por defecto
-    setLastSubmitted("");
-  }, [resetRtList, resetUci, resetVFiltered, resetLambdaItoH, clearError]);
+
+    startLoading();
+    dispatch(setSimulationLoading(true));
+    try {
+      const chartData = await requestDefaultSimulationData();
+      showSimulation(chartData, initial.UCI_threshold);
+      // Gráficos y formulario coinciden: "Simular" queda deshabilitado
+      setLastSubmitted(JSON.stringify(initial));
+    } catch (err: unknown) {
+      console.warn(
+        "Reset simulation error:",
+        err instanceof Error ? err.message : err,
+      );
+      // Sin los datos iniciales, se deja "Simular" habilitado para pedirlos
+      setLastSubmitted("");
+      const { key, minutes } = getSimulationErrorKey(err);
+      setSimulationError(t(key, { count: minutes, minutes }));
+    } finally {
+      stopLoading();
+      dispatch(setSimulationLoading(false));
+    }
+  }, [
+    resetRtList,
+    resetUci,
+    resetVFiltered,
+    resetLambdaItoH,
+    clearError,
+    startLoading,
+    stopLoading,
+    dispatch,
+    showSimulation,
+    initial,
+    setSimulationError,
+    t,
+  ]);
 
   return (
     <div className={CSS_CLASSES.CONTAINER}>

@@ -48,7 +48,9 @@ export const NumericField = ({
         <p id={errorId} className="text-xs text-red-700">
           {field.error === "required"
             ? t("field-required")
-            : t("field-out-of-range", range)}
+            : field.error === "not-integer"
+              ? t("field-not-integer")
+              : t("field-out-of-range", range)}
         </p>
       )}
     </div>

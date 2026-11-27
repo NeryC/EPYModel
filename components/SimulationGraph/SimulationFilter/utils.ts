@@ -8,12 +8,15 @@ import { NumericConstraints, NumericInputError } from "./types";
  */
 export const parseNumericInput = (
   text: string,
-  { MIN, MAX }: NumericConstraints,
+  { MIN, MAX, INTEGER }: NumericConstraints,
 ): { value: number | null; error: NumericInputError | null } => {
   const trimmed = text.trim();
   const value = trimmed === "" ? NaN : Number(trimmed);
   if (Number.isNaN(value)) return { value: null, error: "required" };
   if (value < MIN || value > MAX) return { value: null, error: "out-of-range" };
+  // Camas y personas por día no pueden ser fraccionarias (antes se aceptaba 12,5)
+  if (INTEGER && !Number.isInteger(value))
+    return { value: null, error: "not-integer" };
   return { value, error: null };
 };
 
@@ -50,6 +53,13 @@ interface SimulationFilters {
   V_filtered: string | number;
   lambda_I_to_H: string | number;
 }
+
+/**
+ * Simulación inicial (la de los valores por defecto). La usa "Reiniciar" para
+ * que los gráficos vuelvan a coincidir con el formulario restaurado.
+ */
+export const requestDefaultSimulationData = (): Promise<SimulationData> =>
+  apiService.getFirstSimulationData();
 
 /**
  * Request filtered simulation data using the new API service
