@@ -28,6 +28,23 @@ describe("parseNumericInput", () => {
   ])('"%s" → value=%s error=%s', (text, value, error) => {
     expect(parseNumericInput(text, UCI)).toEqual({ value, error });
   });
+
+  it("camas y vacunados deben ser enteros (12,5 camas no tiene sentido)", () => {
+    const enteros = { MIN: 1, MAX: 5000, INTEGER: true };
+    expect(parseNumericInput("12.5", enteros)).toEqual({
+      value: null,
+      error: "not-integer",
+    });
+    expect(parseNumericInput("12", enteros)).toEqual({
+      value: 12,
+      error: null,
+    });
+    // λ sí admite decimales
+    expect(parseNumericInput("0.003", { MIN: 0, MAX: 0.99 })).toEqual({
+      value: 0.003,
+      error: null,
+    });
+  });
 });
 
 describe("useNumericInput — el campo se puede editar libremente", () => {

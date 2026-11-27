@@ -16,10 +16,12 @@ export interface NumericConstraints {
   MIN: number;
   MAX: number;
   STEP?: number;
+  /** Solo se aceptan números enteros (camas, personas). */
+  INTEGER?: boolean;
 }
 
 /** Motivo por el que el texto de un campo numérico no es un valor válido. */
-export type NumericInputError = "required" | "out-of-range";
+export type NumericInputError = "required" | "out-of-range" | "not-integer";
 
 export interface NumericInputHook {
   /** Texto tal como lo escribió el usuario (puede estar vacío o fuera de rango). */
@@ -110,7 +112,7 @@ export interface RtConstraints {
 export interface NumericConstraintsMap {
   UCI: NumericConstraints;
   V_FILTERED: NumericConstraints;
-  LAMBDA_I_TO_H: Required<NumericConstraints>;
+  LAMBDA_I_TO_H: Required<Omit<NumericConstraints, "INTEGER">>;
 }
 
 export interface CssClasses {

@@ -142,5 +142,10 @@
   "simulator-page-description": "Simulate COVID-19 epidemiological scenarios in Paraguay with the SEIR-H model. Adjust transmissibility, ICU and vaccination parameters.",
   "home-page-title": "COVID-19 Projections Paraguay | EPIModel",
   "home-page-description": "COVID-19 epidemiological projections for Paraguay: infected, hospitalized, ICU and deaths. Project PINV20-40, CONACYT.",
-  "simulation-start-note": "The simulation starts on {{date}}, the last day estimated by the model, when the estimated effective Rt was {{rt}}."
+  "simulation-start-note": "The simulation starts on {{date}}, the last day estimated by the model, when the estimated effective Rt was {{rt}}.",
+  "field-not-integer": "Must be a whole number.",
+  "rt-month-group": "Rt month {{month}}",
+  "rt-month-decrease": "Decrease Rt month {{month}}",
+  "rt-month-value": "Rt value month {{month}}",
+  "rt-month-increase": "Increase Rt month {{month}}"
 }

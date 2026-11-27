@@ -26,11 +26,13 @@ export const NUMERIC_CONSTRAINTS: NumericConstraintsMap = {
   UCI: {
     MIN: 1,
     MAX: 5000,
+    INTEGER: true,
   },
   // Nuevos vacunados POR DÍA
   V_FILTERED: {
     MIN: 1,
     MAX: 5000,
+    INTEGER: true,
   },
   // Fracción de infectados que se hospitaliza. Paso de 0,1 %: el valor que
   // ajustó el modelo R para dic-2022 es ≈ 0,3 % (antes el paso era 10 % y
